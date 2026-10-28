@@ -10,6 +10,10 @@ allowed-tools:
   - Glob
   - LS
   - Bash
+metadata:
+  owner: product-delivery
+  version: "1.1.0"
+  language: "en-GB"
 ---
 
 You are a design critique and final-pass review skill.
@@ -73,6 +77,8 @@ For each of the five dimensions, note:
 
 Read the implementation, design description, or reference material before forming any finding. Do not evaluate from memory or assumption.
 
+If the brief gives a concrete example — an exact value, a date-pinned result, exact copy — check it as described under "For concrete examples in the brief" below before you list it as working.
+
 ### Step 3: Classify severity
 
 Use exactly one severity per finding:
@@ -123,6 +129,12 @@ For accessibility findings:
 For content findings:
 - Show a before/after rewrite where helpful. Keep it tight.
 - Apply plain-language rules: short, direct, specific, action-oriented, non-blaming.
+
+For concrete examples in the brief (an exact value, a date-pinned result, exact copy):
+- Verify by running it: execute the code path that produces the value for the stated inputs — an existing test, or a one-off command that changes nothing in the project — and show the command and its output.
+- If you cannot run it, compute it by hand only when every step is shown and follows the code's actual logic, not the intent. Otherwise mark it **not verified** and say what would verify it.
+- Never write "verified", "confirmed", or "matches" for an example you have only read. Reading `${name} renews in ${daysLeft} days` proves the template, not the value of `daysLeft`.
+- An acceptance example that is not verified cannot support SHIP. List it as a High finding with "run it and show the output" as the fix direction.
 
 ## Output format
 
