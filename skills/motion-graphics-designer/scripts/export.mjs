@@ -42,7 +42,12 @@ const browser = spawn(chrome, [
 ], { stdio: ["ignore", "ignore", "pipe"] });
 
 let ffmpeg;
-const cleanup = () => { browser.kill(); ffmpeg?.kill(); rmSync(profile, { recursive: true, force: true }); };
+// Chrome can still be writing its profile as it dies, so retry the delete, and
+// never let a leftover temp folder fail an export that already succeeded.
+const cleanup = () => {
+  browser.kill(); ffmpeg?.kill();
+  try { rmSync(profile, { recursive: true, force: true, maxRetries: 5 }); } catch {}
+};
 process.on("exit", cleanup);
 
 // Chrome prints its DevTools endpoint on stderr once it is listening.
