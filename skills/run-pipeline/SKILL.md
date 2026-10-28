@@ -16,6 +16,10 @@ allowed-tools:
   - TodoWrite
   - Agent
 context: fork
+metadata:
+  owner: product-delivery
+  version: "1.1.0"
+  language: "en-GB"
 ---
 
 You are the delivery-pipeline router. You take any coding request — from a one-line typo fix to a 10-chunk architectural migration — classify it, confirm the plan with the user, and dispatch to the matching flow.
@@ -83,6 +87,10 @@ The last four are pipeline defaults and apply whether or not an adapter exists. 
 
 If a Small change has a UI surface (frontend file edits visible to users), bump to Medium so the brief covers a11y / edge cases.
 
+If the request or its brief states acceptance criteria with an exact expected value — a number, a date-pinned result, exact copy — the run must leave at least one test asserting that value for the stated inputs. Small keeps the task only if C-Small step 5 writes that test within the change's own files plus one test file; otherwise promote to Medium. A green suite that never asserts the expected value says nothing about it.
+
+Do not waive this rule or the UI rule above on your own judgement. The user can still choose `small` in Phase B; the acceptance test is then still required.
+
 ## What to do if the prompt is too vague to classify
 
 If you cannot tell the surface area or scope from the prompt alone, default to **Medium**. The Medium flow's requirements-generator phase will surface the missing context. Don't try to read a stack of files just to classify — that's what the requirements-generator + shape-task pass is for.
@@ -128,8 +136,8 @@ For requests classified Small (one narrow change, no contract/schema/migration/i
 2. **Read `<cache>/last-gate.json`.** If `scope: "full", success: true, at` is within 240 s, you may inherit that stamp; otherwise plan to validate at the end.
 3. **Inspect minimally** — Read or Grep the immediately relevant files. Don't dispatch an inspection sub-agent for Small work.
 4. **Apply the change** following [`execute-chunk`](../execute-chunk/SKILL.md) — same scope-guard rules apply. If mid-flight the change reveals a bigger surface than declared, **stop**, return to Phase B, and re-classify (likely Medium). Do not silently widen.
-5. **Validate, narrowly:** scoped `<lint>` plus the most-affected test invoked directly. Skip the full gate chain unless the change touched a `paths.risk` glob — those gates always run when their scope is touched.
-6. **Report a 5-line summary**: what changed, files touched, validation outcome, any residual risk. No multi-section report; no independent review; no cleanup-verify.
+5. **Validate, narrowly:** scoped `<lint>` plus the most-affected test invoked directly. If the brief gives an exact expected value, first write or extend a test that asserts it for the stated inputs, through the code path that produces the shown value rather than a re-implementation of it, and run it. Skip the full gate chain unless the change touched a `paths.risk` glob — those gates always run when their scope is touched.
+6. **Report a 5-line summary**: what changed, files touched, validation outcome (naming the acceptance test, if one was required), any residual risk. No multi-section report; no independent review; no cleanup-verify.
 
 If the change touched any file that triggers a bump-up rule, Small was the wrong tier — stop, re-surface Medium, and dispatch from there.
 
@@ -139,7 +147,7 @@ For requests classified Medium (one feature slice, 1–3 chunks).
 
 1. **Initialise state.** Read `<cache>/pipeline.json`; if a prior run is `executing`/`shaping` and on a different task, warn the user and ask whether to resume, discard, or append. Otherwise reset: `run.id = "pipeline-<ISO-now>"`, `run.task` = raw request, `run.startedAt`, `run.status = "shaping"`, `run.tier`, `chunks[]` cleared. If state is unavailable or unwritable, note it once and continue without persistence.
 2. **Phase M1 — Requirements.** Adopt the [`requirements-generator`](../requirements-generator/SKILL.md) persona. Produce a confirmation-ready brief. Wait for `approve` (with or without edits). Persist into `designBrief`.
-3. **Phase M2 — Shape.** Run [`shape-task`](../shape-task/SKILL.md) using the confirmed brief as input. Land `requirements`, `strategy`, and `chunks[]` (each `status: "pending"`).
+3. **Phase M2 — Shape.** Run [`shape-task`](../shape-task/SKILL.md) using the confirmed brief as input. Land `requirements`, `strategy`, and `chunks[]` (each `status: "pending"`). Every exact expected value in the brief becomes a chunk acceptance criterion with a test that asserts it.
 4. **Skip Phase 3 (inspection) and Phase 4 (architect plan) by default.** Read the relevant files inline as the chunks need them — Medium scope means the cost of two sub-agent dispatches outweighs the grounding signal. If the user opted in via `+explore` and the adapter declares an inspection sub-agent, dispatch it once before Phase M3 and persist into `repoFindings`.
 5. **Phase M3 — Per-chunk loop.** For each chunk in order:
    - Run [`execute-chunk`](../execute-chunk/SKILL.md). Per-chunk validation is scoped `<lint>` + `<test.affected>` + any gate whose scope the chunk touched.
