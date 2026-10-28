@@ -5,7 +5,7 @@ none of them assume you write code.
 
 | You are using | Time | Go to |
 |---|---|---|
-| **Claude Code in the desktop app** — no terminal, all 28 skills at once | 3 min | **[Part 2](#part-2--claude-code-in-the-desktop-app)** |
+| **Claude Code in the desktop app** — no terminal, all 29 skills at once | 3 min | **[Part 2](#part-2--claude-code-in-the-desktop-app)** |
 | **Claude Code in a terminal** — same result, typed commands | 3 min | **[Part 3](#part-3--claude-code-in-a-terminal)** |
 | **Claude for chatting** — browser or the app's Chat tab | 5 min | **[Part 4](#part-4--claude-for-chatting-browser-or-chat-tab)** |
 
@@ -16,7 +16,7 @@ you from what is on your screen.
 
 ## What you are installing
 
-The suite contains 19 expert personas, eight delivery-pipeline skills, and a
+The suite contains 20 expert personas, eight delivery-pipeline skills, and a
 Project Point of Truth practice. You can ask Claude to work as a product manager,
 UX researcher, or accessibility specialist, run a coding task through the
 pipeline, or use the PPoT to preserve durable project knowledge.
@@ -56,7 +56,7 @@ These instructions assume Claude is already installed and you are signed in.
 
 ## Part 2 — Claude Code in the desktop app
 
-No terminal. This installs all 28 skills in one go.
+No terminal. This installs all 29 skills in one go.
 
 ### Step 1 · Open the Code tab
 
@@ -131,7 +131,7 @@ A role with no task attached will just ask you what you want, so always give it
 the work in the same message.
 
 **Optional but recommended:** [Part 5](#part-5--optional--let-claude-pick-the-expert)
-makes Claude choose the right expert so you do not have to remember 28 names.
+makes Claude choose the right expert so you do not have to remember 29 names.
 
 ---
 
@@ -239,7 +239,7 @@ Each is one small file. **Click a link and it downloads.** Nothing opens.
 | [ppot.zip](https://github.com/afovea/product-team-skills/raw/main/download/ppot.zip) | Project briefings, decisions, assumptions, durable learning, and knowledge review |
 
 <details>
-<summary><b>All 28 — click to see the full list</b></summary>
+<summary><b>All 29 — click to see the full list</b></summary>
 
 **Shared project knowledge**
 [ppot](https://github.com/afovea/product-team-skills/raw/main/download/ppot.zip)
@@ -261,6 +261,7 @@ Each is one small file. **Click a link and it downloads.** Nothing opens.
 [content-designer](https://github.com/afovea/product-team-skills/raw/main/download/content-designer.zip) ·
 [design-systems-specialist](https://github.com/afovea/product-team-skills/raw/main/download/design-systems-specialist.zip) ·
 [motion-designer](https://github.com/afovea/product-team-skills/raw/main/download/motion-designer.zip) ·
+[motion-graphics-designer](https://github.com/afovea/product-team-skills/raw/main/download/motion-graphics-designer.zip) ·
 [accessibility-specialist](https://github.com/afovea/product-team-skills/raw/main/download/accessibility-specialist.zip)
 
 **Engineering, delivery and quality**
@@ -402,7 +403,7 @@ cd product-team-skills
 ./install.sh --agents --personal
 ```
 
-That puts all 28 skills in `~/.agents/skills/`, where Codex finds them in every
+That puts all 29 skills in `~/.agents/skills/`, where Codex finds them in every
 project. Start Codex and type `$product-` — the roles should autocomplete.
 
 For one project instead, and to get the routing brain with it:
@@ -553,7 +554,7 @@ help.
 
 ## Which route gives you what
 
-| | The 28 skills | Delivery pipeline | Routing brain | Gate enforcement |
+| | The 29 skills | Delivery pipeline | Routing brain | Gate enforcement |
 |---|---|---|---|---|
 | Claude Code — desktop app or terminal | ✅ all at once | ✅ | ✅ via [Part 5](#part-5--optional--let-claude-pick-the-expert) | ✅ |
 | Codex, and other `SKILL.md` hosts | ✅ all at once via [Part 6](#part-6--codex-and-other-hosts-that-read-skillmd) | ✅ | ✅ into `AGENTS.md` | ✅ on Codex |
@@ -572,8 +573,8 @@ For teams and repositories. The [README](./README.md) has the detail.
 | Route | Command | Adds |
 |---|---|---|
 | Cloud sessions | `enabledPlugins` in the repo's `.claude/settings.json` | the plugin, for everyone opening a cloud session on that repo |
-| Project | `./install.sh /path/to/project` | 28 skills on disk + the routing brain |
-| Personal | `./install.sh --personal` | 28 skills on disk, every project |
+| Project | `./install.sh /path/to/project` | 29 skills on disk + the routing brain |
+| Personal | `./install.sh --personal` | 29 skills on disk, every project |
 | Routing only | `./install.sh --routing-only /path` | the routing brain, nothing else |
 | Submodule | `./install.sh --submodule /path` | pinned to a tag, symlinked |
 | Any of the above, for Codex | add `--agents` | the same, written to `.agents/skills/` and `AGENTS.md` |
