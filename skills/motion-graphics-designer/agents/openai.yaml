@@ -1,0 +1,6 @@
+interface:
+  display_name: "Motion Graphics Designer"
+  short_description: "Short animated explainers, animated charts and product walkthroughs built as code from your own content, exported to MP4"
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q3 in Thirty Seconds</title>
+<style>
+  /* Theme. Every colour the animation uses is one of these. */
+  :root {
+    --bg: #0f1115; --ink: #f4f1ea; --muted: #a3a09a; --accent: #f2a541; --accent-2: #5fb3a1;
+    --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; background: #000; color: var(--ink); font-family: var(--font); }
+  body { display: grid; grid-template-rows: 1fr auto; overflow: hidden; }
+
+  /* The stage is drawn at its true pixel size and scaled to fit, so preview and export match. */
+  #viewport { position: relative; overflow: hidden; }
+  #stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; background: var(--bg); overflow: hidden; }
+  .scene { position: absolute; inset: 0; padding: 120px 160px; display: flex; flex-direction: column; justify-content: center; visibility: hidden; }
+  .scene.on { visibility: visible; }
+
+  .kicker { font-size: 34px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .headline { font-size: 120px; font-weight: 750; line-height: 1.02; letter-spacing: -.02em; }
+  .sub { font-size: 44px; color: var(--muted); margin-top: 32px; max-width: 1300px; }
+  .big { font-size: 300px; font-weight: 800; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+  .bars { display: flex; align-items: flex-end; gap: 48px; height: 560px; margin-top: 48px; }
+  .bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+  .bar .fill { background: var(--accent-2); border-radius: 12px 12px 0 0; transform-origin: bottom; }
+  .bar.hi .fill { background: var(--accent); }
+  .bar .val { font-size: 44px; font-weight: 700; margin-bottom: 16px; font-variant-numeric: tabular-nums; }
+  .bar .lab { font-size: 32px; color: var(--muted); margin-top: 20px; }
+
+  .steps { list-style: none; padding: 0; margin-top: 56px; display: grid; gap: 40px; }
+  .steps li { display: flex; align-items: baseline; gap: 40px; font-size: 56px; }
+  .steps b { color: var(--accent); font-size: 40px; min-width: 64px; font-variant-numeric: tabular-nums; }
+
+  /* Controls are preview-only; export hides them. */
+  #controls { display: flex; align-items: center; gap: 16px; padding: 12px 16px; background: #111; font: 14px var(--font); }
+  #controls button { font: inherit; color: inherit; background: #222; border: 1px solid #444; border-radius: 6px; padding: 6px 14px; cursor: pointer; }
+  #controls button:focus-visible, #scrub:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #scrub { flex: 1; accent-color: var(--accent); }
+  #clock { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 110px; text-align: right; }
+  .export #controls { display: none; }
+  .export { background: var(--bg); }
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage" role="img" aria-roledescription="animation"></div></div>
+<div id="controls">
+  <button id="play" type="button">Pause</button>
+  <input id="scrub" type="range" min="0" step="0.01" aria-label="Position in animation">
+  <span id="clock" aria-live="off"></span>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ CONTENT
+ * Every word, number and duration lives here. Change one and nothing else
+ * moves: scene code reads from C and never hard-codes copy.               */
+const C = {
+  size: { width: 1920, height: 1080 },   // 1080×1920 for vertical, 1080×1080 for square
+  title: { kicker: "Quarterly update", headline: "Q3 in thirty seconds", sub: "What moved, why it moved, and what we do next.", dur: 5 },
+  stat:  { value: 18, suffix: "%", label: "growth in weekly active teams", dur: 5 },
+  chart: { headline: "Activation by month", unit: "%", highlight: "Sep",
+           rows: [["Jul", 31], ["Aug", 36], ["Sep", 44]], dur: 7 },
+  steps: { headline: "Next quarter", items: ["Ship guided setup", "Halve time-to-first-report", "Launch team templates"], dur: 7 },
+  close: { headline: "Thank you", sub: "Questions in #q3-review", dur: 4 },
+};
+
+/* ------------------------------------------------------------- PRIMITIVES */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const span = (t, a, b) => clamp((t - a) / (b - a));      // 0→1 progress of t across [a, b]
+const ease = { out: p => 1 - (1 - p) ** 3, inOut: p => p < .5 ? 4 * p ** 3 : 1 - (-2 * p + 2) ** 3 / 2 };
+const lerp = (a, b, p) => a + (b - a) * p;
+const el = (html) => { const d = document.createElement("div"); d.innerHTML = html.trim(); return d.firstChild; };
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// Rise-and-fade in at [a, a+.7]; every scene also fades out over its last 0.5s.
+function rise(node, t, a, dist = 40) {
+  const p = ease.out(span(t, a, a + .7));
+  node.style.opacity = p;
+  node.style.transform = `translateY(${lerp(dist, 0, p)}px)`;
+}
+const sceneOut = (t, dur) => 1 - span(t, dur - .5, dur);
+
+/* ----------------------------------------------------------------- SCENES
+ * Each scene: { dur, node, update(t) }. update() must be a pure function of
+ * t (seconds into the scene) so any frame can be drawn in any order — that
+ * is what makes scrubbing and frame-exact export work.                    */
+const scenes = [
+  (() => {
+    const s = C.title, node = el(`<section class="scene">
+      <div class="kicker">${esc(s.kicker)}</div><h1 class="headline">${esc(s.headline)}</h1><p class="sub">${esc(s.sub)}</p></section>`);
+    const [k, h, sub] = node.children;
+    return { dur: s.dur, node, update(t) { rise(k, t, .2); rise(h, t, .4, 60); rise(sub, t, 1); node.style.opacity = sceneOut(t, s.dur); } };
+  })(),
+  (() => {
+    const s = C.stat, node = el(`<section class="scene"><div class="big"></div><p class="sub">${esc(s.label)}</p></section>`);
+    const [big, sub] = node.children;
+    return { dur: s.dur, node, update(t) {
+      big.textContent = Math.round(lerp(0, s.value, ease.out(span(t, .3, 2.2)))) + s.suffix;
+      rise(big, t, .1); rise(sub, t, 1.4); node.style.opacity = sceneOut(t, s.dur);
+    } };
+  })(),
+  (() => {
+    const s = C.chart, max = Math.max(...s.rows.map(r => r[1]));
+    const node = el(`<section class="scene"><h2 class="headline" style="font-size:80px">${esc(s.headline)}</h2><div class="bars">${
+      s.rows.map(([lab]) => `<div class="bar${lab === s.highlight ? " hi" : ""}"><div class="val"></div><div class="fill"></div><div class="lab">${esc(lab)}</div></div>`).join("")}</div></section>`);
+    const h = node.children[0], bars = [...node.querySelectorAll(".bar")];
+    return { dur: s.dur, node, update(t) {
+      rise(h, t, .2);
+      bars.forEach((b, i) => {
+        const p = ease.out(span(t, .8 + i * .35, 2 + i * .35)), v = s.rows[i][1];
+        b.querySelector(".fill").style.height = `${(v / max) * 420 * p}px`;
+        b.querySelector(".val").textContent = Math.round(v * p) + s.unit;
+        b.querySelector(".val").style.opacity = p;
+      });
+      node.style.opacity = sceneOut(t, s.dur);
+    } };
+  })(),
+  (() => {
+    const s = C.steps, node = el(`<section class="scene"><h2 class="headline" style="font-size:80px">${esc(s.headline)}</h2><ol class="steps">${
+      s.items.map((x, i) => `<li><b>0${i + 1}</b><span>${esc(x)}</span></li>`).join("")}</ol></section>`);
+    const h = node.children[0], items = [...node.querySelectorAll("li")];
+    return { dur: s.dur, node, update(t) { rise(h, t, .2); items.forEach((li, i) => rise(li, t, 1 + i * .9, 30)); node.style.opacity = sceneOut(t, s.dur); } };
+  })(),
+  (() => {
+    const s = C.close, node = el(`<section class="scene" style="align-items:center;text-align:center"><h2 class="headline">${esc(s.headline)}</h2><p class="sub">${esc(s.sub)}</p></section>`);
+    const [h, sub] = node.children;
+    return { dur: s.dur, node, update(t) { rise(h, t, .2, 60); rise(sub, t, .8); } };   // last scene holds, no fade-out
+  })(),
+];
+
+/* ----------------------------------------------------------------- ENGINE */
+const stage = document.getElementById("stage"), viewport = document.getElementById("viewport");
+const { width: W, height: H } = C.size;
+stage.style.width = W + "px"; stage.style.height = H + "px";
+let start = 0;
+for (const s of scenes) { s.start = start; start += s.dur; stage.appendChild(s.node); }
+const duration = start;
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const exporting = new URLSearchParams(location.search).has("export");
+
+function render(t) {
+  t = clamp(t, 0, duration - 1e-3);
+  const cur = scenes.findLast(s => t >= s.start);
+  // Reduced motion: cut between each scene's settled frame instead of tweening.
+  const local = reduced && !exporting ? Math.max(0, cur.dur - .6) : t - cur.start;
+  for (const s of scenes) s.node.classList.toggle("on", s === cur);
+  cur.update(local);
+  stage.setAttribute("aria-label", cur.node.innerText.replace(/\s+/g, " ").trim());
+}
+
+function fit() {
+  const k = Math.min(viewport.clientWidth / W, viewport.clientHeight / H);
+  stage.style.transform = `translate(${(viewport.clientWidth - W * k) / 2}px, ${(viewport.clientHeight - H * k) / 2}px) scale(${k})`;
+}
+
+// The export script drives this. Nothing else should depend on it.
+window.__anim = { width: W, height: H, duration, render, ready: document.fonts.ready };
+
+if (exporting) {
+  document.body.classList.add("export");
+  viewport.style.height = "100vh";
+  render(0);
+} else {
+  const play = document.getElementById("play"), scrub = document.getElementById("scrub"), clock = document.getElementById("clock");
+  scrub.max = duration;
+  let t = 0, playing = true, last = performance.now();
+  const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  const draw = () => { render(t); scrub.value = t; clock.textContent = `${fmt(t)} / ${fmt(duration)}`; };
+  const setPlaying = (p) => { playing = p; play.textContent = p ? "Pause" : "Play"; last = performance.now(); };
+  play.onclick = () => { if (t >= duration - .01) t = 0; setPlaying(!playing); };
+  scrub.oninput = () => { t = +scrub.value; setPlaying(false); draw(); };
+  addEventListener("keydown", e => {
+    if (e.target === scrub) return;
+    if (e.code === "Space") { e.preventDefault(); play.click(); }
+    if (e.code === "ArrowRight") { t = Math.min(duration, t + 1); draw(); }
+    if (e.code === "ArrowLeft") { t = Math.max(0, t - 1); draw(); }
+  });
+  (function tick(now) {
+    // Capped so a backgrounded tab resumes where it paused instead of jumping ahead.
+    if (playing) { t += Math.min(now - last, 100) / 1000; if (t >= duration) { t = duration; setPlaying(false); } }
+    last = now; draw(); requestAnimationFrame(tick);
+  })(performance.now());
+  addEventListener("resize", fit); fit();
+}
+</script>
+</body>
+</html>
