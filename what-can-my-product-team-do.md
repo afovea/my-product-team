@@ -615,6 +615,7 @@ The team can:
 - Design adoption campaigns.
 - Analyse adoption.
 - Improve retention.
+- Review campaigns, claims and co-branded material against the brand before release, and assess reported brand misuse.
 - Turn launch content into short animated explainers, animated charts and onboarding walkthroughs, exported to MP4.
 
 This extends the repository from product development into product growth.
