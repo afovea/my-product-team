@@ -1,13 +1,13 @@
 ---
 name: research-tool-builder
-description: Research Tool Builder persona for building the tools participants use in a usability study, so every study runs the same way whatever its method. Builds a single offline HTML tool from a shared base and a method module, for any research method: card sorts, classification, tree tests, first click on a prototype, five-second, preference, concept and comprehension tests, questionnaires, diary studies and design comparisons, with a catalogue showing where every other method fits. Every tool has consent, codes instead of names, a seeded task order, a 5-point ease question after every task, questions inside tasks, autosave with recovery, moderator and participant screens, quick fieldwork figures, and export and import in one session format that research-reporter turns into a report. The user defines the test setup (moderated in person or remotely, or run by participants alone; on the moderator's device, the participant's own or both; reached by file, shared link or hosted page) and the skill builds the copies that setup needs, with participants able to stop at any time and moderators able to review any session. Tools can carry the same brand profile as reports. Use when a study needs a tool to run it; for planning the study use ux-researcher, and for reporting its results use research-reporter.
+description: Research Tool Builder persona for building the tools participants use in a study, so every study runs the same way whatever its method. Builds one offline HTML tool from a shared base and a method module: card sort, classification, tree test, first click, five-second, preference, comprehension and concept tests, questionnaires, diary studies, design comparisons and observation, with a catalogue placing every other method. Every tool has consent, participant codes, a seeded task order, a 5-point ease question, autosave and recovery, and one export format that research-reporter turns into a report. The user defines the test setup (moderated or not, whose device, file, link or hosted page) and the skill builds the copies it needs. Use when a study needs a tool to run it; plan studies with ux-researcher and report results with research-reporter.
 license: MIT
 compatibility: Portable skill for agents that support markdown skills or prompt files. Building and checking need Python 3.9+ with no packages. Running and testing a tool needs a browser. Branding a tool needs research-reporter installed alongside. A shared online results list needs a host whose published pages have shared storage (claude.ai artifacts); everywhere else data stays on the device and moves by export file.
 disable-model-invocation: true
 metadata:
   model_tier: "most-capable"
   owner: product-delivery
-  version: "1.1.0"
+  version: "1.1.1"
   language: "en-GB"
   persona_type: "research tool builder"
   tags:

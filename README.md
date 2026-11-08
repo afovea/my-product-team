@@ -1,169 +1,93 @@
 # product-team-skills
 
-A coordinated product team as **32 Agent Skills** — 23 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice — with a routing brain that decides which one a request belongs to.
+A product team you can call on: **32 Agent Skills** covering strategy, research, design, engineering, quality and delivery, plus a delivery pipeline for coding work and a shared record of what the project knows.
 
-Invoke a role when you want a specific discipline's judgement: a PRD, a component spec, an accessibility review, a brand review, a threat model, a motion spec, an animated explainer, a usability study tool, a usability test report, a release decision. Run the pipeline when a coding task should be classified, chunked and verified rather than just done.
+- **Ask one expert.** A product manager for a PRD, an accessibility specialist for a review, a security specialist for a threat model, a motion designer for an interaction spec. Each one works the way that discipline works.
+- **Run a whole piece of work.** [Workflows](#workflows) chain the skills from a rough idea to evidence that it worked, with the checkpoints where a person decides.
+- **Build with checks that hold.** The [delivery pipeline](#delivery-pipeline) classifies a coding task, builds it in small verified chunks and won't finish while the project's checks fail.
 
-Every role is project-agnostic, so the same suite works on any codebase without dragging another project's context along.
+The skills work in Claude Code, claude.ai, the Claude app and Codex, and on any codebase.
 
-**→ [What can my product team do?](./what-can-my-product-team-do.md)**  
-See the kinds of end-to-end product work these skills can undertake individually and in combination.
-
-**→ [Capability map](./docs/capability-map.md)**  
-Where each capability sits in the triple-diamond product cycle, what the eleven repeated ones do differently at each phase, and what each phase writes to the Project Point of Truth.
-
-**→ [Project Point of Truth](#project-point-of-truth)**  
-The human-governed register of a product's durable facts, decisions, constraints and assumptions — read by every skill before it works, and proposed back to afterwards.
-
-**→ [The Figma board](https://www.figma.com/community/file/1668354152302142589/afoveas-product-delivery-team-skills)**  
-The same model as a FigJam workshop kit: a run-sheet per capability, timed zones, and the gates that close each diamond.
+**Start here:** [Get started](#get-started) · [Install guide](./INSTALL.md) · [Workflows](./docs/workflows.md) · [What can my product team do?](./what-can-my-product-team-do.md) · [Capability map](./docs/capability-map.md) · [The Figma board](https://www.figma.com/community/file/1668354152302142589/afoveas-product-delivery-team-skills)
 
 ## Contents
 
-- [Quick start](#quick-start) — install by surface; find your row before you copy anything
-  - [A · Claude web (`claude.ai` in a browser)](#a--claude-web-claudeai-in-a-browser)
-  - [B · Claude app, Chat tab](#b--claude-app-chat-tab)
-  - [C · Claude app, Code tab (Claude Code)](#c--claude-app-code-tab-claude-code)
-  - [D · Claude Code in a terminal](#d--claude-code-in-a-terminal)
-  - [E · Claude Code on the web (cloud sessions)](#e--claude-code-on-the-web-cloud-sessions)
-  - [F · Codex, and other `SKILL.md` hosts](#f--codex-and-other-skillmd-hosts)
-- [Invoking a skill](#invoking-a-skill) — naming a role in chat, `/name` in Claude Code, and why automatic selection differs by host
-- [Project Point of Truth](#project-point-of-truth) — the `/ppot` practice and the pull/push handshake every skill uses
-- [Model and sub-agents](#model-and-sub-agents) — every skill checks the model against the task, and asks before starting sub-agents
+- [Get started](#get-started) — install by where you use Claude, in a few lines each
+- [Use the skills](#use-the-skills) — how to call a role in Claude Code, claude.ai and Codex
 - [Workflows](#workflows) — seventeen recipes that chain the skills, from an idea to evidence it worked
 - [The 32 skills](#the-32-skills) — every role and pipeline skill, grouped, with when to reach for it
+- [How the skills work together](#how-the-skills-work-together) — the Project Point of Truth, model and sub-agent checks, and the routing brain
+  - [Project Point of Truth](#project-point-of-truth)
+  - [Model and sub-agents](#model-and-sub-agents)
+  - [The routing brain](#the-routing-brain)
+- [Delivery pipeline](#delivery-pipeline) — run-pipeline, the project adapter, and gate enforcement
 - [The Figma board](#the-figma-board) — the FigJam companion a team runs the work on
-- [Install options](#install-options) — all routes compared, and what each one actually gives you
+- [Install options in depth](#install-options-in-depth) — every route compared, duplicates, context cost, updating and compatibility
   - [Which route](#which-route)
   - [Precedence and duplicates](#precedence-and-duplicates)
   - [Context cost, and how to turn it down](#context-cost-and-how-to-turn-it-down)
+  - [Keeping it up to date](#keeping-it-up-to-date)
   - [Migrating from the old repo](#migrating-from-the-old-repo)
   - [Compatibility](#compatibility)
-- [The routing brain (optional second layer)](#the-routing-brain-optional-second-layer) — role arbitration from prose, and the six squads
-- [Delivery pipeline](#delivery-pipeline) — `/run-pipeline`, the project adapter, and gate enforcement
-  - [Verified by running, not reading](#verified-by-running-not-reading)
-  - [Enforcing the gates](#enforcing-the-gates)
-- [Repository layout](#repository-layout) — what sits where, and why `reference/` is not a skill
-- [Conventions](#conventions) — authoring rules for skills in this repo
-- [Versioning](#versioning) — what counts as major, minor and patch
+- [For maintainers](#for-maintainers) — repository layout, conventions, versioning and contributing
+  - [Repository layout](#repository-layout)
+  - [Conventions](#conventions)
+  - [Versioning](#versioning)
+  - [Contributing](#contributing)
 - [Licence](#licence)
-- [Contributing](#contributing)
 
-## Quick start
+## Get started
 
-**Find your row, then read that section.** Which Claude you are in decides the
-method — they are not interchangeable, and using the wrong one is the single
-most common failed install.
+Which Claude you're using decides how to install, and the methods aren't interchangeable. Find your row; [INSTALL.md](./INSTALL.md) has every step written out, with what you should see at each step, and a troubleshooting section keyed to the exact error text.
 
-| Where you are | Method | Section |
+| Where you are | What to do | Step by step |
 |---|---|---|
-| **Claude web** — `claude.ai` in a browser, chatting | Upload each role | [A](#a--claude-web-claudeai-in-a-browser) |
-| **Claude app** — desktop app, **Chat** tab | Upload each role | [B](#b--claude-app-chat-tab) |
-| **Claude app** — desktop app, **Code** tab | Two typed lines, all 32 | [C](#c--claude-app-code-tab-claude-code) |
-| **Claude Code** — a terminal | Two typed lines, all 32 | [D](#d--claude-code-in-a-terminal) |
-| **Claude Code on the web** — `claude.ai/code`, cloud sessions | A committed settings file | [E](#e--claude-code-on-the-web-cloud-sessions) |
-| **Codex** — or any host reading `SKILL.md` | One command, all 32 | [F](#f--codex-and-other-skillmd-hosts) |
+| **claude.ai** in a browser, or the Claude app's **Chat** tab | Upload the roles you want, one ZIP each | [INSTALL Part 4](./INSTALL.md#part-4--claude-for-chatting-browser-or-chat-tab) |
+| **Claude Code**: the Claude app's **Code** tab, or a terminal | Two typed lines install all 32 | [Part 2](./INSTALL.md#part-2--claude-code-in-the-desktop-app) (app), [Part 3](./INSTALL.md#part-3--claude-code-in-a-terminal) (terminal) |
+| **Claude Code cloud sessions** (`claude.ai/code`) | Commit a project install to the repository | [Part 7](./INSTALL.md#part-7--claude-code-cloud-sessions) |
+| **Codex**, or another host that reads `SKILL.md` | One command | [Part 6](./INSTALL.md#part-6--codex-and-other-hosts-that-read-skillmd) |
 
----
+### claude.ai and the Chat tab
 
-### A · Claude web (`claude.ai` in a browser)
+1. **Settings → Capabilities**: switch on **Code execution and file creation** (called **Create and edit files** in the newer layout). On a Team or Enterprise plan, an owner first allows skills in **Organization settings → Plugins & skills**.
+2. Download the roles you want from [`download/`](./download), for example [product-manager.zip](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip). **Don't unzip them.**
+3. **Customize → Skills → + → Create skill → Upload a skill**, pick the file, and check it's switched on.
+4. Ask, naming the role: *"As a product designer, our reports page is blank for new users. Design the empty state."*
 
-Chat, in a browser. Download the roles you want and upload them.
+Uploads belong to your account, so they appear in the browser, the app and your cloud sessions.
 
-1. **Settings → Capabilities** → switch on **Code execution** and **File
-   creation**. Skills do not run without both.
-2. Download a role — say
-   [product-designer.zip](https://github.com/afovea/my-product-team/raw/main/download/product-designer.zip)
-   or [product-manager.zip](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip).
-   All 32 are in [`download/`](./download). **Do not unzip them.**
-3. **Settings → Capabilities → Skills → +** → upload the file → switch it on.
-4. Ask for what you want, naming the role: *"As a product designer, our reports
-   page is blank for new users. Design the empty state."*
+### Claude Code
 
-Uploads attach to your account, so they appear in the app's Chat tab too — do
-this once, not twice.
-
-### B · Claude app, Chat tab
-
-Same product as A, same files, **different menu**. The app has a
-**Customize** entry that the browser does not.
-
-1. **Settings → Capabilities** → switch on **Code execution** and **File
-   creation**.
-2. Download the roles you want from [`download/`](./download).
-3. **Customize** in the left sidebar → **Skills** → **+** → upload → switch it on.
-4. Ask for what you want, naming the role.
-
-Already done it in the browser? Your skills are already here. Skip this.
-
-### C · Claude app, Code tab (Claude Code)
-
-Not chat — this is Claude Code inside the app. Installs all 32 at once, with no
-terminal: the two lines go into the ordinary message box.
+In the Code tab's message box, or after starting `claude` in a terminal, type:
 
 ```
 /plugin marketplace add afovea/my-product-team
-/plugin install product-team
+/plugin install product-team@productteam-skills
 ```
 
-If it says `Run /reload-plugins to activate.`, run that too. Then type
-`/product-` — the roles should autocomplete:
+The second line opens a panel: choose **Install for you (user scope)**. Then type `/product-team:` and the 32 roles appear:
 
 ```
-/product-manager Turn this vague feature request into a delivery-ready ticket.
+/product-team:product-manager Turn this vague feature request into a delivery-ready ticket.
 ```
 
-The app asks for a project folder before you can send anything. Pick any folder —
-the install goes onto your account, works in every folder afterwards, and writes
-nothing into the one you picked.
+You get the delivery pipeline, the gate-enforcement hook and a once-a-day update reminder too. The three names differ on purpose: `my-product-team` is the repository, `productteam-skills` the marketplace, and `product-team` the plugin.
 
-### D · Claude Code in a terminal
+If `/plugin` does nothing in the app, use the **+** button next to the message box and choose **Add plugins**. [INSTALL.md](./INSTALL.md#typing-plugin-does-nothing-in-the-app) covers the rest.
 
-Identical to C. Run `claude` from any folder, then type the same two lines.
+### Claude Code cloud sessions
 
-```
-/plugin marketplace add afovea/my-product-team
-/plugin install product-team
-```
+Cloud sessions start from a fresh copy of the repository and don't load plugins. Commit a project install instead, and every cloud session on that repository gets the roles and the routing brain:
 
-### For C and D
-
-You also get the delivery pipeline and the gate-enforcement hook. Add
-[the routing brain](#the-routing-brain-optional-second-layer) with
-`./install.sh --routing-only /path/to/project` and Claude picks the role for you.
-
-> Copy those two lines exactly. The three names differ — the repo is
-> `my-product-team`, the marketplace `productteam-skills`, the plugin
-> `product-team`. `/plugin install product-team@my-product-team` fails with
-> `Plugin "product-team" not found in marketplace "my-product-team"`.
-
-### E · Claude Code on the web (cloud sessions)
-
-Cloud sessions do not read your machine, and the plugin browser is unavailable
-there. Declare the plugin in the repository instead, and everyone who opens a
-cloud session on it gets the skills automatically.
-
-Add this to `.claude/settings.json` **in that repository** and commit it:
-
-```json
-{
-  "extraKnownMarketplaces": {
-    "productteam-skills": {
-      "source": { "source": "github", "repo": "afovea/my-product-team" }
-    }
-  },
-  "enabledPlugins": { "product-team@productteam-skills": true }
-}
+```bash
+git clone https://github.com/afovea/my-product-team.git
+cd my-product-team
+./install.sh /path/to/your/repo     # then commit .claude/ and CLAUDE.md in your repo
 ```
 
-Merge these keys into the file if it already exists. If `.gitignore` contains
-`.claude/`, add `!.claude/settings.json` or the file will never be committed.
+Skills you switch on in claude.ai also load in your own cloud sessions.
 
-### F · Codex, and other `SKILL.md` hosts
-
-Not Claude at all. The skills follow the [Agent Skills](https://agentskills.io)
-standard, so any host built on it reads them — Codex included. Two differences:
-they live in `.agents/skills/`, and you invoke one with `$name`.
+### Codex
 
 ```bash
 git clone https://github.com/afovea/my-product-team.git
@@ -171,36 +95,36 @@ cd my-product-team
 ./install.sh --agents --personal
 ```
 
-All 32 into `~/.agents/skills/`, available in every project. Restart Codex, then:
+All 32 go into `~/.agents/skills/`, available in every project. Restart Codex, then:
 
 ```
 $product-manager Turn this vague feature request into a delivery-ready ticket.
 ```
 
-Add `--agents` to any other mode for the same result in that layout —
-`./install.sh --agents /path/to/project` also writes the routing brain to the
-project's `AGENTS.md` and seeds the pipeline adapter. Gate enforcement travels
-too: the `Stop` hook works on both hosts.
-
----
-
-**➡️ [Step-by-step guide for all of these, written for non-technical users](./INSTALL.md)**
-— how to tell which Claude you are in, where to click, what you should see, and
-what to do when it does not work.
-
-> **Installed from the old `ProductTeam-skills` repo?** It has moved here — see [Migrating](#migrating-from-the-old-repo).
+> **Installed from the old `ProductTeam-skills` repository?** It has moved here. See [Migrating](#migrating-from-the-old-repo).
 
 [↑ Back to contents](#contents)
 
-## Invoking a skill
+## Use the skills
 
-**Whichever route you installed by, give the role the actual task in the same
-message.** Summoning a role with nothing to do gets you a question back, not the
-work.
+**Give the role the actual task in the same message.** A role called with nothing to do asks you what you want.
 
-### In a browser or the app's chat
+### In Claude Code
 
-Name the role in ordinary words. Claude picks the skill from what you wrote.
+Type `/product-team:` and the role's name, then the task:
+
+```
+/product-team:product-designer Our reports page is blank for new users. Design the empty state.
+/product-team:security-specialist Review this migration for RLS gaps.
+/product-team:accessibility-specialist This chart uses colour alone for four series. Problem?
+/product-team:run-pipeline Add a /health route returning DB connectivity.
+```
+
+The full name always reaches the plugin. The short form, such as `/product-designer`, also works, but only while nothing else uses that name. Skills you uploaded to claude.ai, or an `install.sh` copy, take it: see [Precedence and duplicates](#precedence-and-duplicates).
+
+### In claude.ai and the Chat tab
+
+There are no commands. Name the role in ordinary words:
 
 ```
 As a product designer, our reports page is blank for new users. Design the empty state.
@@ -208,72 +132,174 @@ Acting as an accessibility specialist, this chart uses colour alone for four ser
 As a content designer, rewrite this error: "Error 4012: request failed."
 ```
 
-If Claude picks the wrong expert, say so — "answer this as a content designer,
-not a product manager". Uploading fewer skills makes it pick better.
+If Claude picks the wrong expert, say so: "answer this as a content designer, not a product manager". Uploading fewer roles helps it choose.
 
 ### In Codex
 
-Type `$` then the skill name. Everything else is the same.
+Type `$` and the role's name:
 
 ```
 $product-designer Our reports page is blank for new users. Design the empty state.
-$security-specialist Review this migration for RLS gaps.
 $run-pipeline Add a /health route returning DB connectivity.
 ```
 
-### In Claude Code
+### Roles wait to be asked, on purpose
 
-Type `/` then the skill name.
+In Claude Code and Codex, no role starts on its own: describing a design problem won't summon the product designer. Automatic selection matches on keywords, and testing showed it picks badly. "Payments integration" pulled in the pricing strategist, and "release risk" the delivery manager. You choose the role, or the [routing brain](#the-routing-brain) suggests one.
 
-```
-/product-designer Our reports page is blank for new users. Design the empty state.
-/security-specialist Review this migration for RLS gaps.
-/accessibility-specialist This chart uses colour alone for four series. Problem?
-/run-pipeline Add a /health route returning DB connectivity.
-```
+Claude Code is told this with `disable-model-invocation: true` in each skill. Codex is told with `policy.allow_implicit_invocation: false` in each skill's `agents/openai.yaml`, and CI checks the two stay in step.
 
-Two forms both work:
+Two exceptions:
+- **`ppot`** answers natural phrases such as "bring me up to speed" and "record our decision", because those phrases are how it's meant to be used.
+- **claude.ai and the Chat tab** have no commands, so Claude choosing is the only way in. The ZIPs therefore ship without the switch, and naming the role in your sentence steers the choice.
 
-| Form | Use when |
-|---|---|
-| `/product-designer` | Normal use — shortest form |
-| `/product-team:product-designer` | Unambiguous. Needed only if a personal or project skill shares the name |
-
-### Automatic selection differs by host, on purpose
-
-In Claude Code every role and pipeline skill sets `disable-model-invocation: true`, so describing a
-design problem in prose will **not** auto-summon `/product-designer`. That is
-deliberate: automatic invocation selects by description keyword-matching, and
-testing showed that picks badly — "payments integration" pulled the Pricing
-Strategist, "release risk" pulled the Delivery Manager. You get selection
-explicitly with `/name`, or via [the routing brain](#the-routing-brain-optional-second-layer)
-when you don't know which discipline you want.
-
-Codex is told the same thing in its own dialect. It does not read
-`disable-model-invocation`, so each of those 31 skills carries an
-`agents/openai.yaml` setting `policy.allow_implicit_invocation: false`. Without
-that file the roles would fire on their own there — the exact behaviour measured
-and rejected above. CI checks the two stay in step, so a new skill cannot suppress
-itself on one host and not the other.
-
-The `/ppot` practice is the exception. Its natural-language phrases — such as
-“bring me up to speed”, “record our decision”, and “check this against the
-project truth” — are its intended interface, so it may be selected automatically.
-
-The Claude apps have no `/name` invocation at all, so Claude choosing is the only
-mechanism there. The ZIPs under [`download/`](./download) therefore ship with
-that line stripped — keeping it would package skills that could never fire.
-Naming the role in your sentence is how you steer the choice.
-
-### Once invoked, a skill stays loaded
-
-The persona persists across turns for the rest of the conversation. Invoke a different one to switch; start a fresh session to drop it.
+Once a role is loaded it stays for the rest of the conversation. Start a new session to drop it.
 
 [↑ Back to contents](#contents)
 
-## Project Point of Truth
+## Workflows
 
-The suite includes a `/ppot` practice for consulting and maintaining a product’s
+The skills are deliberately narrow, so real product work needs several of them, in the right order. **[docs/workflows.md](./docs/workflows.md)** is the recipe book: seventeen workflows, each naming which skill runs when, what to ask it for, what it leaves behind for the next step, and where a person has to decide.
+
+Each skill also names who it takes work from and who it hands work to, in its own "Works with" section, so a skill can point you to the next one even outside a workflow.
+
+### The spine: from idea to evidence
+
+Eight workflows take an idea through the product cycle, closing three gates where a person agrees the work can move on, or sends it back:
+
+```
+W17 Start ─► W1 Frame ─► W3 Define ─► Gate 1 ─► W4 Develop ─► W5 Decide ─► Gate 2
+                ▲  │         ▲                     │                          │
+                │  └─► W2 Test with users ◄────────┘                          ▼
+                │                                         W6 Build (per ticket, many)
+                │                                                             │
+                └──── W11 Health check ◄── Gate 3 ◄── W8 Launch ◄── W7 Release decision
+```
+
+| | Workflow | Starts from | Ends with |
+|---|---|---|---|
+| W1 | [Frame the problem](./docs/workflows.md#w1--frame-the-problem) | "Is this worth pursuing?" | Evidence and the riskiest assumptions |
+| W2 | [Test with users](./docs/workflows.md#w2--test-with-users) | An assumption only users can settle | A report and what it means |
+| W3 | [Define the bet](./docs/workflows.md#w3--define-the-bet) | A problem with evidence | **Gate 1: Problem agreed** |
+| W4 | [Develop the solution](./docs/workflows.md#w4--develop-the-solution) | An agreed problem | Two or three tested options |
+| W5 | [Decide and make ready](./docs/workflows.md#w5--decide-and-make-ready) | Options | **Gate 2: Approach agreed**, ready tickets |
+| W6 | [Build a ticket](./docs/workflows.md#w6--build-a-ticket) | A ready ticket | Verified code |
+| W7 | [Release](./docs/workflows.md#w7--release) | Built work | **The release decision** |
+| W8 | [Launch and learn](./docs/workflows.md#w8--launch-and-learn) | A release | **Gate 3: Outcome evidenced** |
+
+### Workflows for any time
+
+| | Workflow | Use it when |
+|---|---|---|
+| W9 | [Investigate a product question](./docs/workflows.md#w9--investigate-a-product-question) | A metric moved and nobody knows why |
+| W10 | [Fix a bug or incident](./docs/workflows.md#w10--fix-a-bug-or-incident) | Something broke |
+| W11 | [Product health check](./docs/workflows.md#w11--product-health-check) | You need to know what's wrong and what matters most |
+| W12 | [Red-team a bet](./docs/workflows.md#w12--red-team-a-bet) | Before investing in an idea, or committing to a design |
+| W13 | [Price and package](./docs/workflows.md#w13--price-and-package) | The commercial model is in question |
+| W14 | [Stand up or audit a design system](./docs/workflows.md#w14--stand-up-or-audit-a-design-system) | A new interface, or drift between products |
+| W15 | [Adopt a library or component](./docs/workflows.md#w15--adopt-a-library-or-component) | "Should we use this?" |
+| W16 | [Tell stakeholders what happened](./docs/workflows.md#w16--tell-stakeholders-what-happened) | Results, numbers or progress to share |
+| W17 | [Start or join a project](./docs/workflows.md#w17--start-or-join-a-project) | A new project, or a new person on one |
+
+### What one looks like
+
+W10, fixing a bug, in Claude Code:
+
+1. `/product-team:diagnose Checkout totals are wrong for orders over £1,000.` It reproduces the fault, tests its hypotheses one at a time, and recommends a fix only once the cause is proven.
+2. `/product-team:run-pipeline Fix the checkout total bug using the diagnosis.` It plans the change, waits for your go-ahead, builds it in small verified chunks, and runs the project's checks.
+3. `/product-team:qa-engineer Write a regression test for the checkout total bug.` A test that fails without the fix, kept in CI.
+4. `/product-team:ppot learn Rounding happened before tax in the checkout service.` What broke and why becomes something the project knows, once you approve it.
+
+### Rules every workflow follows
+
+- **Start with what's known:** `ppot brief` first, so nobody re-argues a settled decision.
+- **Model and sub-agents are settled once,** at the start, with any parallel work capped by you.
+- **Hand over files, not memories.** Each skill offers to save its output for the next step.
+- **A person decides at every gate.** The skills recommend.
+- **Knowledge goes back at the end,** as proposals you approve.
+- **Whoever builds something doesn't approve it.**
+
+The guide also has a best-use card for every skill and the ownership rules for where two skills could claim the same job. Workflows are versioned (currently 1.0.0).
+
+[↑ Back to contents](#contents)
+
+## The 32 skills
+
+Run each one as `/product-team:<name>` in Claude Code, `$<name>` in Codex, or by naming the role in claude.ai. The [workflows](#workflows) say which to use when, and each skill's "Works with" section names its neighbours.
+
+### Shared project knowledge
+
+| Skill | Use when |
+|---|---|
+| `ppot` | Project briefings, facts, decisions, assumptions, durable learning, contradictions, knowledge reviews, and checking artefacts against project truth |
+
+### Product and strategy
+
+| Skill | Use when |
+|---|---|
+| `product-manager` | Value, scope, outcomes, prioritisation, PRDs, backlog structure |
+| `product-strategist` | Market positioning, vision, strategic bets, competitive framing |
+| `growth-product-marketing-manager` | Adoption, activation, messaging, funnel, CRO, content strategy, SEO |
+| `pricing-strategist` | Pricing models, tier structure, packaging, willingness-to-pay |
+| `brand-guardian` | Brand fidelity, claims and trust review, naming and strategy fit, co-branding, suspected brand misuse |
+
+### Research, insight and data
+
+| Skill | Use when |
+|---|---|
+| `ux-researcher` | Research planning, discovery, interviews, synthesis, validation |
+| `data-analyst` | Metrics, dashboards, funnels, experiments, behavioural evidence |
+| `customer-success` | Customer feedback, retention signals, adoption blockers |
+| `storm-researcher` | Contested or strategic research — five-perspective scan, contradiction mapping, adversarial review |
+| `research-tool-builder` | Consistent offline tools for any research method, from card sorts and tree tests to five-second, preference and diary studies, exporting one session format |
+| `research-reporter` | Usability test results turned into a consistent, brandable, editable stakeholder report |
+
+### Design and experience
+
+| Skill | Use when |
+|---|---|
+| `product-designer` | UX, UI, flows, interaction design, design QA |
+| `content-designer` | UX writing, labels, errors, onboarding, comprehension |
+| `design-systems-specialist` | Components, tokens, theming, UI foundation choice, component source intake |
+| `motion-designer` | Animation, transitions, micro-interactions, pointer effects, ambient/WebGL backgrounds, motion tokens, reduced motion, animation performance |
+| `motion-graphics-designer` | Short animated explainers, animated charts and product walkthroughs built from your own content, exported to MP4 |
+| `accessibility-specialist` | WCAG review, inclusive design, assistive-tech risk, data-visualisation accessibility |
+
+### Engineering, delivery and quality
+
+| Skill | Use when |
+|---|---|
+| `software-engineer` | Implementation, feasibility, trade-offs, library selection, version-matched API use |
+| `technical-architect` | System design, integration strategy, scalability, standing-dependency evaluation |
+| `devops-engineer` | CI/CD, environments, deployment and rollback, observability — risk in the *running system* |
+| `security-specialist` | Threat modelling, audits, auth/RLS review, DPIA, supply chain and licence boundaries, AI safety |
+| `qa-engineer` | Test planning, regression, bug reporting, durable proof of verification |
+| `delivery-manager` | Delivery planning, dependencies, ceremonies — risk to *schedule and flow* |
+
+### Delivery pipeline skills
+
+| Skill | Use when |
+|---|---|
+| `run-pipeline` | **Start here for any coding task.** Classifies Small / Medium / Large and dispatches |
+| `requirements-generator` | Turning a rough request into a confirmation-ready brief |
+| `shape-task` | Decomposing a brief into requirements, strategy and chunks |
+| `execute-chunk` | Implementing one approved chunk with scoped edits and targeted validation |
+| `close-chunk` | Verifying a chunk against its acceptance criteria |
+| `cleanup-verify` | Post-run sweep: regenerate artefacts, rebuild, run the gate chain, report drift |
+| `diagnose` | Root-cause analysis — reproduce → isolate → verify → fix |
+| `design-critique` | Final-pass design review with a SHIP / SHIP_WITH_NOTES / HOLD decision |
+
+Several skills carry reference material that loads only when needed: `security-specialist` (a nine-category audit cookbook and a health-data domain pack), `motion-designer` (standards, libraries and component-gallery intake), `ppot` (entry schema and governance), and the two research skills (method specifications, data formats and theming).
+
+[↑ Back to contents](#contents)
+
+## How the skills work together
+
+Three things tie the skills together.
+
+### Project Point of Truth
+
+The suite includes a `ppot` practice for consulting and maintaining a product’s
 `PPoT.md` — a concise, human-governed register of durable facts, decisions,
 constraints, assumptions, and learning.
 
@@ -287,11 +313,11 @@ Every other product-team skill is compatible with it. When relevant, a skill:
 The practice is available directly:
 
 ```text
-/ppot brief
-/ppot ask What do we know about enterprise onboarding?
-/ppot decide We will release read-only sharing first
-/ppot check docs/new-feature-prd.md
-/ppot review
+/product-team:ppot brief
+/product-team:ppot ask What do we know about enterprise onboarding?
+/product-team:ppot decide We will release read-only sharing first
+/product-team:ppot check docs/new-feature-prd.md
+/product-team:ppot review
 ```
 
 Natural language works too: “Bring me up to speed”, “Remember that users treat
@@ -304,21 +330,7 @@ and starter template, not the project’s facts.
 Contribution practices, entry types, approval rules, natural-language examples,
 and the pull/push handshake used by every skill.
 
-[↑ Back to contents](#contents)
-
-## Workflows
-
-The skills are narrow on purpose. Each one names who it takes work from and hands work to, in a "Works with" section that CI keeps two-way. **[docs/workflows.md](./docs/workflows.md)** supplies the sequencing:
-- **The spine:** eight workflows from framing a problem to evidencing the outcome, with the three gates.
-- **Nine recurring ones:** investigating a metric, fixing an incident, a health check, red-teaming, pricing, design systems, adopting a library, telling stakeholders, and starting a project.
-- **For each skill:** a best-use card.
-- **Ownership rules** for where skills overlap.
-
-Each step names the skill, the intent to ask it for, and what it should leave behind for the next one.
-
-[↑ Back to contents](#contents)
-
-## Model and sub-agents
+### Model and sub-agents
 
 Every skill carries the same short section, so the behaviour is the same whichever skill runs:
 
@@ -335,248 +347,15 @@ Both happen once per task. When `run-pipeline` orchestrates other skills, it set
 
 The section's text lives once, in [`reference/model-and-sub-agents.md`](./reference/model-and-sub-agents.md). Each skill keeps its own copy, because skills install one at a time; `python3 scripts/sync-shared-sections.py` refreshes every copy, and `scripts/verify.sh` fails if one drifts or a skill has no tier.
 
-[↑ Back to contents](#contents)
-
-## The 32 skills
-
-### Shared project knowledge
-
-| Invoke | Use when |
-|---|---|
-| `/ppot` | Project briefings, facts, decisions, assumptions, durable learning, contradictions, knowledge reviews, and checking artefacts against project truth |
-
-### Product and strategy
-
-| Invoke | Use when |
-|---|---|
-| `/product-manager` | Value, scope, outcomes, prioritisation, PRDs, backlog structure |
-| `/product-strategist` | Market positioning, vision, strategic bets, competitive framing |
-| `/growth-product-marketing-manager` | Adoption, activation, messaging, funnel, CRO, content strategy, SEO |
-| `/pricing-strategist` | Pricing models, tier structure, packaging, willingness-to-pay |
-| `/brand-guardian` | Brand fidelity, claims and trust review, naming and strategy fit, co-branding, suspected brand misuse |
-
-### Research, insight and data
-
-| Invoke | Use when |
-|---|---|
-| `/ux-researcher` | Research planning, discovery, interviews, synthesis, validation |
-| `/data-analyst` | Metrics, dashboards, funnels, experiments, behavioural evidence |
-| `/customer-success` | Customer feedback, retention signals, adoption blockers |
-| `/storm-researcher` | Contested or strategic research — five-perspective scan, contradiction mapping, adversarial review |
-| `/research-tool-builder` | Consistent offline tools for any research method, from card sorts and tree tests to five-second, preference and diary studies, exporting one session format |
-| `/research-reporter` | Usability test results turned into a consistent, brandable, editable stakeholder report |
-
-### Design and experience
-
-| Invoke | Use when |
-|---|---|
-| `/product-designer` | UX, UI, flows, interaction design, design QA |
-| `/content-designer` | UX writing, labels, errors, onboarding, comprehension |
-| `/design-systems-specialist` | Components, tokens, theming, UI foundation choice, component source intake |
-| `/motion-designer` | Animation, transitions, micro-interactions, pointer effects, ambient/WebGL backgrounds, motion tokens, reduced motion, animation performance |
-| `/motion-graphics-designer` | Short animated explainers, animated charts and product walkthroughs built from your own content, exported to MP4 |
-| `/accessibility-specialist` | WCAG review, inclusive design, assistive-tech risk, data-visualisation accessibility |
-
-### Engineering, delivery and quality
-
-| Invoke | Use when |
-|---|---|
-| `/software-engineer` | Implementation, feasibility, trade-offs, library selection, version-matched API use |
-| `/technical-architect` | System design, integration strategy, scalability, standing-dependency evaluation |
-| `/devops-engineer` | CI/CD, environments, deployment and rollback, observability — risk in the *running system* |
-| `/security-specialist` | Threat modelling, audits, auth/RLS review, DPIA, supply chain and licence boundaries, AI safety |
-| `/qa-engineer` | Test planning, regression, bug reporting, durable proof of verification |
-| `/delivery-manager` | Delivery planning, dependencies, ceremonies — risk to *schedule and flow* |
-
-### Delivery pipeline skills
-
-| Invoke | Use when |
-|---|---|
-| `/run-pipeline` | **Start here for any coding task.** Classifies Small / Medium / Large and dispatches |
-| `/requirements-generator` | Turning a rough request into a confirmation-ready brief |
-| `/shape-task` | Decomposing a brief into requirements, strategy and chunks |
-| `/execute-chunk` | Implementing one approved chunk with scoped edits and targeted validation |
-| `/close-chunk` | Verifying a chunk against its acceptance criteria |
-| `/cleanup-verify` | Post-run sweep: regenerate artefacts, rebuild, run the gate chain, report drift |
-| `/diagnose` | Root-cause analysis — reproduce → isolate → verify → fix |
-| `/design-critique` | Final-pass design review with a SHIP / SHIP_WITH_NOTES / HOLD decision |
-
-Three skills carry reference material that loads only when needed: `/security-specialist` (a nine-category audit cookbook and a health-data domain pack), `/motion-designer` (standards, libraries and component-gallery intake), and `/ppot` (entry schema and governance).
-
-[↑ Back to contents](#contents)
-
-## The Figma board
-
-**→ [Afovea's Product Delivery Team Skills — Figma Community](https://www.figma.com/community/file/1668354152302142589/afoveas-product-delivery-team-skills)**
-
-A FigJam board that turns this repo into something a team can run in a room. The skills supply the judgement; the board supplies the order, the timings and the checkpoints. Duplicate it into your drafts and work down it.
-
-**An introduction page** covers how the board and the repo fit together, the 28 skills and how to invoke each one, the Project Point of Truth practice, and the product cycle as a **triple diamond** — Discover → Define → Develop → Decide → Build → Deliver and learn, closed by three gates: **Problem agreed**, **Approach agreed**, **Outcome evidenced**. A detail panel per phase names each capability that earns its keep there, when to reach for it, which roles are involved, what comes out, and what it writes to the PPoT.
-
-**Six further pages, one per phase,** hold the working boards. Each capability gets a run-sheet built as numbered zones with a time budget and a stated output, so a session has a shape rather than a blank canvas. Gates get run-sheets of their own, ending in a signed decision that can send the work back a diamond as readily as forward.
-
-It is the visual counterpart of [`docs/capability-map.md`](./docs/capability-map.md) — the same model, laid out to be filled in rather than read. Neither one installs anything: the skills still come from a route in [Install options](#install-options).
-
-[↑ Back to contents](#contents)
-
-## Install options
-
-Five routes, one per product surface. **[INSTALL.md](./INSTALL.md) walks each
-one through to a verified install**, with a troubleshooting section keyed to the
-exact error text. The summary:
-
-| Route | Command | You get |
-|---|---|---|
-| **Plugin** *(recommended)* | `/plugin install product-team` | All 32 skills **plus** the gate hook and a once-a-day update reminder. Updatable with one command ([how](./INSTALL.md#keeping-it-up-to-date)). No routing brain |
-| **Desktop app** | **+** → Plugins → Add plugin | The same, without a terminal |
-| **Cloud / web** | two keys in the repo's `.claude/settings.json` | The same, for everyone opening a cloud session on that repo |
-| **Routing only** | `install.sh --routing-only /path/to/project` | The routing brain alone, for when the plugin already supplies the skills |
-| **Per project** | `install.sh /path/to/project` | Skills in `<project>/.claude/skills/` **plus** the routing brain in its `CLAUDE.md`. Add `--agents` for `.agents/skills/` and `AGENTS.md` |
-| **Personal** | `install.sh --personal` | Skills in `~/.claude/skills/` — every project. Skills only |
-| **Submodule** | `install.sh --submodule /path/to/project` | Per-project, pinned to a tag, symlinked so discovery still works |
-| **Claude apps** *(no terminal)* | download a ZIP from [`download/`](./download), upload it | The roles you upload, in claude.ai and the Chat tab. No routing brain, no hook |
-| **Codex / open standard** | add `--agents` to any `install.sh` route | The same, written to `.agents/skills/` and `AGENTS.md`, invoked as `$name` |
-
-The script is in the repo, so clone first for those routes:
-
-```bash
-git clone https://github.com/afovea/my-product-team.git
-cd my-product-team
-./install.sh --verify                     # what is installed right now?
-./install.sh /path/to/your-project
-```
-
-It copies the skills, appends the routing brain to `CLAUDE.md` — or `AGENTS.md` with `--agents` — **with the paths and invocations already rewritten for that host**, updates `.gitignore`, and seeds a pipeline adapter template. Re-running updates the routing block in place between its markers and leaves anything you wrote above it alone. Running it with no arguments prints the menu rather than guessing a target.
-
-### Which route
-
-- **Just want the skills?** Plugin — terminal, desktop app, or a committed `.claude/settings.json` for cloud sessions.
-- **Want role arbitration too?** Plugin *plus* `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 32 skills on disk, which claims the bare `/name` and then goes stale independently of the plugin.
-- **Want it pinned and tracked in the consuming repo?** Submodule.
-- **On claude.ai or the desktop app's Chat tab?** Those are a different product from Claude Code — download a ZIP from [`download/`](./download) and upload it, per [INSTALL.md](./INSTALL.md#part-4--claude-for-chatting-browser-or-chat-tab).
-
-**The repo is the source, not an installation.** Cloning it makes the skills visible nowhere. Claude Code discovers them at `~/.claude/skills/<name>/SKILL.md` or `<project>/.claude/skills/<name>/SKILL.md`, or from an installed plugin. Pick a route above, or you will not see them.
-
-### Precedence and duplicates
-
-Enterprise overrides personal, and personal overrides project. Plugin skills are namespaced `plugin-name:skill-name`, so they never *collide* — but the bare name resolves to the filesystem copy. Install both ways and `/product-manager` runs the filesystem skill while the plugin copy stays reachable as `/product-team:product-manager`. Both work; you are just editing one and running the other.
-
-`./install.sh --verify` reports every copy it can find, and says which combinations are worth reducing to one.
-
-### Context cost, and how to turn it down
-
-Installing 32 skills is not free. Two different costs, and the second is the one that actually bites.
-
-**Always-on** — every skill's `name` and `description` are preloaded into the system prompt so the host knows what exists. That is **~2,300 tokens on every session**, including projects with nothing to do with product work. Nothing else loads until a skill is invoked.
-
-**On-invoke** — the skill's body enters the conversation when you call it, and **stays there for the rest of the session**. That ranges from ~1k to ~9.5k tokens depending on the skill. This is the larger number by far.
-
-See your own figures, per skill:
-
-```bash
-claude plugin details product-team
-```
-
-The heaviest bodies are worth knowing before you invoke them casually:
-
-| Skill | always-on | on-invoke |
-|---|---:|---:|
-| `motion-designer` | ~270 | ~13k |
-| `run-pipeline` | ~110 | ~7.9k |
-| `security-specialist` | ~120 | ~7.7k |
-| `storm-researcher` | ~90 | ~6.7k |
-| *typical role* | ~50–150 | ~1.6–3.6k |
-
-#### Turn the always-on cost off entirely
-
-```bash
-claude plugin disable product-team          # off, still installed
-claude plugin enable product-team           # back on
-claude plugin disable --all                 # every plugin
-```
-
-`disable` takes `--scope user|project|local`, so you can switch the suite off globally and leave it on in one repo, or the reverse.
-
-#### Scope it to the projects that need it
-
-Installing at project scope keeps the always-on cost out of every unrelated session:
-
-```bash
-claude plugin install product-team@productteam-skills --scope project
-```
-
-#### Drop skills you never use
-
-There is no per-skill disable. Two ways to trim anyway:
-
-- **Filesystem install** — delete the directories you do not want. `install.sh --personal` then `rm -r ~/.claude/skills/motion-designer` removes that skill and its always-on share. Losing `motion-designer` alone saves ~210 tokens per session, more than four typical roles.
-- **Fork the plugin** — remove the skill directories from `skills/` and point your marketplace at your fork. Survives updates; a filesystem deletion does not.
-
-#### Managing the on-invoke cost
-
-- A skill loads **once** per session. Re-invoking the same one adds a short note, not a second copy.
-- Start a fresh session to clear loaded skills, rather than invoking a different one to "switch".
-- After auto-compaction, invoked skills are re-attached at up to 5,000 tokens each within a **combined 25,000-token budget**, most-recent first. Invoke many heavy skills in one session and the earliest ones get dropped entirely — so if a skill seems to stop influencing behaviour after a long session, re-invoke it.
-
-### Migrating from the old repo
-
-This suite previously lived at `afovea/ProductTeam-skills`, which is now archived. If you installed from there:
-
-```bash
-# 1. point the marketplace at the new repo
-claude plugin marketplace remove productteam-skills
-claude plugin marketplace add afovea/my-product-team
-claude plugin install product-team
-
-# 2. if you used a filesystem install from an older layout, clear the stale
-#    nested pipeline directory — skills are flat now
-rm -r ~/.claude/skills/pipeline            # personal installs
-rm -r <project>/.claude/skills/pipeline    # project installs
-```
-
-Earlier versions nested the eight pipeline skills one level deeper, so an old install leaves that directory behind and they end up present twice. `install.sh` detects this and prints the exact command rather than deleting anything itself.
-
-### Compatibility
-
-The skills are plain markdown following the [Agent Skills](https://agentskills.io) standard, so they work with any host that reads `SKILL.md`. Two hosts are supported with a route of their own rather than left to you to wire up: Claude Code, and Codex.
-
-The suite is written twice over where the two disagree, so neither is a second-class citizen:
-
-| | Claude Code | Codex |
-|---|---|---|
-| Skills | `.claude/skills/` | `.agents/skills/` |
-| Invocation | `/name` | `$name` |
-| Suppress auto-selection | `disable-model-invocation` | `agents/openai.yaml` |
-| Routing brain | `CLAUDE.md` | `AGENTS.md` |
-| Plugin manifest | `.claude-plugin/` | `.codex-plugin/` |
-| Gate enforcement | `Stop` hook | `Stop` hook |
-
-`install.sh` writes either — add `--agents` for the second column — and `./install.sh --verify` reports both.
-
-What survives on each surface:
-
-| | Skills | Routing brain | Gate hook |
-|---|---|---|---|
-| Claude Code — terminal, desktop **Code** tab, cloud | ✅ | ✅ with a project install | ✅ |
-| Codex — CLI and IDE | ✅ | ✅ with a project install | ✅ |
-| Claude apps — claude.ai, desktop **Chat** tab, Cowork | ✅ ones you upload | ❌ no `CLAUDE.md` | ❌ no hooks |
-| Any other `SKILL.md` host | ✅ via `--agents` | depends on the host | depends on the host |
-
-Gate enforcement needs a host with hooks. Claude Code and Codex both have a `Stop` event that a hook can refuse, and the same script serves both. Where hooks do not exist, the pipeline skills still run and still report a failing gate — they just cannot be stopped by one.
-
-**Observed on Codex**, not inferred from the spec: installed to `~/.agents/skills/`, the roles appear in the `$` picker carrying the display names and descriptions from their `agents/openai.yaml`, and a fresh session handed a design problem in prose answers it directly rather than summoning a role — so `allow_implicit_invocation: false` does what it claims. The extra frontmatter fields these skills carry beyond `name` and `description` are ignored rather than rejected. The `Stop` hook is the one part shared by both hosts that has so far only been exercised on Claude Code.
-
-Claude Code in **WSL** is the one Claude Code surface without plugins — use a filesystem install there.
-
-[↑ Back to contents](#contents)
-
-## The routing brain (optional second layer)
+### The routing brain
 
 [`routing.md`](./routing.md) goes in a project's `CLAUDE.md` — or its `AGENTS.md` for Codex — and decides which role or squad a request belongs to, so you can ask in prose instead of picking a skill:
 
 > "The error message when a payment fails is confusing. Rewrite it." → Content Designer
 > "This chart distinguishes four series by colour alone." → Accessibility Specialist
 > "Fix the typo in the footer." → no specialist; it is a mechanical edit
+
+With the plugin, it **names** the role and gives you its command, because the roles never start on their own. With a project install, where the skill files sit in the project, Claude reads and follows the right one itself. Install it with `./install.sh --routing-only /path/to/project` alongside the plugin, or as part of a project install; [INSTALL.md](./INSTALL.md#part-5--optional--let-claude-pick-the-expert) has both.
 
 It also defines **six squads** for cross-functional work — Discovery, Definition, Delivery, Validation, Growth, Platform — because "is this ready to ship?" is not one discipline's call.
 
@@ -591,7 +370,7 @@ Measured at **89.6% selection accuracy** across 16 cases (up from 70.8%). Two fi
 
 ## Delivery pipeline
 
-`/run-pipeline` is the entry point. It classifies scope, surfaces a plan for confirmation, then dispatches — Small runs a single scoped change, Medium adds requirements/shaping and a chunk loop, Large adds repository inspection and an architect plan.
+`run-pipeline` is the entry point: `/product-team:run-pipeline` and the task, in Claude Code. It classifies scope, surfaces a plan for confirmation, then dispatches — Small runs a single scoped change, Medium adds requirements/shaping and a chunk loop, Large adds repository inspection and an architect plan.
 
 Two documents make it portable:
 
@@ -662,7 +441,186 @@ Scratch files live in `.claude/.gate/`, which excludes itself from version contr
 
 [↑ Back to contents](#contents)
 
-## Repository layout
+## The Figma board
+
+**→ [Afovea's Product Delivery Team Skills — Figma Community](https://www.figma.com/community/file/1668354152302142589/afoveas-product-delivery-team-skills)**
+
+A FigJam board that turns this repo into something a team can run in a room. The skills supply the judgement; the board supplies the order, the timings and the checkpoints. Duplicate it into your drafts and work down it.
+
+**An introduction page** covers how the board and the repo fit together, the 28 skills and how to invoke each one, the Project Point of Truth practice, and the product cycle as a **triple diamond** — Discover → Define → Develop → Decide → Build → Deliver and learn, closed by three gates: **Problem agreed**, **Approach agreed**, **Outcome evidenced**. A detail panel per phase names each capability that earns its keep there, when to reach for it, which roles are involved, what comes out, and what it writes to the PPoT.
+
+**Six further pages, one per phase,** hold the working boards. Each capability gets a run-sheet built as numbered zones with a time budget and a stated output, so a session has a shape rather than a blank canvas. Gates get run-sheets of their own, ending in a signed decision that can send the work back a diamond as readily as forward.
+
+It is the visual counterpart of [`docs/capability-map.md`](./docs/capability-map.md) — the same model, laid out to be filled in rather than read. Neither one installs anything: the skills still come from a route in [Install options](#install-options-in-depth).
+
+[↑ Back to contents](#contents)
+
+## Install options in depth
+
+Every route, compared. **[INSTALL.md](./INSTALL.md) walks each one through to a verified install**, with troubleshooting keyed to the exact error text.
+
+| Route | Command | You get |
+|---|---|---|
+| **Plugin** *(recommended)* | `/plugin install product-team@productteam-skills` | All 32 skills **plus** the gate hook and a once-a-day update reminder. Updatable with one command ([how](./INSTALL.md#keeping-it-up-to-date)). No routing brain |
+| **Desktop app** | the same two lines in the Code tab, or **+** → **Add plugins** | The same, without a terminal |
+| **Cloud sessions** | `install.sh /path/to/repo`, then commit | The skills and routing brain for every cloud session on that repository. Cloud sessions don't load plugins |
+| **Routing only** | `install.sh --routing-only /path/to/project` | The routing brain alone, for when the plugin already supplies the skills |
+| **Per project** | `install.sh /path/to/project` | Skills in `<project>/.claude/skills/` **plus** the routing brain in its `CLAUDE.md`. Add `--agents` for `.agents/skills/` and `AGENTS.md` |
+| **Personal** | `install.sh --personal` | Skills in `~/.claude/skills/` — every project. Skills only |
+| **Submodule** | `install.sh --submodule /path/to/project` | Per-project, pinned to a tag, symlinked so discovery still works |
+| **Claude apps** *(no terminal)* | download a ZIP from [`download/`](./download), upload it | The roles you upload, in claude.ai, the Chat tab, Cowork and your cloud sessions. No routing brain, no hook |
+| **Codex / open standard** | add `--agents` to any `install.sh` route | The same, written to `.agents/skills/` and `AGENTS.md`, invoked as `$name` |
+
+The script is in the repo, so clone first for those routes:
+
+```bash
+git clone https://github.com/afovea/my-product-team.git
+cd my-product-team
+./install.sh --verify                     # what is installed right now?
+./install.sh /path/to/your-project
+```
+
+It copies the skills, appends the routing brain to `CLAUDE.md` — or `AGENTS.md` with `--agents` — **with the paths and invocations already rewritten for that host**, updates `.gitignore`, and seeds a pipeline adapter template. Re-running updates the routing block in place between its markers and leaves anything you wrote above it alone. Running it with no arguments prints the menu rather than guessing a target.
+
+### Which route
+
+- **Just want the skills?** The plugin, in the terminal or the desktop app. For cloud sessions, a committed project install.
+- **Want role arbitration too?** Plugin *plus* `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 32 skills on disk, which takes the short `/name` and then goes stale independently of the plugin.
+- **Want it pinned and tracked in the consuming repo?** Submodule.
+- **On claude.ai or the desktop app's Chat tab?** Those are a different product from Claude Code — download a ZIP from [`download/`](./download) and upload it, per [INSTALL.md](./INSTALL.md#part-4--claude-for-chatting-browser-or-chat-tab).
+
+**The repo is the source, not an installation.** Cloning it makes the skills visible nowhere. Claude Code discovers them at `~/.claude/skills/<name>/SKILL.md` or `<project>/.claude/skills/<name>/SKILL.md`, or from an installed plugin. Pick a route above, or you will not see them.
+
+### Precedence and duplicates
+
+Plugin skills are namespaced, as `/product-team:product-manager`, so they never collide with anything: the full name always reaches the plugin. The short `/product-manager` goes to whichever copy claims it first, and three things can claim it:
+
+- **A filesystem copy** from `install.sh`, personal or project. It takes the short name; the plugin stays reachable by its full name.
+- **Skills uploaded to claude.ai.** They appear in Claude Code when you're signed in with the same account, listed with `synced` as their source in `/plugin`. They're built for chat, so Claude may start one on its own. Switch them off in `/plugin`'s **Installed** tab, or in claude.ai, if you use the plugin.
+- **Another plugin** with a skill of the same name.
+
+Enterprise overrides personal, and personal overrides project. `./install.sh --verify` reports every copy it can find, and says which combinations are worth reducing to one.
+
+### Context cost, and how to turn it down
+
+Installing 32 skills is not free. Two different costs, and the second is the one that actually bites.
+
+**Always-on** — every skill's `name` and `description` are preloaded into the system prompt so the host knows what exists. That is **about 2,700 tokens on every session**, including projects with nothing to do with product work. Nothing else loads until a skill is invoked.
+
+**On-invoke** — the skill's body enters the conversation when you call it, and **stays there for the rest of the session**. That ranges from about 2k to 10.6k tokens depending on the skill. This is the larger number by far.
+
+See your own figures, per skill:
+
+```bash
+claude plugin details product-team
+```
+
+The heaviest bodies are worth knowing before you invoke them casually:
+
+| Skill | always-on | on-invoke |
+|---|---:|---:|
+| `motion-designer` | ~210 | ~10.6k |
+| `run-pipeline` | ~80 | ~8.1k |
+| `security-specialist` | ~90 | ~6.7k |
+| `storm-researcher` | ~70 | ~5.9k |
+| *typical role* | ~50–200 | ~2–4k |
+
+Figures from `claude plugin details product-team` on version 1.9.
+
+#### Turn the always-on cost off entirely
+
+```bash
+claude plugin disable product-team@productteam-skills   # off, still installed
+claude plugin enable product-team@productteam-skills    # back on
+claude plugin disable --all                 # every plugin
+```
+
+`disable` takes `--scope user|project|local`, so you can switch the suite off globally and leave it on in one repo, or the reverse.
+
+#### Scope it to the projects that need it
+
+Installing at project scope keeps the always-on cost out of every unrelated session:
+
+```bash
+claude plugin install product-team@productteam-skills --scope project
+```
+
+#### Drop skills you never use
+
+There is no per-skill disable. Two ways to trim anyway:
+
+- **Filesystem install** — delete the directories you do not want. `install.sh --personal` then `rm -r ~/.claude/skills/motion-designer` removes that skill and its always-on share. Losing `motion-designer` alone saves ~210 tokens per session, more than four typical roles.
+- **Fork the plugin** — remove the skill directories from `skills/` and point your marketplace at your fork. Survives updates; a filesystem deletion does not.
+
+#### Managing the on-invoke cost
+
+- A skill loads **once** per session. Re-invoking the same one adds a short note, not a second copy.
+- Start a fresh session to clear loaded skills, rather than invoking a different one to "switch".
+- After auto-compaction, invoked skills are re-attached at up to 5,000 tokens each within a **combined 25,000-token budget**, most-recent first. Invoke many heavy skills in one session and the earliest ones get dropped entirely — so if a skill seems to stop influencing behaviour after a long session, re-invoke it.
+
+### Keeping it up to date
+
+Plugin updates are off by default for marketplaces outside Anthropic's, so turn on auto-update for `productteam-skills` in `/plugin`'s **Marketplaces** tab, or update by hand: **Installed** tab → **product-team** → **Update now**, or `claude plugin update product-team@productteam-skills`. Once you're on 1.9 or later, a once-a-day reminder says when a newer release is tagged. [INSTALL.md](./INSTALL.md#keeping-it-up-to-date) covers every route, including ZIP uploads and submodules.
+
+### Migrating from the old repo
+
+This suite previously lived at `afovea/ProductTeam-skills`, later renamed `afovea/product-team-skills`. If `claude plugin marketplace list` shows either as the source of `productteam-skills`, GitHub's redirect keeps it working for now, but point it at the current name:
+
+```bash
+# 1. point the marketplace at the new repo (removing it uninstalls the plugin;
+#    the next two lines put it back)
+claude plugin marketplace remove productteam-skills
+claude plugin marketplace add afovea/my-product-team
+claude plugin install product-team@productteam-skills
+
+# 2. if you used a filesystem install from an older layout, clear the stale
+#    nested pipeline directory — skills are flat now
+rm -r ~/.claude/skills/pipeline            # personal installs
+rm -r <project>/.claude/skills/pipeline    # project installs
+```
+
+Earlier versions nested the eight pipeline skills one level deeper, so an old install leaves that directory behind and they end up present twice. `install.sh` detects this and prints the exact command rather than deleting anything itself.
+
+### Compatibility
+
+The skills are plain markdown following the [Agent Skills](https://agentskills.io) standard, so they work with any host that reads `SKILL.md`. Two hosts are supported with a route of their own rather than left to you to wire up: Claude Code, and Codex.
+
+The suite is written twice over where the two disagree, so neither is a second-class citizen:
+
+| | Claude Code | Codex |
+|---|---|---|
+| Skills | `.claude/skills/` | `.agents/skills/` |
+| Invocation | `/product-team:name` (plugin) or `/name` (`install.sh`) | `$name` |
+| Suppress auto-selection | `disable-model-invocation` | `agents/openai.yaml` |
+| Routing brain | `CLAUDE.md` | `AGENTS.md` |
+| Plugin manifest | `.claude-plugin/` | `.codex-plugin/` |
+| Gate enforcement | `Stop` hook | `Stop` hook |
+
+`install.sh` writes either — add `--agents` for the second column — and `./install.sh --verify` reports both.
+
+What survives on each surface:
+
+| | Skills | Routing brain | Gate hook |
+|---|---|---|---|
+| Claude Code: terminal and desktop **Code** tab | ✅ | names the role with the plugin; ✅ with a project install | ✅ with the plugin |
+| Claude Code cloud sessions | ✅ committed, or uploaded to claude.ai | ✅ when committed | ❌ |
+| Codex — CLI and IDE | ✅ | ✅ with a project install | ✅ |
+| Claude apps: claude.ai, desktop **Chat** tab, Cowork | ✅ ones you upload | ❌ no `CLAUDE.md` | ❌ no hooks |
+| Any other `SKILL.md` host | ✅ via `--agents` | depends on the host | depends on the host |
+
+Gate enforcement needs a host with hooks. Claude Code and Codex both have a `Stop` event that a hook can refuse, and the same script serves both. Where hooks do not exist, the pipeline skills still run and still report a failing gate — they just cannot be stopped by one.
+
+**Observed on Codex**, not inferred from the spec: installed to `~/.agents/skills/`, the roles appear in the `$` picker carrying the display names and descriptions from their `agents/openai.yaml`, and a fresh session handed a design problem in prose answers it directly rather than summoning a role — so `allow_implicit_invocation: false` does what it claims. The extra frontmatter fields these skills carry beyond `name` and `description` are ignored rather than rejected. The `Stop` hook is the one part shared by both hosts that has so far only been exercised on Claude Code.
+
+The desktop app's **WSL** sessions don't load plugins: use a filesystem install there.
+
+[↑ Back to contents](#contents)
+
+## For maintainers
+
+The rest is for people changing the suite itself.
+
+### Repository layout
 
 ```
 my-product-team/
@@ -724,9 +682,7 @@ my-product-team/
 
 `reference/` holds documents that five pipeline skills share, and the canonical text of the section every skill carries. They are not skills, so they sit outside `skills/` rather than being forced into a directory that pretends otherwise.
 
-[↑ Back to contents](#contents)
-
-## Conventions
+### Conventions
 
 - All skills use **UK English**.
 - Every skill carries the standard `name` and `description`. Role and pipeline skills additionally use the repository's Claude-specific invocation and metadata fields. The PPoT practice keeps portable minimal frontmatter, adding only `metadata.model_tier` and `metadata.version`.
@@ -736,9 +692,7 @@ my-product-team/
 - Every skill carries two shared sections, `## Handing over work` and `## Model and sub-agents`, plus a `metadata.model_tier` and a `metadata.version`. Edit the sections only in `reference/handing-over-work.md` and `reference/model-and-sub-agents.md`, then run `python3 scripts/sync-shared-sections.py`; CI fails if a copy drifts or a skill has no tier or version.
 - Every skill ends with `## Maintenance` listing its review triggers. Treat that as a versioning prompt: bump role and pipeline skill metadata when their behaviour changes, and bump the plugin version when the shared PPoT practice changes.
 
-[↑ Back to contents](#contents)
-
-## Versioning
+### Versioning
 
 Semver, tagged `v<MAJOR>.<MINOR>.<PATCH>` on `main`.
 
@@ -754,15 +708,7 @@ Consuming projects should pin to a tag and update deliberately.
 - `scripts/verify.sh` fails if the plugin's version falls behind the newest tag.
 - Versions 1.2 to 1.7 were never tagged. `v1.8.0` is the first tag after `v1.1.0`.
 
-[↑ Back to contents](#contents)
-
-## Licence
-
-[MIT](./LICENSE). Use it, fork it, adapt it. Attribution appreciated but the licence only requires the copyright notice.
-
-[↑ Back to contents](#contents)
-
-## Contributing
+### Contributing
 
 Issues and pull requests welcome.
 
@@ -770,5 +716,11 @@ Issues and pull requests welcome.
 - Update [routing.md](./routing.md): a row in the relevant table, squad memberships if cross-functional, and an entry in the specialist-routing examples. **The table matters more than the prose** — see the routing findings above.
 - Bump the skill's frontmatter `version` on behaviour-shaping changes.
 - Tag a release after merge to `main`.
+
+[↑ Back to contents](#contents)
+
+## Licence
+
+[MIT](./LICENSE). Use it, fork it, adapt it. Attribution appreciated but the licence only requires the copyright notice.
 
 [↑ Back to contents](#contents)

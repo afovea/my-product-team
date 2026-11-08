@@ -69,7 +69,7 @@ product-team-skills — filesystem install
 Most people want the plugin instead. In Claude Code:
 
     /plugin marketplace add afovea/my-product-team
-    /plugin install product-team
+    /plugin install product-team@productteam-skills
 
 That gives you all 32 skills plus the gate-enforcement hook, updatable with one
 command. Use this script when you also want the routing brain, or when plugins
@@ -147,7 +147,7 @@ if [[ "$MODE" == "verify" ]]; then
       claude plugin list 2>/dev/null | grep -A2 'product-team@' | sed 's/^/    /'
       FOUND=$((FOUND + 1))
     else
-      echo "  plugin: not installed  (/plugin install product-team)"
+      echo "  plugin: not installed  (/plugin install product-team@productteam-skills)"
     fi
   else
     echo "  not on PATH — the desktop app does not add it. That is fine;"
@@ -230,18 +230,26 @@ if [[ "$MODE" == "verify" ]]; then
   fi
   echo
 
-  echo "Cloud sessions (.claude/settings.json in $TARGET)"
-  if [[ -f "$TARGET/.claude/settings.json" ]] && grep -q 'product-team@productteam-skills' "$TARGET/.claude/settings.json" 2>/dev/null; then
-    echo "  declared — cloud sessions on this repo will install the plugin"
+  # Cloud sessions start from a fresh clone: they load skills committed to the
+  # repository, never plugins the repository's settings switch on.
+  echo "Cloud sessions (what a fresh clone of $TARGET carries)"
+  if git -C "$TARGET" ls-files --error-unmatch "$CFG_DIR/skills/product-manager/SKILL.md" >/dev/null 2>&1; then
+    echo "  skills committed — cloud sessions on this repo load them"
   else
-    echo "  not declared (see INSTALL.md, Route C)"
+    echo "  no committed skills — cloud sessions will not have the suite."
+    echo "  Commit a project install (./install.sh '$TARGET', then commit $CFG_DIR/),"
+    echo "  or switch the skills on in claude.ai. See INSTALL.md, Cloud sessions."
+  fi
+  if [[ -f "$TARGET/.claude/settings.json" ]] && grep -q 'product-team@productteam-skills' "$TARGET/.claude/settings.json" 2>/dev/null; then
+    echo "  note: .claude/settings.json switches the plugin on, but cloud sessions"
+    echo "        do not install plugins from repository settings"
   fi
   echo
 
   echo "Verdict"
   if [[ "$FOUND" -eq 0 ]]; then
     echo "  Not installed anywhere this script can see."
-    echo "  Quickest route:  /plugin install product-team   (see INSTALL.md)"
+    echo "  Quickest route:  /plugin install product-team@productteam-skills   (see INSTALL.md)"
   elif [[ "$FOUND" -eq 1 ]]; then
     echo "  One install, no conflicts. Start Claude Code and type /product- to confirm."
   else
@@ -308,7 +316,7 @@ Or, if you only want the skills available everywhere:
 Or skip the filesystem entirely and use the plugin, in Claude Code:
 
     /plugin marketplace add afovea/my-product-team
-    /plugin install product-team
+    /plugin install product-team@productteam-skills
 
 See INSTALL.md.
 EOF
@@ -391,10 +399,15 @@ if [[ "$MODE" == "routing" ]]; then
   # the "Skill file" column into the invocation you actually type, so the routing
   # table names something that exists. routing.md is written Claude-shaped, so
   # the patterns match `.claude/...` here whatever layout is being written.
+  # A Claude Code plugin's skills are namespaced, so name them the way the plugin
+  # loads them. The roles cannot start themselves (disable-model-invocation), so
+  # the brain names the role and gives the user the command rather than running it.
+  ROUTE_INVOKE="$INVOKE"
+  [[ "$LAYOUT" == "claude" ]] && ROUTE_INVOKE="/product-team:"
   ROUTING="$(sed \
-    -e "s#\`\.claude/skills/\([a-z0-9-]*\)/SKILL\.md\`#\`${INVOKE}\1\`#g" \
+    -e "s#\`\.claude/skills/\([a-z0-9-]*\)/SKILL\.md\`#\`${ROUTE_INVOKE}\1\`#g" \
     -e 's#| Skill file |#| Invoke |#g' \
-    -e "s#the relevant files under \`\.claude/skills/\`#the relevant skill by name, e.g. \`${INVOKE}product-manager\`#g" \
+    -e "s#follow the deeper guidance in the relevant files under \`\.claude/skills/\`#name it and give the user its command, e.g. \`${ROUTE_INVOKE}product-manager\` followed by the task. The roles start only when the user runs them#g" \
     -e 's#place deeper role guidance in `\.claude/skills/`#leave the deeper role guidance in the installed skills#g' \
     -e "s#\`\.claude/#\`$CFG_DIR/#g" \
     "$SUITE_ROOT/routing.md")"
@@ -441,7 +454,7 @@ if [[ "$MODE" == "routing" ]]; then
   echo "  1. cd '$TARGET' && claude"
   echo "  2. Describe a task in plain words, without naming a role:"
   echo "       The error message when a payment fails is confusing. Rewrite it."
-  echo "     Claude should reach for the Content Designer."
+  echo "     Claude should name the Content Designer and give you its command."
   echo
   echo "Put project-specific context ABOVE the routing block in $INSTR_FILE."
   echo "This assumes the skills themselves are installed. If they are not:"
@@ -449,7 +462,7 @@ if [[ "$MODE" == "routing" ]]; then
     echo "  ./install.sh --agents '$TARGET'   (or install the plugin in Codex)"
   else
     echo "  /plugin marketplace add afovea/my-product-team"
-    echo "  /plugin install product-team"
+    echo "  /plugin install product-team@productteam-skills"
   fi
   exit 0
 fi

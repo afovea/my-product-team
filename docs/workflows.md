@@ -2,7 +2,7 @@
 
 How to chain the 32 skills into complete pieces of product work.
 
-**Version 1.0.0** · 8 November 2026 · for product-team skills 1.8.0. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
+**Version 1.0.0** · 8 November 2026 · for product-team skills 1.9.1. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
 
 The skills are deliberately narrow. Each one names who it takes work from and hands work to, in its "Works with" section, but a pair of handoffs is not a plan. This guide supplies the sequencing: which skill runs when, what it should leave behind for the next one, where a person has to decide, and when to go back.
 
@@ -46,7 +46,7 @@ This guide is the recipe for each job.
 
 Six rules apply to every workflow below.
 
-1. **Start with what the project already knows.** Run `/ppot brief`, or `/ppot init` if the project has no `PPoT.md` yet. Every later step reads it. Nobody should re-argue a confirmed decision.
+1. **Start with what the project already knows.** Run `ppot brief`, or `ppot init` if the project has no `PPoT.md` yet. In Claude Code with the plugin that's `/product-team:ppot brief`; skills are written here by name, and run as `/product-team:<name>` in Claude Code or `$<name>` in Codex. Every later step reads it. Nobody should re-argue a confirmed decision.
 2. **Settle the model and sub-agents once.** Every skill checks the model against its usual tier, and asks before starting sub-agents. In a workflow, do it once, at the start. Steps marked **⇉** can run in parallel, but only with your approval and within the cap you set. Without approval they run one after another in the conversation. The result is the same; it is just slower.
 3. **Hand over files, not memories.** The next skill only gets what was written down. Every skill offers to save its output as a file in the project, for example `product/<work-item>/03-evidence.md` (its "Handing over work" section). Say yes whenever a later step needs it, and point the next skill at the file. The build pipeline, the research skills and `ppot` keep their own files in their own places.
 4. **A person decides at every gate.** The skills recommend; they do not approve. Each gate names the evidence the decision needs. Sending work back through a gate is a normal outcome, not a failure.

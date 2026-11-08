@@ -152,7 +152,7 @@ Six fall into the second group:
 | Create and govern a design system | the design system's own documentation |
 | Build accessibility into product development | a review checklist |
 | Review security and privacy | a threat model, kept access-controlled |
-| Build features | work run through the delivery pipeline (`/run-pipeline`) |
+| Build features | work run through the delivery pipeline (`/product-team:run-pipeline`) |
 | Provide independent quality assurance | a test plan |
 
 *Investigate and fix problems* is the close call that went the other way. It has a fixed order

@@ -75,63 +75,80 @@ The install goes onto your account, not into that folder: the roles then work in
 
 ### Step 2 · Type two lines
 
-Click into the message box at the bottom — the same one you would type a question
+Click into the message box at the bottom: the same one you would type a question
 into. Type this and press Enter:
 
 ```
 /plugin marketplace add afovea/my-product-team
 ```
 
-Wait for it to say **Successfully added marketplace**. Then type this and press
-Enter:
+Wait for it to say **Successfully added marketplace: productteam-skills**. Then
+type this and press Enter:
 
 ```
-/plugin install product-team
+/plugin install product-team@productteam-skills
 ```
 
-> **Copy those two lines exactly.** The names look similar but they are
-> different — `my-product-team` is the collection, `product-team` is the
-> thing you install. Typing `my-product-team` in the second line gives you a
-> "not found" error.
+> **Copy those two lines exactly.** Three names are involved: `my-product-team`
+> is the GitHub repository, `productteam-skills` is the marketplace it adds, and
+> `product-team` is the plugin you install.
 
-### Step 3 · Switch it on
+**No luck typing `/plugin` in the app?** Click the **+** next to the message box
+and choose **Add plugins** (or **Plugins**, then **Browse plugins**). Find
+**product-team** and continue at Step 3. If it isn't listed, the marketplace
+hasn't been added yet: run the first line once from a terminal instead
+([Part 3](#part-3--claude-code-in-a-terminal)). The app and the terminal share
+your plugins, so installing in one installs in both.
 
-Read what Claude says back:
+### Step 3 · Choose who it is for
 
-- **"Plugin is now active."** — finished, go to Step 4.
-- **"Run /reload-plugins to activate."** — type `/reload-plugins` and press
-  Enter. If it warns you about re-reading the conversation, type
-  `/reload-plugins --force`.
+The install line doesn't install straight away. It opens a panel showing what the
+plugin adds: 32 skills and two hooks. Choose:
+
+- **Install for you (user scope)**: every folder you open. Pick this one.
+- *Install for all collaborators on this repository*, or *Install for you, in
+  this repo only*: for one project. See [Advanced routes](#advanced-routes).
+
+Then read the last line it prints:
+
+- **Plugin is now active.** Finished. Go to Step 4.
+- **Run /reload-plugins to apply.** Claude Code usually runs it for you. If it
+  warns that reloading costs a little extra, type `/reload-plugins --force`.
 
 ### Step 4 · Check it worked
 
-Type `/product-` in the message box and stop. A list should drop down showing
-`product-manager`, `product-designer`, `product-strategist`.
-
-If that list appears, you are installed.
+Type `/product-team:` in the message box and stop. A list drops down with all 32
+roles, such as `/product-team:product-manager`. If that list appears, you are
+installed.
 
 ### Step 5 · Use it
 
-Type `/`, pick a role, then **write the task on the same line** before pressing
-Enter:
+Type the role's full name, then **write the task on the same line** before
+pressing Enter:
 
 ```
-/product-manager Turn this vague feature request into a delivery-ready ticket.
-```
-
-```
-/product-designer Our reports page is blank for new users. Design the empty state.
+/product-team:product-manager Turn this vague feature request into a delivery-ready ticket.
 ```
 
 ```
-/accessibility-specialist This chart uses colour alone for four series. Problem?
+/product-team:product-designer Our reports page is blank for new users. Design the empty state.
 ```
 
-A role with no task attached will just ask you what you want, so always give it
-the work in the same message.
+```
+/product-team:accessibility-specialist This chart uses colour alone for four series. Problem?
+```
 
-**Optional but recommended:** [Part 5](#part-5--optional--let-claude-pick-the-expert)
-makes Claude choose the right expert so you do not have to remember 32 names.
+The full name always works. The short form, `/product-manager`, works too, but
+only while nothing else uses that name. Another copy of the roles takes it, such
+as skills you uploaded to claude.ai or an `install.sh` copy: see
+[Two copies of every role](#two-copies-of-every-role-or-a-role-starts-on-its-own).
+
+A role with no task attached will just ask what you want, so give it the work in
+the same message.
+
+**Optional:** [Part 5](#part-5--optional--let-claude-pick-the-expert) adds a
+routing brain that names the right expert when you describe a problem in plain
+words.
 
 ---
 
@@ -193,12 +210,22 @@ not into the terminal:
 ```
 
 ```
-/plugin install product-team
+/plugin install product-team@productteam-skills
 ```
+
+Or do it without starting Claude Code, as ordinary terminal commands. This
+installs for you in every folder (user scope), with no panel to answer:
+
+```bash
+claude plugin marketplace add afovea/my-product-team
+claude plugin install product-team@productteam-skills
+```
+
+Then start `claude` and carry on at Step 4.
 
 ### Step 3, 4 and 5
 
-Identical to Part 2 — [switch it on](#step-3--switch-it-on),
+Identical to Part 2: [choose who it is for](#step-3--choose-who-it-is-for),
 [check it worked](#step-4--check-it-worked), [use it](#step-5--use-it).
 
 ---
@@ -210,18 +237,19 @@ it works on the free plan.
 
 Here you download a file for each role you want and upload it into Claude.
 
-### Step 1 · Turn on two settings
+### Step 1 · Turn on code execution
 
-Skills do not run without these. This is the most common reason an install
-"does nothing".
+Skills do not run without it. This is the most common reason an install "does
+nothing". It works on every plan, the free one included.
 
 1. Click your **name or profile picture**, usually bottom-left.
-2. Click **Settings**.
-3. Find **Capabilities**.
-4. Switch on **Code execution** and **File creation**.
+2. Click **Settings**, then **Capabilities**.
+3. Switch on **Code execution and file creation**. In the newer settings layout
+   it is called **Create and edit files**.
 
-> No **Capabilities** section? Look for **Features** or **Beta features** — the
-> label has moved between versions. You want two switches with those names.
+> **On a Team or Enterprise plan?** An owner of your organisation has to allow
+> skills first, in **Organization settings → Plugins & skills**. If you can't
+> find the switch, or uploads are refused, ask them.
 
 ### Step 2 · Download the roles you want
 
@@ -294,31 +322,21 @@ for Claude Code and do much less in chat.
 
 ### Step 3 · Upload them
 
-About fifteen seconds each. **The menu differs between the browser and the app**
-— use your version:
+About fifteen seconds each, and the same in the browser and the app:
 
-**If you are in Claude web** (a browser):
-
-1. **Settings** → **Capabilities** → **Skills**.
-2. Click **+**.
-
-**If you are in the Claude app** (Chat tab):
-
-1. Click **Customize** in the left sidebar.
-2. Click **Skills**.
-3. Click **+**.
-
-**Then, in both:**
-
-1. Choose the option to **upload** or **create** a skill.
-2. Pick one of the `.zip` files you downloaded.
-3. Claude reads it and shows the name and description.
+1. Click **Customize** in the left sidebar, then **Skills**.
+2. Click **+**, then **Create skill**, then **Upload a skill**.
+3. Pick one of the `.zip` files you downloaded. Claude shows its name and
+   description.
 4. Make sure its toggle is **on**.
 
 Repeat for each file.
 
-You only need to do this in one of the two. Uploads attach to your account, so
-what you add in the browser shows up in the app and the other way round.
+You only need to do this once. Uploads attach to your account, so they appear in
+the browser, the app's Chat tab, Cowork and Claude Code cloud sessions. They also
+appear in Claude Code on your computer when you're signed in with the same
+account. If you also install the plugin there, you'll have two copies of each
+role: see [Two copies of every role](#two-copies-of-every-role-or-a-role-starts-on-its-own).
 
 ### Step 4 · Check it worked
 
@@ -343,7 +361,7 @@ you work rather than a question back.
 ## Part 5 — optional · let Claude pick the expert
 
 **Claude Code only** (Parts 2 and 3). Adds a decision layer so you can describe a
-problem in plain words and Claude reaches for the right role by itself:
+problem in plain words and Claude works out which role it belongs to:
 
 > "The error message when a payment fails is confusing. Rewrite it."
 > → Content Designer
@@ -357,6 +375,14 @@ ship?" that are not one discipline's call.
 This lives in a file called `CLAUDE.md` inside your project folder, so it applies
 per folder rather than everywhere.
 
+**What it can and can't do with the plugin.** The roles never start on their own;
+that's deliberate, because automatic selection picks badly. So with the plugin,
+the routing brain **names** the right role and gives you its command, for example
+`/product-team:content-designer`, and you run it. If you want Claude to work as the
+role without that step, use a project install instead
+([Advanced routes](#advanced-routes)): the skill files are then in the project,
+and Claude reads and follows the right one itself.
+
 **The easy way — ask Claude Code to do it.** Paste this into Claude Code:
 
 ```
@@ -364,14 +390,16 @@ Read https://raw.githubusercontent.com/afovea/my-product-team/main/routing.md
 and append it to this folder's CLAUDE.md, creating that file if it does not
 exist. Wrap it in the comment markers <!-- product-team-skills:start --> and
 <!-- product-team-skills:end -->. In the role tables, replace the "Skill file"
-column with how I actually invoke each role, e.g. `/product-manager`.
+column with each role's plugin command, e.g. `/product-team:product-manager`.
+The roles only start when I run them, so when one fits, name it and give me
+its command.
 ```
 
 Then start a new session so it is picked up.
 
 That only writes `CLAUDE.md`. It does not copy any skills, because you already
-have them from the plugin — a second copy on disk would shadow the first and then
-quietly go out of date.
+have them from the plugin. A second copy on disk would take the short names and
+then quietly go out of date.
 
 <details>
 <summary><b>Doing it from a terminal instead — needs git</b></summary>
@@ -442,7 +470,38 @@ because both use the same event contract.
 The one thing to know is that the roles do **not** fire on their own. That is
 deliberate — automatic selection by keyword picks badly, so `$name` is how you
 choose. The exception is `$ppot`, whose natural-language phrases are its intended
-interface. See [Invoking a skill](./README.md#invoking-a-skill).
+interface. See [Invoking a skill](./README.md#use-the-skills).
+
+---
+
+## Part 7 — Claude Code cloud sessions
+
+For Claude Code on the web (`claude.ai/code`), and cloud sessions started from
+the app or the terminal. A cloud session starts from a fresh copy of your
+repository. It **doesn't** load plugins: not the ones on your computer, and not
+ones a repository's `.claude/settings.json` switches on. Two things do reach it:
+
+- **Skills committed to the repository.** Run a project install and commit the
+  result, and everyone's cloud sessions on that repository get the roles and the
+  routing brain:
+
+  ```bash
+  git clone https://github.com/afovea/my-product-team.git
+  cd my-product-team
+  ./install.sh /path/to/your/repo
+  ```
+
+  Then, in your repository, commit `.claude/skills/`, `.claude/reference/` and
+  `CLAUDE.md`. `install.sh` adds `.claude/skills/` to `.gitignore` on the
+  assumption that the install is personal, so remove that line first.
+- **Skills switched on in claude.ai** ([Part 4](#part-4--claude-for-chatting-browser-or-chat-tab)).
+  They load in your own cloud sessions, for you alone.
+
+Gate enforcement needs the hook, and a project install doesn't add it, so in
+cloud sessions the pipeline reports a failing gate but can't stop on one.
+
+`./install.sh --verify` run against the repository says whether its skills are
+committed.
 
 ---
 
@@ -452,10 +511,16 @@ Each release is tagged on GitHub as `vX.Y.Z`, and the [tags page](https://github
 
 | You installed with | To update |
 |---|---|
-| The plugin (desktop app or terminal, Parts 2 and 3) | Type `/plugin marketplace update productteam-skills`, then update **product-team** from `/plugin`. To have it happen by itself, turn on auto-update for this marketplace in `/plugin`, under Marketplaces |
+| The plugin (desktop app or terminal, Parts 2 and 3) | Type `/plugin`, open the **Installed** tab, select **product-team** and choose **Update now**. Or, in a terminal: `claude plugin update product-team@productteam-skills`. Start a new session, or type `/reload-plugins`, to load the new version. Updates are off by default for marketplaces outside Anthropic's: to make them automatic, open `/plugin`, go to the **Marketplaces** tab, select **productteam-skills** and choose **Enable auto-update** |
 | ZIPs uploaded to claude.ai or the Chat tab (Part 4) | Download the skills that changed from [`download/`](./download) and upload them again, replacing the old ones. Nothing updates on its own |
 | `install.sh` for Codex, a project, your personal folder, or routing only (Parts 5 and 6) | Get the latest copy of this repository (`git pull` in your clone), then run the same `install.sh` command again. `./install.sh --verify` shows what is installed afterwards |
 | A submodule | In your project, `git -C .claude/skills-vendor fetch --tags`, then `git -C .claude/skills-vendor checkout vX.Y.Z` with the new tag. Run `./install.sh --submodule` again so skills added since are linked in, then commit the change |
+
+**Installed before the repository was renamed?** If `claude plugin marketplace
+list` shows the source as `afovea/product-team-skills` or
+`afovea/ProductTeam-skills`, it still works, because GitHub redirects renamed
+repositories, but point it at the current name when you next update. See
+[Migrating from the old repo](./README.md#migrating-from-the-old-repo).
 
 **The update reminder.** If you installed the plugin in Claude Code, it checks once a day, when a session starts, whether a newer release has been tagged. When one has, it shows one line naming the new version and how to update.
 - It reads only the release tags from GitHub, and changes nothing.
@@ -468,26 +533,65 @@ Each release is tagged on GitHub as `vX.Y.Z`, and the [tags page](https://github
 
 ### `Plugin "product-team" not found in marketplace "my-product-team"`
 
-You typed the collection's name where the plugin's name goes. The second line
-is:
+You typed the repository's name where the marketplace's name goes. The second
+line is:
 
 ```
-/plugin install product-team
+/plugin install product-team@productteam-skills
 ```
 
 ### `Marketplace "productteam-skills" not found`
 
 The first line did not run, or did not finish. Run it, wait for **Successfully
-added marketplace**, then run the second.
+added marketplace: productteam-skills**, then run the second.
 
-### I installed it but `/product-manager` is not in the list
+### Typing `/plugin` does nothing in the app
+
+Use the **+** button next to the message box instead: **Add plugins**, or
+**Plugins** then **Browse plugins**. If **product-team** isn't listed there, add
+the marketplace once from a terminal ([Part 3](#part-3--claude-code-in-a-terminal)).
+The app and the terminal share your plugins.
+
+### I installed it but the roles are not in the list
 
 In order:
 
-1. Did you skip [Step 3](#step-3--switch-it-on)? Type `/reload-plugins`, then
-   `/reload-plugins --force` if it warns you.
-2. Are you in a session that started before you installed? Start a new one.
-3. Still missing? Close Claude Code, reopen it, and try again.
+1. Are you typing the full name? Plugin roles are listed as
+   `/product-team:product-manager`. Type `/product-team:` to see them all.
+2. Did the install panel finish? Type `/plugin` and check the **Installed** tab
+   lists **product-team** as enabled. If not, run Step 2 again and
+   [choose a scope](#step-3--choose-who-it-is-for).
+3. Type `/reload-plugins`, then `/reload-plugins --force` if it warns you, or
+   start a new session.
+4. Still missing? Open the **Errors** tab in `/plugin`, or run
+   `claude plugin list` in a terminal.
+
+### `/product-manager` runs the wrong thing, or nothing
+
+The short name belongs to whichever skill claimed it first. Use the full name,
+`/product-team:product-manager`, which always reaches the plugin. If you have
+another copy of the roles, see below.
+
+### Two copies of every role, or a role starts on its own
+
+You have the roles from two places. Usually it's skills you uploaded to claude.ai
+([Part 4](#part-4--claude-for-chatting-browser-or-chat-tab)), which also appear in
+Claude Code when you're signed in with that account. Those copies are built for
+chat, so Claude may pick one on its own, while the plugin's copies wait until you
+run them.
+
+Use the full plugin names, or keep one copy. To stop the uploaded ones appearing
+in Claude Code, switch them off in claude.ai (**Customize → Skills**), or switch
+them off in Claude Code from the **Installed** tab of `/plugin`, where they're
+listed with `synced` as their source. A personal or project `install.sh` copy is
+a third possible source: `./install.sh --verify` lists every copy it can find.
+
+### It works, but behaves like an older version
+
+Check what you have: run `claude plugin list` in a terminal, or open the
+**Installed** tab in `/plugin`. Compare the version with the newest on the
+[tags page](https://github.com/afovea/my-product-team/tags), then
+[update](#keeping-it-up-to-date).
 
 ### Codex does not list the skills after installing them
 
@@ -529,7 +633,7 @@ following Part 2, everything goes into Claude's own message box.
 
 ### I uploaded a skill in chat and nothing is different
 
-1. **Are Code execution and File creation on?** [Part 4 Step 1](#step-1--turn-on-two-settings).
+1. **Is code execution on?** [Part 4 Step 1](#step-1--turn-on-code-execution). On a Team or Enterprise plan, an owner also has to allow skills.
    Most common cause. Switch them on and start a **new** chat.
 2. **Is the skill toggled on?** Uploading does not always switch it on.
 3. **Did you start the chat before installing?** Start a new one.
@@ -561,8 +665,10 @@ Menu names move between versions. Try in order: **Customize** in the sidebar ·
 **In chat:** say which one you want — "answer this as an accessibility
 specialist, not a product designer". Uploading fewer roles improves its aim.
 
-**In Claude Code:** it never picks on its own unless you added
-[Part 5](#part-5--optional--let-claude-pick-the-expert). Invoke the role by name.
+**In Claude Code:** it never picks on its own. Run the role by its full name, or
+add [Part 5](#part-5--optional--let-claude-pick-the-expert) to have Claude name
+the right one for you. If a role does start on its own, it's a copy uploaded to
+claude.ai: see [Two copies of every role](#two-copies-of-every-role-or-a-role-starts-on-its-own).
 
 ### Nothing here matches
 
@@ -577,9 +683,11 @@ help.
 
 | | The 32 skills | Delivery pipeline | Routing brain | Gate enforcement |
 |---|---|---|---|---|
-| Claude Code — desktop app or terminal | ✅ all at once | ✅ | ✅ via [Part 5](#part-5--optional--let-claude-pick-the-expert) | ✅ |
+| Claude Code, desktop app or terminal (plugin) | ✅ all at once | ✅ | names the role, via [Part 5](#part-5--optional--let-claude-pick-the-expert) | ✅ |
+| Claude Code, a project install | ✅ all at once | ✅ | ✅ follows the role itself | ❌ the hook comes with the plugin |
+| Claude Code cloud sessions | ✅ committed, or switched on in claude.ai, via [Part 7](#part-7--claude-code-cloud-sessions) | ✅ | ✅ when committed | ❌ |
 | Codex, and other `SKILL.md` hosts | ✅ all at once via [Part 6](#part-6--codex-and-other-hosts-that-read-skillmd) | ✅ | ✅ into `AGENTS.md` | ✅ on Codex |
-| Claude for chatting | ✅ the ones you upload | partly — built for Claude Code | ❌ | ❌ |
+| Claude for chatting | ✅ the ones you upload | partly, built for Claude Code | ❌ | ❌ |
 
 **Gate enforcement** stops the agent ending a turn while a project's checks are
 failing. It only applies to coding work, and needs a host with hooks — Claude
@@ -593,7 +701,8 @@ For teams and repositories. The [README](./README.md) has the detail.
 
 | Route | Command | Adds |
 |---|---|---|
-| Cloud sessions | `enabledPlugins` in the repo's `.claude/settings.json` | the plugin, for everyone opening a cloud session on that repo |
+| Plugin for a whole repository | `/plugin install product-team@productteam-skills`, then **Install for all collaborators on this repository** | switches the plugin on in the repository's committed `.claude/settings.json`. Each collaborator still runs the two install lines once, and cloud sessions don't load it |
+| Cloud sessions | `./install.sh /path/to/repo`, then commit | the skills and routing brain in the repository, for every cloud session on it ([Part 7](#part-7--claude-code-cloud-sessions)) |
 | Project | `./install.sh /path/to/project` | 32 skills on disk + the routing brain |
 | Personal | `./install.sh --personal` | 32 skills on disk, every project |
 | Routing only | `./install.sh --routing-only /path` | the routing brain, nothing else |
