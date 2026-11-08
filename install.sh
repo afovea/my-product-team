@@ -36,7 +36,7 @@ warn_stale_layout() {
   echo
 }
 
-SUITE_URL="https://github.com/afovea/product-team-skills.git"
+SUITE_URL="https://github.com/afovea/my-product-team.git"
 SUITE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODE=""
 TARGET=""
@@ -68,7 +68,7 @@ product-team-skills — filesystem install
 
 Most people want the plugin instead. In Claude Code:
 
-    /plugin marketplace add afovea/product-team-skills
+    /plugin marketplace add afovea/my-product-team
     /plugin install product-team
 
 That gives you all 30 skills plus the gate-enforcement hook, updatable with one
@@ -307,7 +307,7 @@ Or, if you only want the skills available everywhere:
 
 Or skip the filesystem entirely and use the plugin, in Claude Code:
 
-    /plugin marketplace add afovea/product-team-skills
+    /plugin marketplace add afovea/my-product-team
     /plugin install product-team
 
 See INSTALL.md.
@@ -448,7 +448,7 @@ if [[ "$MODE" == "routing" ]]; then
   if [[ "$LAYOUT" == "agents" ]]; then
     echo "  ./install.sh --agents '$TARGET'   (or install the plugin in Codex)"
   else
-    echo "  /plugin marketplace add afovea/product-team-skills"
+    echo "  /plugin marketplace add afovea/my-product-team"
     echo "  /plugin install product-team"
   fi
   exit 0

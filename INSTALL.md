@@ -79,7 +79,7 @@ Click into the message box at the bottom — the same one you would type a quest
 into. Type this and press Enter:
 
 ```
-/plugin marketplace add afovea/product-team-skills
+/plugin marketplace add afovea/my-product-team
 ```
 
 Wait for it to say **Successfully added marketplace**. Then type this and press
@@ -90,8 +90,8 @@ Enter:
 ```
 
 > **Copy those two lines exactly.** The names look similar but they are
-> different — `product-team-skills` is the collection, `product-team` is the
-> thing you install. Typing `product-team-skills` in the second line gives you a
+> different — `my-product-team` is the collection, `product-team` is the
+> thing you install. Typing `my-product-team` in the second line gives you a
 > "not found" error.
 
 ### Step 3 · Switch it on
@@ -189,7 +189,7 @@ You are now inside Claude Code — the prompt has changed. These go into Claude,
 not into the terminal:
 
 ```
-/plugin marketplace add afovea/product-team-skills
+/plugin marketplace add afovea/my-product-team
 ```
 
 ```
@@ -231,58 +231,58 @@ Each is one small file. **Click a link and it downloads.** Nothing opens.
 
 | Role | What it does |
 |---|---|
-| [product-designer.zip](https://github.com/afovea/product-team-skills/raw/main/download/product-designer.zip) | UX, UI, flows, interaction design, design QA |
-| [content-designer.zip](https://github.com/afovea/product-team-skills/raw/main/download/content-designer.zip) | Wording, labels, error messages, onboarding copy |
-| [accessibility-specialist.zip](https://github.com/afovea/product-team-skills/raw/main/download/accessibility-specialist.zip) | WCAG review, inclusive design, contrast, screen readers |
-| [ux-researcher.zip](https://github.com/afovea/product-team-skills/raw/main/download/ux-researcher.zip) | Research planning, interviews, synthesis |
-| [product-manager.zip](https://github.com/afovea/product-team-skills/raw/main/download/product-manager.zip) | Scope, priorities, outcomes, PRDs, tickets |
-| [ppot.zip](https://github.com/afovea/product-team-skills/raw/main/download/ppot.zip) | Project briefings, decisions, assumptions, durable learning, and knowledge review |
+| [product-designer.zip](https://github.com/afovea/my-product-team/raw/main/download/product-designer.zip) | UX, UI, flows, interaction design, design QA |
+| [content-designer.zip](https://github.com/afovea/my-product-team/raw/main/download/content-designer.zip) | Wording, labels, error messages, onboarding copy |
+| [accessibility-specialist.zip](https://github.com/afovea/my-product-team/raw/main/download/accessibility-specialist.zip) | WCAG review, inclusive design, contrast, screen readers |
+| [ux-researcher.zip](https://github.com/afovea/my-product-team/raw/main/download/ux-researcher.zip) | Research planning, interviews, synthesis |
+| [product-manager.zip](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip) | Scope, priorities, outcomes, PRDs, tickets |
+| [ppot.zip](https://github.com/afovea/my-product-team/raw/main/download/ppot.zip) | Project briefings, decisions, assumptions, durable learning, and knowledge review |
 
 <details>
 <summary><b>All 30 — click to see the full list</b></summary>
 
 **Shared project knowledge**
-[ppot](https://github.com/afovea/product-team-skills/raw/main/download/ppot.zip)
+[ppot](https://github.com/afovea/my-product-team/raw/main/download/ppot.zip)
 
 **Product and strategy**
-[product-manager](https://github.com/afovea/product-team-skills/raw/main/download/product-manager.zip) ·
-[product-strategist](https://github.com/afovea/product-team-skills/raw/main/download/product-strategist.zip) ·
-[growth-product-marketing-manager](https://github.com/afovea/product-team-skills/raw/main/download/growth-product-marketing-manager.zip) ·
-[pricing-strategist](https://github.com/afovea/product-team-skills/raw/main/download/pricing-strategist.zip) ·
-[brand-protector](https://github.com/afovea/product-team-skills/raw/main/download/brand-protector.zip)
+[product-manager](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip) ·
+[product-strategist](https://github.com/afovea/my-product-team/raw/main/download/product-strategist.zip) ·
+[growth-product-marketing-manager](https://github.com/afovea/my-product-team/raw/main/download/growth-product-marketing-manager.zip) ·
+[pricing-strategist](https://github.com/afovea/my-product-team/raw/main/download/pricing-strategist.zip) ·
+[brand-protector](https://github.com/afovea/my-product-team/raw/main/download/brand-protector.zip)
 
 **Research, insight and data**
-[ux-researcher](https://github.com/afovea/product-team-skills/raw/main/download/ux-researcher.zip) ·
-[data-analyst](https://github.com/afovea/product-team-skills/raw/main/download/data-analyst.zip) ·
-[customer-success](https://github.com/afovea/product-team-skills/raw/main/download/customer-success.zip) ·
-[storm-researcher](https://github.com/afovea/product-team-skills/raw/main/download/storm-researcher.zip)
+[ux-researcher](https://github.com/afovea/my-product-team/raw/main/download/ux-researcher.zip) ·
+[data-analyst](https://github.com/afovea/my-product-team/raw/main/download/data-analyst.zip) ·
+[customer-success](https://github.com/afovea/my-product-team/raw/main/download/customer-success.zip) ·
+[storm-researcher](https://github.com/afovea/my-product-team/raw/main/download/storm-researcher.zip)
 
 **Design and experience**
-[product-designer](https://github.com/afovea/product-team-skills/raw/main/download/product-designer.zip) ·
-[content-designer](https://github.com/afovea/product-team-skills/raw/main/download/content-designer.zip) ·
-[design-systems-specialist](https://github.com/afovea/product-team-skills/raw/main/download/design-systems-specialist.zip) ·
-[motion-designer](https://github.com/afovea/product-team-skills/raw/main/download/motion-designer.zip) ·
-[motion-graphics-designer](https://github.com/afovea/product-team-skills/raw/main/download/motion-graphics-designer.zip) ·
-[accessibility-specialist](https://github.com/afovea/product-team-skills/raw/main/download/accessibility-specialist.zip)
+[product-designer](https://github.com/afovea/my-product-team/raw/main/download/product-designer.zip) ·
+[content-designer](https://github.com/afovea/my-product-team/raw/main/download/content-designer.zip) ·
+[design-systems-specialist](https://github.com/afovea/my-product-team/raw/main/download/design-systems-specialist.zip) ·
+[motion-designer](https://github.com/afovea/my-product-team/raw/main/download/motion-designer.zip) ·
+[motion-graphics-designer](https://github.com/afovea/my-product-team/raw/main/download/motion-graphics-designer.zip) ·
+[accessibility-specialist](https://github.com/afovea/my-product-team/raw/main/download/accessibility-specialist.zip)
 
 **Engineering, delivery and quality**
-[software-engineer](https://github.com/afovea/product-team-skills/raw/main/download/software-engineer.zip) ·
-[technical-architect](https://github.com/afovea/product-team-skills/raw/main/download/technical-architect.zip) ·
-[devops-engineer](https://github.com/afovea/product-team-skills/raw/main/download/devops-engineer.zip) ·
-[security-specialist](https://github.com/afovea/product-team-skills/raw/main/download/security-specialist.zip) ·
-[qa-engineer](https://github.com/afovea/product-team-skills/raw/main/download/qa-engineer.zip) ·
-[delivery-manager](https://github.com/afovea/product-team-skills/raw/main/download/delivery-manager.zip)
+[software-engineer](https://github.com/afovea/my-product-team/raw/main/download/software-engineer.zip) ·
+[technical-architect](https://github.com/afovea/my-product-team/raw/main/download/technical-architect.zip) ·
+[devops-engineer](https://github.com/afovea/my-product-team/raw/main/download/devops-engineer.zip) ·
+[security-specialist](https://github.com/afovea/my-product-team/raw/main/download/security-specialist.zip) ·
+[qa-engineer](https://github.com/afovea/my-product-team/raw/main/download/qa-engineer.zip) ·
+[delivery-manager](https://github.com/afovea/my-product-team/raw/main/download/delivery-manager.zip)
 
 **Delivery pipeline** — for running coding tasks step by step. These are built
 for Claude Code and do much less in chat.
-[run-pipeline](https://github.com/afovea/product-team-skills/raw/main/download/run-pipeline.zip) ·
-[requirements-generator](https://github.com/afovea/product-team-skills/raw/main/download/requirements-generator.zip) ·
-[shape-task](https://github.com/afovea/product-team-skills/raw/main/download/shape-task.zip) ·
-[execute-chunk](https://github.com/afovea/product-team-skills/raw/main/download/execute-chunk.zip) ·
-[close-chunk](https://github.com/afovea/product-team-skills/raw/main/download/close-chunk.zip) ·
-[cleanup-verify](https://github.com/afovea/product-team-skills/raw/main/download/cleanup-verify.zip) ·
-[diagnose](https://github.com/afovea/product-team-skills/raw/main/download/diagnose.zip) ·
-[design-critique](https://github.com/afovea/product-team-skills/raw/main/download/design-critique.zip)
+[run-pipeline](https://github.com/afovea/my-product-team/raw/main/download/run-pipeline.zip) ·
+[requirements-generator](https://github.com/afovea/my-product-team/raw/main/download/requirements-generator.zip) ·
+[shape-task](https://github.com/afovea/my-product-team/raw/main/download/shape-task.zip) ·
+[execute-chunk](https://github.com/afovea/my-product-team/raw/main/download/execute-chunk.zip) ·
+[close-chunk](https://github.com/afovea/my-product-team/raw/main/download/close-chunk.zip) ·
+[cleanup-verify](https://github.com/afovea/my-product-team/raw/main/download/cleanup-verify.zip) ·
+[diagnose](https://github.com/afovea/my-product-team/raw/main/download/diagnose.zip) ·
+[design-critique](https://github.com/afovea/my-product-team/raw/main/download/design-critique.zip)
 
 </details>
 
@@ -358,7 +358,7 @@ per folder rather than everywhere.
 **The easy way — ask Claude Code to do it.** Paste this into Claude Code:
 
 ```
-Read https://raw.githubusercontent.com/afovea/product-team-skills/main/routing.md
+Read https://raw.githubusercontent.com/afovea/my-product-team/main/routing.md
 and append it to this folder's CLAUDE.md, creating that file if it does not
 exist. Wrap it in the comment markers <!-- product-team-skills:start --> and
 <!-- product-team-skills:end -->. In the role tables, replace the "Skill file"
@@ -378,8 +378,8 @@ Identical result, done the same way every time. This is the only step in this
 guide that needs `git` installed; the paste-in method above does not.
 
 ```bash
-git clone https://github.com/afovea/product-team-skills.git
-cd product-team-skills
+git clone https://github.com/afovea/my-product-team.git
+cd my-product-team
 ./install.sh --routing-only /path/to/your/folder
 ```
 
@@ -399,8 +399,8 @@ else built on the same standard. Two differences from Parts 2 and 3, both small:
 ### The whole suite, in one command
 
 ```bash
-git clone https://github.com/afovea/product-team-skills.git
-cd product-team-skills
+git clone https://github.com/afovea/my-product-team.git
+cd my-product-team
 ./install.sh --agents --personal
 ```
 
@@ -446,10 +446,10 @@ interface. See [Invoking a skill](./README.md#invoking-a-skill).
 
 ## Something went wrong
 
-### `Plugin "product-team" not found in marketplace "product-team-skills"`
+### `Plugin "product-team" not found in marketplace "my-product-team"`
 
-You typed the collection's name where the plugin's name goes. They differ by one
-hyphen. The second line is:
+You typed the collection's name where the plugin's name goes. The second line
+is:
 
 ```
 /plugin install product-team
@@ -547,7 +547,7 @@ specialist, not a product designer". Uploading fewer roles improves its aim.
 ### Nothing here matches
 
 Open an issue at
-[github.com/afovea/product-team-skills/issues](https://github.com/afovea/product-team-skills/issues).
+[github.com/afovea/my-product-team/issues](https://github.com/afovea/my-product-team/issues).
 Say which Claude you are using, what you clicked, and what you saw. Screenshots
 help.
 

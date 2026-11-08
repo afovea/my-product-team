@@ -71,8 +71,8 @@ Chat, in a browser. Download the roles you want and upload them.
 1. **Settings → Capabilities** → switch on **Code execution** and **File
    creation**. Skills do not run without both.
 2. Download a role — say
-   [product-designer.zip](https://github.com/afovea/product-team-skills/raw/main/download/product-designer.zip)
-   or [product-manager.zip](https://github.com/afovea/product-team-skills/raw/main/download/product-manager.zip).
+   [product-designer.zip](https://github.com/afovea/my-product-team/raw/main/download/product-designer.zip)
+   or [product-manager.zip](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip).
    All 30 are in [`download/`](./download). **Do not unzip them.**
 3. **Settings → Capabilities → Skills → +** → upload the file → switch it on.
 4. Ask for what you want, naming the role: *"As a product designer, our reports
@@ -100,7 +100,7 @@ Not chat — this is Claude Code inside the app. Installs all 30 at once, with n
 terminal: the two lines go into the ordinary message box.
 
 ```
-/plugin marketplace add afovea/product-team-skills
+/plugin marketplace add afovea/my-product-team
 /plugin install product-team
 ```
 
@@ -120,7 +120,7 @@ nothing into the one you picked.
 Identical to C. Run `claude` from any folder, then type the same two lines.
 
 ```
-/plugin marketplace add afovea/product-team-skills
+/plugin marketplace add afovea/my-product-team
 /plugin install product-team
 ```
 
@@ -130,10 +130,10 @@ You also get the delivery pipeline and the gate-enforcement hook. Add
 [the routing brain](#the-routing-brain-optional-second-layer) with
 `./install.sh --routing-only /path/to/project` and Claude picks the role for you.
 
-> Copy those two lines exactly. The names differ by a hyphen — the repo is
-> `product-team-skills`, the marketplace `productteam-skills`, the plugin
-> `product-team`. `/plugin install product-team@product-team-skills` fails with
-> `Plugin "product-team" not found in marketplace "product-team-skills"`.
+> Copy those two lines exactly. The three names differ — the repo is
+> `my-product-team`, the marketplace `productteam-skills`, the plugin
+> `product-team`. `/plugin install product-team@my-product-team` fails with
+> `Plugin "product-team" not found in marketplace "my-product-team"`.
 
 ### E · Claude Code on the web (cloud sessions)
 
@@ -147,7 +147,7 @@ Add this to `.claude/settings.json` **in that repository** and commit it:
 {
   "extraKnownMarketplaces": {
     "productteam-skills": {
-      "source": { "source": "github", "repo": "afovea/product-team-skills" }
+      "source": { "source": "github", "repo": "afovea/my-product-team" }
     }
   },
   "enabledPlugins": { "product-team@productteam-skills": true }
@@ -164,8 +164,8 @@ standard, so any host built on it reads them — Codex included. Two differences
 they live in `.agents/skills/`, and you invoke one with `$name`.
 
 ```bash
-git clone https://github.com/afovea/product-team-skills.git
-cd product-team-skills
+git clone https://github.com/afovea/my-product-team.git
+cd my-product-team
 ./install.sh --agents --personal
 ```
 
@@ -405,8 +405,8 @@ exact error text. The summary:
 The script is in the repo, so clone first for those routes:
 
 ```bash
-git clone https://github.com/afovea/product-team-skills.git
-cd product-team-skills
+git clone https://github.com/afovea/my-product-team.git
+cd my-product-team
 ./install.sh --verify                     # what is installed right now?
 ./install.sh /path/to/your-project
 ```
@@ -490,7 +490,7 @@ This suite previously lived at `afovea/ProductTeam-skills`, which is now archive
 ```bash
 # 1. point the marketplace at the new repo
 claude plugin marketplace remove productteam-skills
-claude plugin marketplace add afovea/product-team-skills
+claude plugin marketplace add afovea/my-product-team
 claude plugin install product-team
 
 # 2. if you used a filesystem install from an older layout, clear the stale
@@ -626,7 +626,7 @@ Scratch files live in `.claude/.gate/`, which excludes itself from version contr
 ## Repository layout
 
 ```
-product-team-skills/
+my-product-team/
 ├── .claude-plugin/
 │   ├── plugin.json                   # makes this an installable plugin
 │   └── marketplace.json              # makes the repo an addable marketplace
