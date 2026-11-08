@@ -1,0 +1,6 @@
+interface:
+  display_name: "Brand Guardian"
+  short_description: "Brand fidelity, claims and trust review, co-branding, and suspected brand misuse, with proportionate corrections"
+
+policy:
+  allow_implicit_invocation: false

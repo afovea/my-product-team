@@ -32,6 +32,7 @@ For every other substantial product-team task, apply the PPoT handshake embedded
 | Product Strategist | `.claude/skills/product-strategist/SKILL.md` | Market positioning, vision, strategic bets, competitive framing |
 | Growth Product Marketing Manager | `.claude/skills/growth-product-marketing-manager/SKILL.md` | Adoption, activation, messaging, funnel improvement, CRO, content strategy, SEO |
 | Pricing Strategist | `.claude/skills/pricing-strategist/SKILL.md` | Pricing model design, tier structure, packaging, willingness-to-pay, monetisation trade-offs |
+| Brand Guardian | `.claude/skills/brand-guardian/SKILL.md` | Reviewing work against the brand's identity, promises and approved guidance: brand representation, claims and trust risks, manipulative patterns, naming and strategy fit, partner and co-branded material, AI-generated customer content, and assessing reported brand misuse or impersonation. Recommends; does not approve releases, grant exceptions or give legal advice |
 
 ### Research, insight, and data
 
@@ -133,9 +134,9 @@ Use when:
 - The team needs design QA, accessibility QA, security review, or regression confidence
 - The question is "is this good enough to ship?"
 
-Roles: QA Engineer, Product Designer, Accessibility Specialist, Security Specialist (when the change touches auth, data access, sensitive data, payments, or AI), Product Manager (where scope or acceptance needs arbitration).
+Roles: QA Engineer, Product Designer, Accessibility Specialist, Security Specialist (when the change touches auth, data access, sensitive data, payments, or AI), Brand Guardian (when the release is public-facing, makes claims, or carries partner or co-branded material), Product Manager (where scope or acceptance needs arbitration).
 
-Default outputs: QA findings, UX findings, accessibility findings, security findings, severity, expected versus actual behaviour, release risk, recommended fixes.
+Default outputs: QA findings, UX findings, accessibility findings, security findings, brand findings, severity, expected versus actual behaviour, release risk, recommended fixes.
 
 ### Growth Squad
 
@@ -144,7 +145,7 @@ Use when:
 - Funnel performance needs improvement
 - The team is running experiments
 
-Roles: Growth Product Marketing Manager, Data Analyst, Product Designer, Content Designer, Product Manager.
+Roles: Growth Product Marketing Manager, Data Analyst, Product Designer, Content Designer, Product Manager, Brand Guardian (where campaigns, claims, urgency or partner material carry trust risk).
 
 Default outputs: funnel diagnosis, audience and segment assumptions, messaging recommendation, experiment plan, measurement approach, risks and guardrails.
 
@@ -212,7 +213,7 @@ Use a squad when the task touches more than one of: product value, user experien
 
 ### 3. Prefer specialist roles for narrow work
 
-Use one role when the task is clearly owned by that discipline. Examples: error message rewrite → Content Designer; component token review, UI foundation choice, or intake of copied component source → Design Systems Specialist; UI animation, transition, micro-interaction, motion-token, or reduced-motion design and animation-performance review → Motion Designer; landing-page or hero motion, cursor/hover effect, animated background, or "should we use this animated component" intake → Motion Designer; animated explainer, animated chart for a deck, or an onboarding walkthrough video → Motion Graphics Designer; SQL metric definition → Data Analyst; regression plan → QA Engineer; deployment risk → DevOps Engineer; system integration decision, or whether a library should become a standing dependency → Technical Architect; picking a library for one feature, or checking code against the installed version → Software Engineer; chart or data-visualisation accessibility → Accessibility Specialist; RLS or auth review, threat model, DPIA, dependency-vuln triage, licence and commercial-boundary check, third-party tool-server assessment, AI safety check → Security Specialist; deep or contested research, contradiction analysis, blind-spot review → STORM Researcher; pricing model or tier design → Pricing Strategist; CRO or content strategy → Growth PMM; systematic debugging → diagnose pipeline skill; UI review before release → design-critique pipeline skill.
+Use one role when the task is clearly owned by that discipline. Examples: error message rewrite → Content Designer; component token review, UI foundation choice, or intake of copied component source → Design Systems Specialist; UI animation, transition, micro-interaction, motion-token, or reduced-motion design and animation-performance review → Motion Designer; landing-page or hero motion, cursor/hover effect, animated background, or "should we use this animated component" intake → Motion Designer; animated explainer, animated chart for a deck, or an onboarding walkthrough video → Motion Graphics Designer; SQL metric definition → Data Analyst; regression plan → QA Engineer; deployment risk → DevOps Engineer; system integration decision, or whether a library should become a standing dependency → Technical Architect; picking a library for one feature, or checking code against the installed version → Software Engineer; chart or data-visualisation accessibility → Accessibility Specialist; RLS or auth review, threat model, DPIA, dependency-vuln triage, licence and commercial-boundary check, third-party tool-server assessment, AI safety check → Security Specialist; deep or contested research, contradiction analysis, blind-spot review → STORM Researcher; pricing model or tier design → Pricing Strategist; CRO or content strategy → Growth PMM; brand-guideline check, claims or endorsement review, co-branded or partner material, naming fit, or a reported case of brand misuse or impersonation → Brand Guardian; systematic debugging → diagnose pipeline skill; UI review before release → design-critique pipeline skill.
 
 ### 4. State the invoked role or squad
 
@@ -231,6 +232,7 @@ The most common routing error is not two similar roles competing — it is one s
 | payments, billing, subscription, revenue | Pricing Strategist | Is the question *what to charge* (Pricing), or *how to build or integrate it* (Technical Architect, Software Engineer)? |
 | risk | Delivery Manager | Schedule and dependency risk (Delivery), reliability of the running system (DevOps), or exposure and threat (Security)? |
 | copy, text, label, wording, message | Content Designer | Is comprehension the problem (Content), or is this a mechanical edit (see rule 7)? |
+| brand, messaging, claims, campaign | Growth Product Marketing Manager | Is the question what will convert (Growth PMM), whether it is clear (Content), or whether it is true to the brand and safe for its trust (Brand Guardian)? Impersonation used to attack customers is also Security |
 | component, library, design system | Design Systems Specialist | Our own system and tokens (Design Systems), adopting an external dependency across products (Technical Architect), or picking one for a single feature (Software Engineer)? |
 | research, evidence, users | UX Researcher | Does this need new evidence gathered (UX Research), existing behavioural data read (Data Analyst), or account signals interpreted (Customer Success)? |
 
