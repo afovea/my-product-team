@@ -10,7 +10,7 @@ Read it alongside two other documents:
 - [what-can-my-product-team-do.md](../what-can-my-product-team-do.md) is the catalogue of jobs.
 - [capability-map.md](./capability-map.md) places those jobs on the product cycle.
 
-This guide is the recipe for each job. Not sure which workflow fits? `/product-team:route` (or `$route` in Codex) picks one from a plain description of the problem and starts its first step.
+This guide is the recipe for each job. **[Product Team Workflows](https://claude.ai/artifact/KMSuAh18cm7HfATKLSyt1D)** is the same content as an interactive page, with a clickable map of the cycle and a skill finder. Not sure which workflow fits? `/product-team:route` (or `$route` in Codex) picks one from a plain description of the problem and starts its first step.
 
 ## Contents
 
@@ -527,5 +527,7 @@ Review this guide when:
 - **Patch:** wording only.
 
 Bump the document's version to match the largest change in it, and note which suite version it was checked against.
+
+The [interactive page](https://claude.ai/artifact/KMSuAh18cm7HfATKLSyt1D) carries the same workflows, skill cards and ownership rules: republish it whenever this guide's version changes, so the two stay the same.
 
 Keep the workflows as recipes that point at skills. A skill's own detail belongs in its `SKILL.md`, and a phase's place in the cycle belongs in `capability-map.md`.
