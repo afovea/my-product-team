@@ -4,7 +4,8 @@
 Every skill says who it takes work from and hands work to, in a "## Works with" section (or, for
 skills with a Handoffs table, the table plus a "Takes work from" line). If A hands to B, B should
 say it takes from A, and the reverse; otherwise a skill cannot route back the way it came.
-`ppot` is exempt: every skill reads it and offers it entries.
+`ppot` and `route` are exempt: every skill reads ppot, and route hands to every skill.
+The router's roster must list every other skill, or it cannot send work there.
 
   python3 scripts/check-handoffs.py      exits non-zero on any problem
 """
@@ -13,6 +14,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+EXEMPT = {'ppot', 'route'}
 NAME = re.compile(r'`([a-z][a-z-]+)`')
 
 
@@ -38,12 +40,17 @@ def main() -> int:
         for x in sorted((t | h) - skills - {'brief', 'ask', 'learn'}):
             problems.append(f'{n}: names `{x}`, which is not a skill')
     for a in sorted(skills):
-        for b in sorted(hand[a] & skills - {'ppot'}):
-            if a != 'ppot' and a not in take[b]:
+        for b in sorted(hand[a] & skills - EXEMPT):
+            if a not in EXEMPT and a not in take[b]:
                 problems.append(f'{a} hands work to {b}, but {b} does not say it takes work from {a}')
-        for b in sorted(take[a] & skills - {'ppot'}):
-            if a != 'ppot' and a not in hand[b]:
+        for b in sorted(take[a] & skills - EXEMPT):
+            if a not in EXEMPT and a not in hand[b]:
                 problems.append(f'{a} takes work from {b}, but {b} does not say it hands work to {a}')
+    route = ROOT / 'skills' / 'route' / 'SKILL.md'
+    if route.is_file():
+        roster = route.read_text(encoding='utf-8').split('## Roster', 1)[-1].split('\n## ', 1)[0]
+        for n in sorted(skills - {'route'} - set(NAME.findall(roster))):
+            problems.append(f'route: the roster does not list `{n}`, so the router cannot send work there')
     for p in problems:
         print(f'  FAIL  {p}')
     if not problems:

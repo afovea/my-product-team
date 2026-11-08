@@ -18,6 +18,8 @@ For complex work, invoke a squad. For specialist work, invoke a role. For ambigu
 |---|---|---|
 | Project Point of Truth | `.claude/skills/ppot/SKILL.md` | Project briefings; questions about established product knowledge; capturing facts, decisions, constraints, assumptions, risks, questions, or durable learning; checking an artefact against project truth; resolving contradictions; reviewing stale knowledge |
 
+The `route` skill carries a summary of these rules wherever the plugin is installed, and can start on its own when someone describes product-team work without naming a role: it picks the role, squad or workflow and then follows that role's skill. Where this document is present, it governs.
+
 Route direct knowledge requests to `ppot`, including natural phrases such as “bring me up to speed”, “what do we know about…”, “record our decision”, “remember this”, “check this against the project truth”, and “which facts are stale?”.
 
 For every other substantial product-team task, apply the PPoT handshake embedded in the selected skill: pull relevant context from a project-root `PPoT.md` before working, preserve its certainty states, and offer durable new knowledge back as a proposal. Do not update the PPoT without explicit approval.

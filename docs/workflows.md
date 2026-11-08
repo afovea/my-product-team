@@ -1,8 +1,8 @@
 # Workflows
 
-How to chain the 32 skills into complete pieces of product work.
+How to chain the 33 skills into complete pieces of product work.
 
-**Version 1.0.0** · 8 November 2026 · for product-team skills 1.9.1. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
+**Version 1.0.1** · 8 November 2026 · for product-team skills 1.10.0. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
 
 The skills are deliberately narrow. Each one names who it takes work from and hands work to, in its "Works with" section, but a pair of handoffs is not a plan. This guide supplies the sequencing: which skill runs when, what it should leave behind for the next one, where a person has to decide, and when to go back.
 
@@ -10,7 +10,7 @@ Read it alongside two other documents:
 - [what-can-my-product-team-do.md](../what-can-my-product-team-do.md) is the catalogue of jobs.
 - [capability-map.md](./capability-map.md) places those jobs on the product cycle.
 
-This guide is the recipe for each job.
+This guide is the recipe for each job. Not sure which workflow fits? `/product-team:route` (or `$route` in Codex) picks one from a plain description of the problem and starts its first step.
 
 ## Contents
 

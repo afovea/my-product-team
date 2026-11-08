@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "product-team",
-      "description": "A coordinated product team as 32 skills: 23 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice for durable product knowledge, with a gate-enforcement hook. The optional routing brain is installed separately with install.sh.",
+      "description": "A coordinated product team as 33 skills: 23 role perspectives, an 8-skill delivery pipeline, a router that picks the right role, squad or workflow, and a Project Point of Truth practice for durable product knowledge. Includes a gate-enforcement hook; the optional CLAUDE.md routing brain is installed separately with install.sh.",
       "author": {
         "name": "Anthony Faconti"
       },
