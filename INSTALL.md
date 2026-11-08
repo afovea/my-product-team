@@ -446,6 +446,24 @@ interface. See [Invoking a skill](./README.md#invoking-a-skill).
 
 ---
 
+## Keeping it up to date
+
+Each release is tagged on GitHub as `vX.Y.Z`, and the [tags page](https://github.com/afovea/my-product-team/tags) lists them all. Each skill's own version is in the `metadata` of its `SKILL.md`. How you update depends on how you installed:
+
+| You installed with | To update |
+|---|---|
+| The plugin (desktop app or terminal, Parts 2 and 3) | Type `/plugin marketplace update productteam-skills`, then update **product-team** from `/plugin`. To have it happen by itself, turn on auto-update for this marketplace in `/plugin`, under Marketplaces |
+| ZIPs uploaded to claude.ai or the Chat tab (Part 4) | Download the skills that changed from [`download/`](./download) and upload them again, replacing the old ones. Nothing updates on its own |
+| `install.sh` for Codex, a project, your personal folder, or routing only (Parts 5 and 6) | Get the latest copy of this repository (`git pull` in your clone), then run the same `install.sh` command again. `./install.sh --verify` shows what is installed afterwards |
+| A submodule | In your project, `git -C .claude/skills-vendor fetch --tags`, then `git -C .claude/skills-vendor checkout vX.Y.Z` with the new tag. Run `./install.sh --submodule` again so skills added since are linked in, then commit the change |
+
+**The update reminder.** If you installed the plugin in Claude Code, it checks once a day, when a session starts, whether a newer release has been tagged. When one has, it shows one line naming the new version and how to update.
+- It reads only the release tags from GitHub, and changes nothing.
+- It stays silent when you're up to date, when you're offline, and in CI.
+- To turn it off, set `PRODUCT_TEAM_NO_UPDATE_CHECK=1` in your environment.
+
+---
+
 ## Something went wrong
 
 ### `Plugin "product-team" not found in marketplace "my-product-team"`

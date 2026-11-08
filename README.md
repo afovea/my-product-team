@@ -427,7 +427,7 @@ exact error text. The summary:
 
 | Route | Command | You get |
 |---|---|---|
-| **Plugin** *(recommended)* | `/plugin install product-team` | All 32 skills **plus** the gate hook. Updatable with one command. No routing brain |
+| **Plugin** *(recommended)* | `/plugin install product-team` | All 32 skills **plus** the gate hook and a once-a-day update reminder. Updatable with one command ([how](./INSTALL.md#keeping-it-up-to-date)). No routing brain |
 | **Desktop app** | **+** → Plugins → Add plugin | The same, without a terminal |
 | **Cloud / web** | two keys in the repo's `.claude/settings.json` | The same, for everyone opening a cloud session on that repo |
 | **Routing only** | `install.sh --routing-only /path/to/project` | The routing brain alone, for when the plugin already supplies the skills |
@@ -623,7 +623,8 @@ The plugin ships a `Stop` hook that makes it a stop. Hooks are the only layer in
 |---|---|
 | `scripts/gate-chain.py` | Resolves and runs the gate chain, reports a JSON result, writes a stamp |
 | `hooks/gate-stop.py` | The `Stop` hook: refuses to end the turn while a blocking gate is failing |
-| `hooks/hooks.json` | Registers the hook. Loads automatically when the plugin is enabled |
+| `hooks/update-check.py` | The `SessionStart` hook: once a day, says when a newer release is tagged ([details](./INSTALL.md#keeping-it-up-to-date)) |
+| `hooks/hooks.json` | Registers both hooks. Loads automatically when the plugin is enabled |
 
 **It only wakes up for an open run.** A `Stop` hook fires every turn, so the hook first looks for a pipeline state file under `.claude/`. No state file, no gates, no cost. Detection is by shape rather than by exact filename, so renaming the state contract does not break it. A run can opt out entirely with `"gate_required": false` in its state.
 
@@ -695,9 +696,10 @@ my-product-team/
 │   │   └── references/               # audit cookbook, healthcare pack
 │   ├── run-pipeline/SKILL.md         # pipeline skills sit alongside roles
 │   └── ...
-├── hooks/                            # deterministic enforcement
-│   ├── hooks.json                    # registers the Stop hook
-│   └── gate-stop.py                  # blocks the turn on a failing gate
+├── hooks/                            # code that runs, rather than instructions
+│   ├── hooks.json                    # registers both hooks
+│   ├── gate-stop.py                  # blocks the turn on a failing gate
+│   └── update-check.py               # once a day, says when a newer release exists
 ├── download/                         # one upload-ready ZIP per skill, committed
 │   ├── product-designer.zip          #   so non-technical users can install
 │   └── ...                           #   without a terminal. CI keeps it in sync
@@ -745,6 +747,12 @@ Semver, tagged `v<MAJOR>.<MINOR>.<PATCH>` on `main`.
 - **PATCH** — wording, clarifications, frontmatter fixes.
 
 Consuming projects should pin to a tag and update deliberately.
+
+**Tag every release.** After merging a version bump to `main`, run `git tag -a vX.Y.Z <merge commit> -m "<summary>"` and `git push origin vX.Y.Z`.
+- The plugin's update reminder compares installed versions against these tags, so it can't see an untagged release.
+- The submodule route pins to the newest tag when it installs.
+- `scripts/verify.sh` fails if the plugin's version falls behind the newest tag.
+- Versions 1.2 to 1.7 were never tagged. `v1.8.0` is the first tag after `v1.1.0`.
 
 [↑ Back to contents](#contents)
 
