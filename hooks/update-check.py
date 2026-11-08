@@ -102,8 +102,8 @@ def latest(repo: str, now: float) -> tuple[int, int, int] | None:
 
 def message(have: tuple[int, int, int], new: tuple[int, int, int], repo: str) -> str:
     h, n = ".".join(map(str, have)), ".".join(map(str, new))
-    return (f"product-team {n} is available (you have {h}). In Claude Code, run "
-            f"/plugin marketplace update {MARKETPLACE}, then update product-team from /plugin. "
+    return (f"product-team {n} is available (you have {h}). To update: /plugin, Installed tab, "
+            f"product-team, Update now; or in a terminal, claude plugin update product-team@{MARKETPLACE}. "
             f"What changed: {repo}/tags. Turn this reminder off with PRODUCT_TEAM_NO_UPDATE_CHECK=1.")
 
 

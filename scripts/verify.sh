@@ -207,8 +207,9 @@ group "Routing-only writes CLAUDE.md and nothing else"
 mkdir -p "$TMP/routing"
 ./install.sh --routing-only "$TMP/routing" >/dev/null
 [ ! -d "$TMP/routing/.claude" ] && ok "no skills copied" || bad "copied skills it should not have"
-grep -q '`/product-manager`' "$TMP/routing/CLAUDE.md" \
-  && ok "role table rewritten to invocations" || bad "role table not rewritten"
+# Alongside the plugin, the roles are reached by their namespaced plugin names.
+grep -q '`/product-team:product-manager`' "$TMP/routing/CLAUDE.md" \
+  && ok "role table rewritten to the plugin's invocations" || bad "role table not rewritten to /product-team:<name>"
 ! grep -q '\.claude/skills' "$TMP/routing/CLAUDE.md" \
   && ok "no dangling skill-file paths" || bad "left paths pointing at files that do not exist"
 

@@ -48,6 +48,13 @@ def main(check: bool) -> int:
         name = f.parent.name
         if meta(text, 'model_tier') not in TIERS:
             problems.append(f'{name}: metadata.model_tier must be one of {", ".join(TIERS)}')
+        fm = text.split('---', 2)[1] if text.startswith('---') else ''
+        nm = re.search(r'^name:\s*(.+)$', fm, re.M)
+        ds = re.search(r'^description:\s*(.+?)(?=^\S[^\n]*:|\Z)', fm, re.M | re.S)
+        if not nm or not re.fullmatch(r'[a-z0-9-]{1,64}', nm.group(1).strip()):
+            problems.append(f'{name}: name must be 1-64 lower-case letters, digits and hyphens')
+        if not ds or len(' '.join(ds.group(1).split()).strip('"\'')) > 1024:
+            problems.append(f'{name}: description must be 1-1024 characters, or claude.ai rejects the upload')
         if not re.fullmatch(r'\d+\.\d+\.\d+', meta(text, 'version') or ''):
             problems.append(f'{name}: metadata.version must be a version number such as "1.0.0"')
         if want != text:

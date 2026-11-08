@@ -96,6 +96,8 @@ In Claude Code, the equivalent explicit practices are:
 | Resolve a conflict | `/ppot resolve <topic>` |
 | Publish approved proposals | `/ppot publish` |
 
+With the plugin, the full form is `/product-team:ppot`, for example `/product-team:ppot brief`. The short `/ppot` works while nothing else uses that name; if you also uploaded the skills to claude.ai, use the full form.
+
 In Codex, use the same practice names with `$ppot`, for example `$ppot brief` or `$ppot check this PRD`.
 
 ## How the other product-team skills use it
