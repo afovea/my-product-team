@@ -69,7 +69,7 @@ For every other substantial product-team task, apply the PPoT handshake embedded
 
 ## Squad routing
 
-Use squads when the work requires more than one discipline.
+Use squads when the work requires more than one discipline. For the order in which a squad's roles run, what each hands to the next and where a person decides, follow the matching recipe in [docs/workflows.md](docs/workflows.md). Each skill's "Works with" section names its own neighbours.
 
 ### Squads are not phases
 
@@ -199,7 +199,7 @@ The entry point is always `run-pipeline`. It classifies the request, surfaces a 
 |---|---|---|
 | Small | One narrow change, single file, no schema/migration/infra/security touch | execute-chunk → targeted validation |
 | Medium | One feature slice, 1–3 chunks | requirements → shape → execute+close loop → cleanup-verify |
-| Large | Broad scope, >3 chunks, architectural or infra changes | full 9-phase flow including Explore sub-agent, Architect plan, and codex review |
+| Large | Broad scope, >3 chunks, architectural or infra changes | full 9-phase flow including inspection and an architect plan (by sub-agent only with the user's approval and cap) and independent review where the adapter declares one |
 
 Shared state lives in `.claude/cache/pipeline.json`. Small flow does not touch the cache.
 
@@ -215,7 +215,7 @@ Use a squad when the task touches more than one of: product value, user experien
 
 ### 3. Prefer specialist roles for narrow work
 
-Use one role when the task is clearly owned by that discipline. Examples: error message rewrite → Content Designer; component token review, UI foundation choice, or intake of copied component source → Design Systems Specialist; UI animation, transition, micro-interaction, motion-token, or reduced-motion design and animation-performance review → Motion Designer; landing-page or hero motion, cursor/hover effect, animated background, or "should we use this animated component" intake → Motion Designer; animated explainer, animated chart for a deck, or an onboarding walkthrough video → Motion Graphics Designer; SQL metric definition → Data Analyst; regression plan → QA Engineer; deployment risk → DevOps Engineer; system integration decision, or whether a library should become a standing dependency → Technical Architect; picking a library for one feature, or checking code against the installed version → Software Engineer; chart or data-visualisation accessibility → Accessibility Specialist; RLS or auth review, threat model, DPIA, dependency-vuln triage, licence and commercial-boundary check, third-party tool-server assessment, AI safety check → Security Specialist; deep or contested research, contradiction analysis, blind-spot review → STORM Researcher; building a card sort, tree test, classification or first-click tool for a study → Research Tool Builder; turning usability test results into a stakeholder report, or theming research reports to a brand → Research Reporter; pricing model or tier design → Pricing Strategist; CRO or content strategy → Growth PMM; brand-guideline check, claims or endorsement review, co-branded or partner material, naming fit, or a reported case of brand misuse or impersonation → Brand Guardian; systematic debugging → diagnose pipeline skill; UI review before release → design-critique pipeline skill.
+Use one role when the task is clearly owned by that discipline. Examples: error message rewrite → Content Designer; component token review, UI foundation choice, or intake of copied component source → Design Systems Specialist; UI animation, transition, micro-interaction, motion-token, or reduced-motion design and animation-performance review → Motion Designer; landing-page or hero motion, cursor/hover effect, animated background, or "should we use this animated component" intake → Motion Designer; animated explainer, animated chart for a deck, or an onboarding walkthrough video → Motion Graphics Designer; SQL metric definition → Data Analyst; regression plan → QA Engineer; deployment risk → DevOps Engineer; system integration decision, or whether a library should become a standing dependency → Technical Architect; picking a library for one feature, or checking code against the installed version → Software Engineer; chart or data-visualisation accessibility → Accessibility Specialist; RLS or auth review, threat model, DPIA, dependency-vuln triage, licence and commercial-boundary check, third-party tool-server assessment, AI safety check → Security Specialist; deep or contested research, contradiction analysis, blind-spot review → STORM Researcher; building the tool a study runs on (card sort, tree test, first click, five-second, preference, comprehension, questionnaire, diary, observation) → Research Tool Builder; turning usability test results into a stakeholder report, or theming research reports to a brand → Research Reporter; pricing model or tier design → Pricing Strategist; CRO or content strategy → Growth PMM; brand-guideline check, claims or endorsement review, co-branded or partner material, naming fit, or a reported case of brand misuse or impersonation → Brand Guardian; systematic debugging → diagnose pipeline skill; UI review before release → design-critique pipeline skill.
 
 ### 4. State the invoked role or squad
 

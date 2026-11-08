@@ -11,6 +11,7 @@ allowed-tools:
   - LS
 metadata:
   model_tier: "fast"
+  version: "1.0.0"
   derived_from: product-designer
   intent: code-task-intake
   language: en-GB
@@ -135,12 +136,22 @@ If the change is purely backend / contract / infra, omit this section entirely.
 
 ## Cache integration
 
-If `.claude/cache/pipeline.json` exists, persist the confirmed brief into `designBrief` so downstream skills (`shape-task`, `run-pipeline`) can read it without restating. Do not touch `lastGate`.
+If `<cache>/pipeline.json` (the adapter's `state.directory`, default `.claude/cache/`) exists, persist the confirmed brief into `designBrief` so downstream skills (`shape-task`, `run-pipeline`) can read it without restating. Do not touch `lastGate`.
 
 When invoked with arguments, treat `$ARGUMENTS` as the raw task request.
 
 Task to scope:
 $ARGUMENTS
+
+## Works with
+
+- **Takes work from:** `run-pipeline` (Medium and Large runs), or a request directly.
+- **Hands work to:** `shape-task` (the confirmed brief); `product-designer` (research, journeys or design QA it does not cover).
+- **Workflows:** W6 Build a ticket (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

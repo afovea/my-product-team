@@ -15,6 +15,7 @@ allowed-tools:
   - Bash
 metadata:
   model_tier: "balanced"
+  version: "1.0.0"
 ---
 
 You are an implementation execution skill.
@@ -256,7 +257,7 @@ Coordinate with `<cache>/pipeline.json` (contract in [`state-schema.md`](../../r
 
 On entry:
 
-- Read `.claude/cache/pipeline.json`.
+- Read `<cache>/pipeline.json`, where `<cache>` is the adapter's `state.directory` (default `.claude/cache/`).
 - If `$ARGUMENTS` does not name a specific chunk, select the first entry in `chunks[]` whose `status === "pending"`. If none exist and `$ARGUMENTS` contains the chunk inline, proceed using that chunk only.
 - Set that chunk's `status = "executing"` and `run.status = "executing"`. Update `updatedAt`.
 - If `requirements` or `strategy` are populated in the cache, treat them as authoritative context for this chunk — you do not need the user to re-supply them.
@@ -278,6 +279,16 @@ When invoked with arguments, treat `$ARGUMENTS` as the approved chunk or executi
 
 Approved chunk to execute:
 $ARGUMENTS
+
+## Works with
+
+- **Takes work from:** `run-pipeline` (which dispatches it); `shape-task` (chunks); `close-chunk` (FAIL findings to address); `diagnose` (the cause, in the pipeline's notes).
+- **Hands work to:** `close-chunk` (independent verification); `product-manager` (anything the scope guard stops).
+- **Workflows:** W6 Build a ticket, W10 Fix a bug or incident (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

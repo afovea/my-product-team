@@ -30,9 +30,10 @@ A project that provides no writable cache location still runs the whole pipeline
   "schemaVersion": 1,
 
   "run": {
-    "id": "pipeline-2026-07-29T13:04:49Z",   // "pipeline-<ISO-8601>"
+    "id": "pipeline-2026-07-29T13:04:49Z",   // "pipeline-<ISO-8601>", or "shape-<ISO-8601>" when shape-task runs on its own
     "task": "raw user request, verbatim",
     "startedAt": "2026-07-29T13:04:49Z",
+    "updatedAt": "2026-07-29T13:40:12Z",     // every skill that writes the file sets it
     "completedAt": "2026-07-29T14:11:02Z",   // set on terminal status only
     "status": "shaping",
     "tier": "medium",                        // "small" | "medium" | "large"
@@ -51,10 +52,11 @@ A project that provides no writable cache location still runs the whole pipeline
       "id": "C1",
       "objective": "one line",
       "acceptanceCriteria": ["testable statement"],
+      "size": "small",                       // "small" | "medium" | "large", from shape-task
       "status": "pending",
       "filesChanged": ["path/to/file.ts"],
-      "validation": { "commands": ["…"], "result": "pass" },
-      "closure": { "decision": "PASS", "notes": "…" }
+      "validation": { "lint": "pass", "check": "pass", "test": "pass", "at": "…" },  // null for a step not run
+      "closure": { "decision": "PASS", "at": "…", "reason": "one line" }
     }
   ],
 
@@ -70,18 +72,28 @@ A project that provides no writable cache location still runs the whole pipeline
 
 | Value | Meaning | Set by |
 |---|---|---|
-| `shaping` | Brief and chunks being established | run-pipeline, Phase B |
+| `shaping` | Brief and chunks being established | run-pipeline, Phase B; shape-task when run on its own |
+| `ready` | Shaped and waiting for the first chunk; only when shape-task runs outside a pipeline run | shape-task |
 | `executing` | Chunk loop in progress | run-pipeline, before first chunk |
-| `verifying` | All chunks closed; final sweep running | run-pipeline, wrap-up |
+| `verifying` | All chunks closed; final sweep and review still to run | run-pipeline, wrap-up; close-chunk, when it closes the last chunk of a pipeline run |
 | `blocked` | Stopped on a failure or scope breach | any skill that stops the run |
-| `complete` | Finished clean | run-pipeline, final phase |
+| `complete` | Finished clean | run-pipeline, final phase; close-chunk, only for a run that is not a pipeline run (no final sweep follows) |
 | `complete_with_findings` | Finished with unresolved review findings after the cap | run-pipeline, final phase |
 
 ### `chunks[].status`
 
-`pending` → `executing` → `passed` (execute-chunk succeeded) → `closed` (close-chunk returned a decision).
+`pending` → `executing` → `passed` (execute-chunk succeeded) → `closed` (close-chunk returned PASS or PASS_WITH_NOTES).
 
-A chunk that fails stays at its current status; the run status goes to `blocked`. Do not mark a chunk `closed` without a `closure.decision`.
+Other values:
+- `blocked`: execute-chunk stopped before editing, for example on the scope guard.
+- `failed`: execute-chunk's validation failed, or close-chunk returned FAIL.
+- `split`: shape-task or close-chunk decomposed the chunk into sub-chunks, which carry on in its place.
+
+When a chunk is `blocked` or `failed`, the run status goes to `blocked`. Do not mark a chunk `closed` without a `closure.decision`.
+
+### Who owns the run
+
+A run whose `run.id` starts with `pipeline-` belongs to `run-pipeline`. The skills it dispatches update their own parts (`designBrief`, `requirements`, `strategy`, `chunks[]`, `scratchpad`) but never reset `run.id`, `run.task`, `run.tier` or `run.startedAt`, and never set a terminal status: only run-pipeline ends its own run, after the final sweep and review.
 
 ### `chunks[].closure.decision`
 
@@ -113,6 +125,10 @@ Some skills use a tighter window than the TTL for their own purposes — `run-pi
 Write `last-gate.json` only for a chain **you just ran and observed in this session**. Never stamp from a `validation` block you read out of `pipeline.json`, from a prior chunk's record, or from a user's assertion that tests pass. The marker exists to let other skills skip work; a stamp written from hearsay silently disables verification.
 
 The `lastGate` key inside `pipeline.json` is a convenience mirror for reporting. `last-gate.json` is authoritative.
+
+### The hook's stamp
+
+`scripts/gate-chain.py` keeps a second stamp, `<config>/.gate/stamp.json`, for the Stop hook. It is keyed to the exact working tree (HEAD, status, diff and untracked files), not to a time window, so any edit invalidates it. The two answer different questions: `last-gate.json` lets skills skip a re-run within the TTL; the hook's stamp proves this exact tree passed. When `gate-chain.py` is available, `cleanup-verify` runs the chain through it with `--stamp`, so one run writes both.
 
 ## Concurrency
 

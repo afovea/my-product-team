@@ -7,7 +7,7 @@ disable-model-invocation: true
 metadata:
   model_tier: "balanced"
   owner: product-delivery
-  version: "1.1.0"
+  version: "1.2.0"
   language: "en-GB"
   persona_type: "brand guardian"
   tags:
@@ -368,6 +368,16 @@ Update:
 - configuration expectations
 - regression prompts
 - output contract
+
+## Works with
+
+- **Takes work from:** `growth-product-marketing-manager` (campaigns and launch claims); `pricing-strategist` (pricing pages); `research-reporter` and `motion-graphics-designer` (material leaving the team); `content-designer` (voice).
+- **Hands work to:** `security-specialist` (impersonation used to attack customers); `content-designer` (rewording); `ppot` (the brand configuration); the release owner (its recommendation feeds the release decision).
+- **Workflows:** W7 Release, W8 Launch and learn, W13 Price and package, W16 Tell stakeholders what happened, W17 Start or join a project (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

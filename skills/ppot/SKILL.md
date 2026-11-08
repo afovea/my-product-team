@@ -3,6 +3,7 @@ name: ppot
 description: Consult, review, and maintain a project's PPoT.md Project Point of Truth. Use when someone asks what is known about a product, requests a project briefing, says "remember this" or "record our decision", wants to capture a fact, constraint, assumption, risk, question, or durable learning, checks a PRD or proposal against established project knowledge, resolves conflicting sources, reviews stale knowledge, or approves a proposed PPoT update.
 metadata:
   model_tier: "balanced"
+  version: "1.0.0"
 ---
 
 # Project Point of Truth
@@ -146,6 +147,16 @@ A PPoT response is complete when it:
 - identifies conflicts instead of hiding them;
 - preserves human approval for confirmed knowledge;
 - leaves a precise next action.
+
+## Works with
+
+- **Takes work from:** every other skill (the candidate entries it raises at the end of its work); `brand-guardian` (the brand configuration to record).
+- **Hands work to:** every other skill (`brief` and `ask` before substantial work); the owner, who approves what is published.
+- **Workflows:** W10 Fix a bug or incident, W15 Adopt a library or component, W17 Start or join a project (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

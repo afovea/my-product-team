@@ -7,7 +7,7 @@ disable-model-invocation: true
 metadata:
   model_tier: "balanced"
   owner: product-delivery
-  version: "1.5.0"
+  version: "1.6.0"
   language: "en-GB"
   persona_type: "functional front-end motion designer"
   tags:
@@ -526,6 +526,16 @@ Update:
 - spring and duration starting points
 - technology guidance
 - resources (links and delivery endpoints go stale quickly)
+
+## Works with
+
+- **Takes work from:** `product-designer` (state changes people need to follow); `design-systems-specialist` (existing tokens); `motion-graphics-designer` (requests that are really interface motion).
+- **Hands work to:** `accessibility-specialist` (reduced-motion review); `software-engineer` (implementation); `design-systems-specialist` (motion tokens); `motion-graphics-designer` (animation to watch rather than use).
+- **Workflows:** W4 Develop the solution, W11 Product health check, W14 Stand up or audit a design system, W15 Adopt a library or component (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

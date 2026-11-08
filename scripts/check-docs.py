@@ -24,6 +24,7 @@ DOCS = [
     "what-can-my-product-team-do.md",
     "docs/PPOT.md",
     "docs/capability-map.md",
+    "docs/workflows.md",
 ]
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -66,6 +67,14 @@ def main() -> int:
         for skill in re.findall(r"download/([\w-]+)\.zip", text):
             if not (ROOT / "download" / f"{skill}.zip").is_file():
                 problems.append(f"{name}: links download/{skill}.zip, which does not exist")
+
+    # Every workflow carries a version, so a team can tell which recipe it followed.
+    flows = docs["docs/workflows.md"]
+    if not re.search(r"^\*\*Version \d+\.\d+\.\d+\*\*", flows, re.M):
+        problems.append("docs/workflows.md: the document has no version line")
+    for wid, body in re.findall(r"^### (W\d+) · .*?\n(.*?)(?=^### |^## |\Z)", flows, re.S | re.M):
+        if not re.search(r"^\*\*Version:\*\* \d+\.\d+\.\d+$", body, re.M):
+            problems.append(f"docs/workflows.md: {wid} has no version")
 
     # Every skill should be reachable from the install guide, or a reader
     # cannot install one that exists.

@@ -6,6 +6,8 @@ That document is a catalogue. It lists everything this product team can do. This
 the two questions that come next: **when would I reach for it**, and **what does it leave
 behind**?
 
+For the step-by-step recipe behind each job, see [workflows.md](./workflows.md).
+
 If the suite is new to you, read the catalogue first. This map is easier to follow once you
 know what the capabilities actually are.
 

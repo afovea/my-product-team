@@ -12,6 +12,7 @@ allowed-tools:
   - Bash
 metadata:
   model_tier: "balanced"
+  version: "1.0.0"
 ---
 
 You are a chunk verification and closure skill.
@@ -293,7 +294,7 @@ On exit (do all four — none are optional):
 1. **Write the closure block** on the chunk: `closure: { decision: "PASS" | "PASS_WITH_NOTES" | "FAIL", at: <now>, reason: <one-line summary> }`.
 2. **Bump `chunk.status`** in the same write — `"closed"` for PASS or PASS_WITH_NOTES, `"failed"` for FAIL. The status field is what dashboards and the run-pipeline router read; leaving it at `"passed"` after a closure decision is a known bookkeeping drift that the 2026-05-03 audit had to retroactively repair across 7 chunks. Do not repeat that.
 3. **Stamp `last-gate.json` only on first-hand evidence.** If you just ran the project's full gate chain yourself as part of closure verification and the decision is PASS, write `<cache>/last-gate.json` with `{ at: <now>, scope: "full", success: true }` so downstream skills skip the redundant run within the stamp TTL. Do NOT stamp `lastGate` based on evidence you only read (for example the chunk's prior `validation` block) — the marker must reflect a run you actually observed.
-4. **Close the run** if this is the last chunk and every chunk is now `status: "closed"` (PASS or PASS_WITH_NOTES) or `status: "split"` (parent chunks decomposed into sub-chunks): set `run.status = "complete"` and `run.completedAt`.
+4. **Hand over the run** if this is the last chunk and every chunk is now `status: "closed"` (PASS or PASS_WITH_NOTES) or `status: "split"` (parent chunks decomposed into sub-chunks). Inside a pipeline run (`run.id` starts with `pipeline-`), set `run.status = "verifying"`: the final sweep and review still have to run, and only `run-pipeline` ends its run. Outside one, no sweep follows, so set `run.status = "complete"` and `run.completedAt`.
 
 **Carry-forward rule.** If your review encountered a "pre-existing failure carried forward from a prior chunk" claim in `pipeline.json`, re-run the failing test against current HEAD before trusting it. The phantom-carry-forward pattern (cache says broken, code is actually green) has now been observed twice; trust the test runner over the cache. Any actually-still-broken test must become a `.claude/todo/` file before this chunk closes — never a "Known gaps" note in the closure reason.
 
@@ -303,6 +304,16 @@ When invoked with arguments, treat `$ARGUMENTS` as the completed chunk descripti
 
 Chunk to verify:
 $ARGUMENTS
+
+## Works with
+
+- **Takes work from:** `run-pipeline` (which dispatches it); `execute-chunk` (a built chunk and its evidence); `shape-task` (the acceptance criteria).
+- **Hands work to:** `execute-chunk` (FAIL findings to address); `diagnose` (a FAIL whose cause is unclear); `cleanup-verify` (after the last chunk).
+- **Workflows:** W6 Build a ticket (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

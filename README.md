@@ -30,6 +30,7 @@ The same model as a FigJam workshop kit: a run-sheet per capability, timed zones
 - [Invoking a skill](#invoking-a-skill) — naming a role in chat, `/name` in Claude Code, and why automatic selection differs by host
 - [Project Point of Truth](#project-point-of-truth) — the `/ppot` practice and the pull/push handshake every skill uses
 - [Model and sub-agents](#model-and-sub-agents) — every skill checks the model against the task, and asks before starting sub-agents
+- [Workflows](#workflows) — seventeen recipes that chain the skills, from an idea to evidence it worked
 - [The 32 skills](#the-32-skills) — every role and pipeline skill, grouped, with when to reach for it
 - [The Figma board](#the-figma-board) — the FigJam companion a team runs the work on
 - [Install options](#install-options) — all routes compared, and what each one actually gives you
@@ -302,6 +303,18 @@ and starter template, not the project’s facts.
 
 Contribution practices, entry types, approval rules, natural-language examples,
 and the pull/push handshake used by every skill.
+
+[↑ Back to contents](#contents)
+
+## Workflows
+
+The skills are narrow on purpose. Each one names who it takes work from and hands work to, in a "Works with" section that CI keeps two-way. **[docs/workflows.md](./docs/workflows.md)** supplies the sequencing:
+- **The spine:** eight workflows from framing a problem to evidencing the outcome, with the three gates.
+- **Nine recurring ones:** investigating a metric, fixing an incident, a health check, red-teaming, pricing, design systems, adopting a library, telling stakeholders, and starting a project.
+- **For each skill:** a best-use card.
+- **Ownership rules** for where skills overlap.
+
+Each step names the skill, the intent to ask it for, and what it should leave behind for the next one.
 
 [↑ Back to contents](#contents)
 
@@ -629,17 +642,20 @@ python3 scripts/gate-chain.py gates           # show the resolved chain
 Gate resolution follows the same declare-then-discover pattern as the rest of the pipeline, first hit wins:
 
 1. `.claude/pipeline-gates.json`
-2. a ` ```gates ` fenced block in `.claude/pipeline-adapter.md`
+2. `.claude/pipeline-adapter.md`: a ` ```gates ` fenced block, or else the `gates: chain:` list in its YAML (the form [`reference/project-adapter.md`](./reference/project-adapter.md) documents)
 3. discovery from `package.json`, `Makefile` or `pyproject.toml`
 
-The adapter form is one gate per line, `name: command`, with a leading `?` marking a gate non-blocking:
+The ` ```gates ` form is one gate per line, `name: command`. Names may contain colons, because the separator is a colon followed by a space. A leading `?` marks a gate non-blocking, and `(baseline N)` turns it into a ratchet:
 
 ```gates
 lint: npm run lint
-typecheck: npm run typecheck
+contracts:validate: npm run contracts:validate
 test: npm test
 ?style: npm run style
+?check:architecture (baseline 47): npm run check:architecture
 ```
+
+A ratchet's exit code is ignored. The last number in its output (or in the output of the YAML form's `baseline.read` filter) must be no higher than its baseline. A higher count, or no number at all, fails the chain like a blocking gate. A non-blocking gate without a baseline only reports.
 
 Scratch files live in `.claude/.gate/`, which excludes itself from version control. Nothing needs adding to a consuming project's `.gitignore`.
 
@@ -688,9 +704,11 @@ my-product-team/
 ├── scripts/
 │   ├── gate-chain.py                 # standalone gate chain runner
 │   ├── sync-shared-sections.py       # keeps every skill's shared section identical
+│   ├── check-handoffs.py             # every "Works with" link names a real skill, both ways
 │   └── package-skills.sh             # rebuilds download/
 ├── reference/                        # shared docs, deliberately not skills
-│   ├── model-and-sub-agents.md       # the section every skill carries a copy of
+│   ├── handing-over-work.md          # shared section: save outputs for the next step
+│   ├── model-and-sub-agents.md       # shared section: model check and sub-agent approval
 │   ├── project-adapter.md
 │   └── state-schema.md
 ├── docs/
@@ -709,10 +727,11 @@ my-product-team/
 ## Conventions
 
 - All skills use **UK English**.
-- Every skill carries the standard `name` and `description`. Role and pipeline skills additionally use the repository's Claude-specific invocation and metadata fields. The PPoT practice keeps portable minimal frontmatter.
+- Every skill carries the standard `name` and `description`. Role and pipeline skills additionally use the repository's Claude-specific invocation and metadata fields. The PPoT practice keeps portable minimal frontmatter, adding only `metadata.model_tier` and `metadata.version`.
 - Every skill also carries an `agents/openai.yaml` with its display name and short description for Codex. The 31 that set `disable-model-invocation: true` add `policy.allow_implicit_invocation: false` there, which is the same instruction in Codex's dialect; `ppot` deliberately omits it. `scripts/verify.sh` fails if the two ever disagree, so adding a skill means adding both.
 - Keep skill bodies **under 500 lines**, per [Anthropic's authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Past that, move detail into that skill's `references/` and link to it with a stated trigger for when to read it.
-- Every skill carries the shared `## Model and sub-agents` section and a `metadata.model_tier`. Edit the section only in `reference/model-and-sub-agents.md`, then run `python3 scripts/sync-shared-sections.py`.
+- Every skill has a `## Works with` section naming who it takes work from and hands work to, drawn from [docs/workflows.md](./docs/workflows.md). When one changes, change the other end too; `scripts/check-handoffs.py` fails on a one-way link.
+- Every skill carries two shared sections, `## Handing over work` and `## Model and sub-agents`, plus a `metadata.model_tier` and a `metadata.version`. Edit the sections only in `reference/handing-over-work.md` and `reference/model-and-sub-agents.md`, then run `python3 scripts/sync-shared-sections.py`; CI fails if a copy drifts or a skill has no tier or version.
 - Every skill ends with `## Maintenance` listing its review triggers. Treat that as a versioning prompt: bump role and pipeline skill metadata when their behaviour changes, and bump the plugin version when the shared PPoT practice changes.
 
 [↑ Back to contents](#contents)

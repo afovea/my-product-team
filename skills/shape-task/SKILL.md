@@ -6,6 +6,7 @@ argument-hint: [feature request or task]
 disable-model-invocation: true
 metadata:
   model_tier: "balanced"
+  version: "1.0.0"
 ---
 
 You are a task shaping and requirements decomposition skill.
@@ -246,14 +247,15 @@ Persist the shaped output into `<cache>/pipeline.json` so `execute-chunk` and `c
 
 On entry:
 
-- Read `.claude/cache/pipeline.json`.
-- If `run.status` is `"executing"` or `"shaping"` and `run.task` differs from the current request, warn the user and ask whether to resume, discard, or append. Do not silently overwrite an in-flight run.
+- Read `<cache>/pipeline.json`, where `<cache>` is the adapter's `state.directory` (default `.claude/cache/`).
+- **Inside a pipeline run** (`run.id` starts with `pipeline-`): the run belongs to `run-pipeline`. Keep `run.id`, `run.task`, `run.tier` and `run.startedAt`; clear only `chunks`, `requirements` and `strategy` before writing your own.
+- **Otherwise**, if `run.status` is `"executing"` or `"shaping"` and `run.task` differs from the current request, warn the user and ask whether to resume, discard, or append. Do not silently overwrite an in-flight run.
 - Otherwise reset the run: set `run.id = "shape-<ISO-timestamp>"`, `run.task` to the raw request, `run.startedAt` to now, `run.status = "shaping"`, and clear `chunks`, `requirements`, `strategy`, and `scratchpad.notes`.
 
 On exit:
 
 - Write the structured outputs into `requirements`, `strategy`, and `chunks[]` (each chunk gets `status: "pending"`, an `id`, `objective`, `acceptanceCriteria`, and `size`).
-- Set `run.status = "ready"` (or `"blocked"` if blocking questions remain) and update `updatedAt`.
+- Set `run.status = "blocked"` if blocking questions remain. Otherwise, outside a pipeline run, set `run.status = "ready"`; inside one, leave the status to `run-pipeline`. Update `run.updatedAt`.
 
 Do not touch `lastGate` — only the execute/close/cleanup skills write to that.
 
@@ -261,6 +263,16 @@ When invoked with arguments, treat `$ARGUMENTS` as the raw task request to shape
 
 Task to shape:
 $ARGUMENTS
+
+## Works with
+
+- **Takes work from:** `requirements-generator` (the confirmed brief), usually inside a `run-pipeline` run.
+- **Hands work to:** `execute-chunk` and `close-chunk` (the chunks and their acceptance criteria); `product-manager` (blocking scope questions).
+- **Workflows:** W6 Build a ticket (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

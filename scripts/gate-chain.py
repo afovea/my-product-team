@@ -6,8 +6,14 @@ Usable from a skill, from CI, or from the Stop hook in gate-stop.py.
 
 Gate list resolution, first hit wins:
   1. <config>/pipeline-gates.json
-  2. a ```gates fenced block in <config>/pipeline-adapter.md
+  2. <config>/pipeline-adapter.md: a ```gates fenced block, or else the
+     `gates: chain:` list in its ```yaml block (reference/project-adapter.md)
   3. discovery from package.json, Makefile, pyproject.toml
+
+Ratchets. A non-blocking gate with a baseline is a ratchet: its exit code is
+ignored, the count read from its output must be no worse than the accepted
+baseline, and a worse count fails the chain like a blocking gate. A
+non-blocking gate without a baseline only reports.
 
 <config> is .claude/ or .agents/ — whichever the project actually uses. See
 config_dir().
@@ -156,6 +162,11 @@ def _normalise(raw: list[dict]) -> list[dict]:
             "blocking": bool(g.get("blocking", True)),
             "timeout": int(g.get("timeout", DEFAULT_TIMEOUT)),
         })
+        base = g.get("baseline")
+        if isinstance(base, (int, str)) and str(base).isdigit():
+            base = {"accepted": int(base)}
+        if isinstance(base, dict) and str(base.get("accepted", "")).isdigit():
+            gates[-1]["baseline"] = {"accepted": int(base["accepted"]), "read": base.get("read")}
     return gates
 
 
@@ -170,11 +181,18 @@ def from_config(root: Path) -> list[dict]:
     return _normalise(data.get("gates", []))
 
 
-def from_adapter(root: Path) -> list[dict]:
-    """Parse a ```gates fenced block out of the pipeline adapter.
+GATE_LINE = re.compile(r"^(?P<name>.+?)(?:\s*\(baseline\s+(?P<baseline>\d+)\))?:\s+(?P<command>.+)$")
 
-    Each line is `name: command`, or a bare command. A leading `?` marks the
-    gate non-blocking (it runs and reports, but never blocks).
+
+def from_adapter(root: Path) -> list[dict]:
+    """Read the gate chain out of the pipeline adapter.
+
+    A ```gates fenced block wins: one gate per line, `name: command` (names
+    may contain colons, so the separator is a colon followed by a space), or
+    a bare command. A leading `?` marks the gate non-blocking, and
+    `?name (baseline 47): command` makes it a ratchet that may not exceed 47.
+    Without one, the `gates: chain:` list of the adapter's ```yaml block is
+    read instead.
     """
     path = config_dir(root) / "pipeline-adapter.md"
     if not path.is_file():
@@ -185,7 +203,8 @@ def from_adapter(root: Path) -> list[dict]:
         return []
     block = re.search(r"^```gates[ \t]*\n(.*?)^```", text, re.S | re.M)
     if not block:
-        return []
+        yaml = re.search(r"^```ya?ml[ \t]*\n(.*?)^```", text, re.S | re.M)
+        return _normalise(yaml_chain(yaml.group(1))) if yaml else []
     raw = []
     for line in block.group(1).splitlines():
         line = line.strip()
@@ -195,12 +214,63 @@ def from_adapter(root: Path) -> list[dict]:
         if line.startswith("?"):
             blocking = False
             line = line[1:].strip()
-        name, sep, command = line.partition(":")
-        if not sep:
-            name, command = line, line
-        raw.append({"name": name.strip(), "command": command.strip(),
-                    "blocking": blocking})
+        m = GATE_LINE.match(line)
+        if m:
+            raw.append({"name": m["name"].strip(), "command": m["command"].strip(),
+                        "blocking": blocking, "baseline": m["baseline"]})
+        else:
+            raw.append({"name": line, "command": line, "blocking": blocking})
     return _normalise(raw)
+
+
+def _scalar(value: str):
+    value = re.sub(r"\s+#.*$", "", value).strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        return value[1:-1]
+    if value.lower() in ("true", "false"):
+        return value.lower() == "true"
+    return value
+
+
+def yaml_chain(text: str) -> list[dict]:
+    """The `gates: chain:` list from the adapter's YAML, without a YAML library.
+
+    Reads only the shape project-adapter.md documents: list items under
+    `chain:` with `name`, `command`, `blocking`, `timeout`, and a `baseline`
+    mapping holding `accepted` and `read`.
+    """
+    gates, item, in_gates, in_chain, in_base = [], None, False, False, False
+    for line in text.splitlines():
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        indent = len(line) - len(line.lstrip())
+        body = line.strip()
+        if indent == 0:
+            in_gates, in_chain = body == "gates:", False
+            continue
+        if not in_gates:
+            continue
+        if body == "chain:":
+            in_chain = True
+            continue
+        if not in_chain:
+            continue
+        if body.startswith("- "):
+            item, in_base = {}, False
+            gates.append(item)
+            body = body[2:]
+        if item is None or ":" not in body:
+            continue
+        key, _, value = body.partition(":")
+        key, value = key.strip(), value.strip()
+        if key == "baseline" and not value:
+            in_base, item["baseline"] = True, {}
+        elif in_base and key in ("accepted", "read"):
+            item["baseline"][key] = _scalar(value)
+        else:
+            in_base = False
+            item[key] = _scalar(value)
+    return gates
 
 
 def discover(root: Path) -> list[dict]:
@@ -289,19 +359,42 @@ def run_chain(root: Path, gates: list[dict]) -> dict:
             "passed": code == 0,
             "seconds": round(time.time() - started, 1),
         }
-        if code != 0:
+        worse = False
+        if not gate["blocking"] and gate.get("baseline"):
+            # A ratchet: the exit code is expected to fail; the count decides.
+            base = gate["baseline"]
+            count = ratchet_count((out or "") + "\n" + (err or ""), base.get("read"), root)
+            result["ratchet"] = {"accepted": base["accepted"], "count": count}
+            worse = count is None or count > base["accepted"]
+            result["passed"] = not worse
+        if not result["passed"]:
             result["output"] = tail((out or "") + "\n" + (err or ""))
         results.append(result)
 
-        if code != 0 and gate["blocking"]:
+        if (code != 0 and gate["blocking"]) or worse:
             failed = gate["name"]
-            break  # stop at the first blocking failure
+            break  # stop at the first blocking failure, or a ratchet that got worse
 
     return {
         "passed": failed is None,
         "failed_gate": failed,
         "gates": results,
     }
+
+
+def ratchet_count(output: str, read: str | None, root: Path) -> int | None:
+    """The count a ratchet compares with its baseline: the last whole number in
+    the gate's output, after the baseline's `read` command has filtered it.
+    None when no number can be found, which fails the ratchet: an unreadable
+    count cannot prove the chain is no worse."""
+    if read:
+        try:
+            output = subprocess.run(read, cwd=root, shell=True, input=output,
+                                    capture_output=True, text=True, timeout=60).stdout
+        except (subprocess.TimeoutExpired, OSError):
+            return None
+    numbers = re.findall(r"\d+", output)
+    return int(numbers[-1]) if numbers else None
 
 
 # --------------------------------------------------------------------------
