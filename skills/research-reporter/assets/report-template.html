@@ -164,6 +164,7 @@ td a.task-link:hover { color: var(--accent); text-decoration: underline; }
 .rank { counter-reset: rk; }
 .rank li { display: grid; grid-template-columns: 24px 1fr; gap: 4px 10px; counter-increment: rk; }
 .rank li::before { content: counter(rk); grid-row: span 2; font: 600 12px/22px var(--f-mono); width: 22px; height: 22px; text-align: center; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.answers-text { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; }
 .rk-meta { font-size: 12.5px; color: var(--muted); }
 .comments summary { cursor: pointer; font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
 .comments ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13.5px; }
@@ -456,7 +457,7 @@ body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted
     "methodDetail": [
       "One-to-one moderated usability testing over video call",
       "Task-based activities in clickable prototypes (app and website)",
-      "Single Ease Question after each task",
+      "A 5-point ease question after each task",
       "Short follow-up interview"
     ],
     "stimulus": [
@@ -757,6 +758,8 @@ body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted
     supported: { label: 'All tasks passed', cls: 'pass', icon: 'check' }, partly: { label: 'Some tasks passed', cls: 'minor', icon: 'alert' }, not: { label: 'No tasks passed', cls: 'major', icon: 'cross' }, na: { label: 'Not scored', cls: 'quiet', icon: 'clock' }
   };
   const HYP = new Proxy({}, { get: (_, k) => (isHyp() ? HYPS : AREAS)[k] });
+  // A 7-point scale is the Single Ease Question; anything else is labelled by its range so it is never mistaken for it.
+  const easeLabel = () => state.study.easeLabel || (state.study.seqScale === 7 ? 'Ease (SEQ)' : `Ease (1–${state.study.seqScale})`);
   const fmtMs = ms => { if (ms == null) return '–'; const s = Math.round(ms / 1000); return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`; };
   const PRIO = { High: 'major', Medium: 'minor', Low: 'quiet', Investigate: 'inv' };
   const pill = (m, sm) => `<span class="pill ${m.cls}${sm ? ' sm' : ''}">${icon(m.icon)}${esc(m.label)}</span>`;
@@ -941,10 +944,11 @@ body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted
           <p class="def">${s.rated ? esc(t.effNote || 'How much friction each participant hit.') : 'Friction not rated for this task.'}</p>
         </div>
         <div class="measure">
-          <div class="top"><span class="eyebrow">${icon('smile')}Ease (SEQ)</span><span class="big num">${fmtMean(s.seqMean)}<small> / ${state.study.seqScale} avg</small></span></div>
+          ${t.easeAsked === false ? `<div class="top"><span class="eyebrow">${icon('smile')}${esc(easeLabel())}</span></div>
+          <p class="def">Not asked for this task.</p>` : `<div class="top"><span class="eyebrow">${icon('smile')}${esc(easeLabel())}</span><span class="big num">${fmtMean(s.seqMean)}<small> / ${state.study.seqScale} avg</small></span></div>
           ${seqBar(s)}
           <div class="seq-ends"><span>${esc(labels[0] || 'Difficult')}</span><span>${esc(labels[labels.length - 1] || 'Easy')}</span></div>
-          ${seqSummary(s)}
+          ${seqSummary(s)}`}
         </div>
       </div>
       ${resultsEd}
@@ -1008,7 +1012,7 @@ body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted
         <td>${verdictCell(s, t)}</td>
         <td class="num">${doneLabel(s)}</td>
         <td>${pill(EFF[s.eff], true)}</td>
-        <td><div class="ease-cell">${seqBar(s, true)}<span class="num">${fmtMean(s.seqMean)}</span></div></td>
+        <td>${t.easeAsked === false ? '<span class="muted">Not asked</span>' : `<div class="ease-cell">${seqBar(s, true)}<span class="num">${fmtMean(s.seqMean)}</span></div>`}</td>
       </tr>`; }).join('')}`).join('');
 
     const scoredTasks = all.filter(s => s.scored);
@@ -1031,7 +1035,7 @@ body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted
           <div class="row"><span class="eyebrow">${icon('target')}${esc(groupLabel())} ${hi + 1} of ${hyps.length}</span><span class="ed-row">${pill(HYP[verdicts[hi]])}${delBtn(`hypotheses.${hi}`, groupLabel().toLowerCase() + ' ' + h.id)}</span></div>
           ${E(`hypotheses.${hi}.statement`, 'h2')}
           ${h.note || editing ? E(`hypotheses.${hi}.note`, 'p', 'muted') : ''}
-          <p class="muted">${nScored ? `${passed} of ${nScored} scored task${nScored === 1 ? '' : 's'} passed.` : 'No scored tasks yet.'}${unscored ? ` ${unscored} observation task${unscored === 1 ? '' : 's'} not scored.` : ''}</p>
+          <p class="muted">${nScored ? `${passed} of ${nScored} scored task${nScored === 1 ? '' : 's'} passed.` : 'No scored tasks yet.'}${unscored ? ` ${unscored} task${unscored === 1 ? '' : 's'} not scored.` : ''}</p>
         </div>
         ${h.tasks.map((t, ti) => taskHTML(h, hi, t, ti)).join('')}
         ${addBtn(`hypotheses.${hi}.tasks`, 'task', 'Add task to ' + h.id)}
@@ -1044,6 +1048,10 @@ body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted
     // Closing questions: choice answers as counts, rankings as average position.
     const survey = (state.survey || []).map((q, qi) => {
       const qp = `survey.${qi}`;
+      if (q.kind === 'text') {
+        return `<div class="card q"><span class="eyebrow">Written answers · ${q.n}</span>${E(qp + '.prompt', 'h3')}
+          <ul class="answers-text">${q.answers.map(a => `<li>“${esc(a)}”</li>`).join('')}</ul></div>`;
+      }
       if (q.kind === 'rank') {
         const items = [...q.items].sort((a, b) => a.avg - b.avg);
         return `<div class="card q"><span class="eyebrow">Ranking · ${q.n} answers</span>${E(qp + '.prompt', 'h3')}
@@ -1163,7 +1171,7 @@ body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted
         <div class="card"><h3>${icon('book')}How we score</h3><ul class="key">
           <li>${pill(VERDICT.pass, true)}<span><b>Effectiveness.</b> A task passes when more than half of participants complete it (3 of 5, 4 of 7). The researcher can override this, with a written reason.</span></li>
           <li>${pill(EFF.minor, true)}<span><b>Efficiency.</b> Each participant is rated no issue, minor (completed with some difficulty) or major (significant difficulty or failure). The task shows the worst level that 2 or more people hit.</span></li>
-          <li><span class="pill sm acc">${icon('smile')}SEQ</span><span><b>Ease.</b> Single Ease Question, asked straight after each task: “Overall, how difficult or easy was the task to complete?” on a ${scale}-point scale. The bar runs from difficult (red) to easy (green), with the number of people in each band.</span></li>
+          <li><span class="pill sm acc">${icon('smile')}${esc(easeLabel())}</span><span><b>Ease.</b> ${scale === 7 ? 'Single Ease Question, asked straight after each task: “Overall, how difficult or easy was the task to complete?” on its standard 7-point scale.' : `Asked straight after each task: “Overall, how easy or difficult was this task?” on a ${scale}-point scale. This is not the 7-point Single Ease Question, so it is not compared with its benchmarks.`} The bar runs from difficult (red) to easy (green), with the number of people in each band.</span></li>
           <li><span class="pill sm inv">${icon('search')}Investigate</span><span><b>Needs investigation.</b> Something we saw but can't yet explain or size. It needs more research before acting on it.</span></li>
         </ul></div>
       </div></section>

@@ -1,0 +1,19 @@
+/* Card sort board. Uses only the shell's tokens. */
+.cs-board { display: grid; gap: 16px; }
+.cs-h { font: 600 14px/1.3 var(--f-body); }
+.cs-deck, .cs-group, .cs-other { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 10px; align-content: start; }
+.cs-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.cs-new { border-style: dashed; background: transparent; }
+.cs-cards { display: flex; flex-wrap: wrap; gap: 8px; }
+.cs-group .cs-cards { flex-direction: column; align-items: stretch; }
+.cs-card { min-height: 44px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); text-align: left; cursor: grab; touch-action: none; font-weight: 500; }
+.cs-card:hover { border-color: var(--accent); }
+.cs-card.held { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent); }
+.cs-ghost { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 50; box-shadow: 0 8px 24px rgb(0 0 0 / .2); max-width: 260px; }
+.cs-over { outline: 3px dashed var(--accent); outline-offset: 2px; }
+.cs-place { border-color: var(--accent); color: var(--accent); }
+.cs-empty { font-size: 14px; }
+.cs-holding { position: sticky; top: 60px; z-index: 5; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 12px; padding: 8px 12px; }
+.cs-other { border-style: dashed; }
+.cs-other-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 8px; align-items: center; }
+@media (max-width: 520px) { .cs-other-row { grid-template-columns: 1fr; } }

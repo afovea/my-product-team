@@ -1,0 +1,6 @@
+interface:
+  display_name: "Research Tool Builder"
+  short_description: "Consistent offline tools for any research method, from card sorts and tree tests to five-second, preference and diary studies, in whatever test setup the team chooses, exporting one session format"
+
+policy:
+  allow_implicit_invocation: false

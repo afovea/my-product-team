@@ -1,12 +1,13 @@
 ---
 name: research-reporter
-description: Research Reporter persona for turning usability test data into a consistent stakeholder report. Converts a testing tool's export, a results spreadsheet or session notes into one data format, scores every task the same way, and builds a single self-contained HTML report with a summary scorecard, priority fixes, findings with evidence, participant quotes, closing-question results and an appendix. Reports can be branded with the team's or a client's identity or themed from a customer's design system, and editors can change and save any part of a report in the page. Use when test results need to become a readable report; for planning a study or synthesising what it means, use ux-researcher.
+description: Research Reporter persona for turning usability test data into a consistent stakeholder report. Converts a testing tool's export (including every tool built with research-tool-builder), a results spreadsheet or session notes into one data format, scores every task the same way, and builds a single self-contained HTML report with a summary scorecard, priority fixes, findings with evidence, participant quotes, closing-question results and an appendix. Reports can be branded with the team's or a client's identity or themed from a customer's design system, and editors can change and save any part of a report in the page. Use when test results need to become a readable report; for planning a study or synthesising what it means, use ux-researcher.
 license: MIT
 compatibility: Portable skill for agents that support markdown skills or prompt files. Building and checking need Python 3.9+ with no packages. Previewing needs a browser. In-page saving needs a host that publishes HTML pages able to save themselves (claude.ai artifacts); elsewhere a saved report downloads as a new file.
 disable-model-invocation: true
 metadata:
+  model_tier: "balanced"
   owner: product-delivery
-  version: "1.0.0"
+  version: "1.1.0"
   language: "en-GB"
   persona_type: "research reporter"
   tags:
@@ -90,6 +91,7 @@ Local file, published page or print. See Delivery.
    ```bash
    python3 scripts/converters/wayfinding_check.py export.json --names-out names.txt > study.json
    ```
+   Tools built with `research-tool-builder` export `research-sessions`, which `scripts/converters/research_sessions.py` reads for every method. Their participants are codes already, so there is no names file.
    Keep `names.txt` out of anything you share.
 3. **Fill:** add the credits, and anything the user has given you that the source lacks: objectives, hypothesis wording, screenshots.
 4. **Build:**
@@ -177,7 +179,7 @@ Before handing over, check that:
 - Confidence ratings appear only as a takeaway line, not as a measure.
 - Hypothesis wording must come from the user when the source has only codes.
 - Screenshots are added by hand in the page or the data; converters do not capture them.
-- One converter exists (wayfinding-check). Other tools need one written.
+- Two converters exist: wayfinding-check, and research-sessions for every tool built with research-tool-builder. Other tools need one written.
 - In-page saving on a published page depends on the host.
 
 ## Maintenance
@@ -194,6 +196,13 @@ Update:
 - `references/data-format.md` and `references/sources.md`
 - the template, its example data and `scripts/report.py` checks together
 
+## Model and sub-agents
+
+Before substantial work, settle two things with the user, once per task: not on every turn, and not again when an orchestrating skill such as `run-pipeline` already has. Trivial work needs neither.
+
+**1. The model.** In one line, say which model you are running on (from your own system information, or say you cannot tell) and which tier the task needs: `most-capable` (Claude Opus), `balanced` (Sonnet) or `fast` (Haiku), or the host's equivalents. Start from this skill's `metadata.model_tier`; move up for high-stakes or hard-to-reverse decisions, ambiguous problems, long multi-step work or a large codebase, and down for lookups, short rewrites, formatting and mechanical checks. If the current model is not that tier, say what that means (more cost, or a risk of falling short), ask whether to switch or carry on, and wait. You cannot switch it yourself: the user does, with `/model` or the app's model menu.
+
+**2. Sub-agents.** Never start sub-agents, parallel agents or a multi-agent workflow on your own initiative, whatever this skill says elsewhere. First say why they would help, what each would do, which model each would use, and that they add cost. Then ask the user to set a cap, as a multiple-choice question: don't use sub-agents (work in this conversation) · up to 2 · up to 5 · another number. The cap covers every sub-agent for the whole task; ask again before going over it. A cap already set by the user or the project's instructions counts. Without approval, work in this conversation.
 
 ## PPoT integration
 

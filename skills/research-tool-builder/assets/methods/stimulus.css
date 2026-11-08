@@ -1,0 +1,7 @@
+/* Stimulus: one item fills the stage; several sit side by side and stack on narrow screens. */
+.st-grid { display: grid; gap: 16px; }
+.st-grid.many { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.st-item { margin: 0; display: grid; gap: 8px; align-content: start; }
+.st-item img { max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.st-text { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; white-space: pre-line; max-width: 70ch; }
+.st-item figcaption { font-weight: 600; }

@@ -1,7 +1,7 @@
 {
   "name": "product-team",
-  "version": "1.6.0",
-  "description": "A coordinated product team as 31 skills: 22 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice for durable product knowledge. Use when work needs a specific discipline's judgement, a coding task should run through scoped execution with gate checks, or the team needs to consult, capture, check, or review project facts, decisions, assumptions, constraints, and learning.",
+  "version": "1.7.0",
+  "description": "A coordinated product team as 32 skills: 23 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice for durable product knowledge. Use when work needs a specific discipline's judgement, a coding task should run through scoped execution with gate checks, or the team needs to consult, capture, check, or review project facts, decisions, assumptions, constraints, and learning.",
   "author": {
     "name": "Anthony Faconti"
   },

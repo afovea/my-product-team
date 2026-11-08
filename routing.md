@@ -41,6 +41,7 @@ For every other substantial product-team task, apply the PPoT handshake embedded
 | UX Researcher | `.claude/skills/ux-researcher/SKILL.md` | Research planning, discovery, interviews, synthesis, validation |
 | Data Analyst | `.claude/skills/data-analyst/SKILL.md` | Metrics, dashboards, funnels, experiments, behavioural evidence |
 | Customer Success | `.claude/skills/customer-success/SKILL.md` | Customer feedback, retention signals, account pain points, adoption blockers |
+| Research Tool Builder | `.claude/skills/research-tool-builder/SKILL.md` | Building the tool a usability study runs on, for any research method (card sort, tree test, first click, five-second, preference, comprehension, questionnaire, diary, design comparison), from a study plan, with consent, codes instead of names, autosave and recovery, and one session export format; porting a team's own testing tool onto the shared base; adding a method. Builds the tool; does not decide what to test or what results mean |
 | Research Reporter | `.claude/skills/research-reporter/SKILL.md` | Turning usability test results (a testing tool's export, a results spreadsheet, session notes) into a consistent stakeholder report, branding or theming reports, and adding converters for new testing tools. Reports what the data shows; does not plan studies or decide what findings mean |
 | STORM Researcher | `.claude/skills/storm-researcher/SKILL.md` | Deep, strategic, controversial, or exploratory research; multi-perspective scans; contradiction analysis; blind-spot and adversarial reviews; incentive and historical-precedent analysis |
 
@@ -102,7 +103,7 @@ Use when:
 - There are assumptions to test
 - The team needs to understand users, needs, context, or evidence
 
-Roles: Product Manager, Product Designer, UX Researcher, Data Analyst (where behavioural evidence is available), Customer Success (where customer feedback is relevant), STORM Researcher (where the evidence is contested, incentive-laden, or a dominant narrative needs stress-testing), Research Reporter (when test results need to become a report stakeholders can read).
+Roles: Product Manager, Product Designer, UX Researcher, Data Analyst (where behavioural evidence is available), Customer Success (where customer feedback is relevant), STORM Researcher (where the evidence is contested, incentive-laden, or a dominant narrative needs stress-testing), Research Tool Builder (when a study needs a tool to run it), Research Reporter (when test results need to become a report stakeholders can read).
 
 Default outputs: problem statement, assumptions, evidence summary, open questions, research or validation plan, recommended next decision.
 
@@ -214,7 +215,7 @@ Use a squad when the task touches more than one of: product value, user experien
 
 ### 3. Prefer specialist roles for narrow work
 
-Use one role when the task is clearly owned by that discipline. Examples: error message rewrite → Content Designer; component token review, UI foundation choice, or intake of copied component source → Design Systems Specialist; UI animation, transition, micro-interaction, motion-token, or reduced-motion design and animation-performance review → Motion Designer; landing-page or hero motion, cursor/hover effect, animated background, or "should we use this animated component" intake → Motion Designer; animated explainer, animated chart for a deck, or an onboarding walkthrough video → Motion Graphics Designer; SQL metric definition → Data Analyst; regression plan → QA Engineer; deployment risk → DevOps Engineer; system integration decision, or whether a library should become a standing dependency → Technical Architect; picking a library for one feature, or checking code against the installed version → Software Engineer; chart or data-visualisation accessibility → Accessibility Specialist; RLS or auth review, threat model, DPIA, dependency-vuln triage, licence and commercial-boundary check, third-party tool-server assessment, AI safety check → Security Specialist; deep or contested research, contradiction analysis, blind-spot review → STORM Researcher; turning usability test results into a stakeholder report, or theming research reports to a brand → Research Reporter; pricing model or tier design → Pricing Strategist; CRO or content strategy → Growth PMM; brand-guideline check, claims or endorsement review, co-branded or partner material, naming fit, or a reported case of brand misuse or impersonation → Brand Guardian; systematic debugging → diagnose pipeline skill; UI review before release → design-critique pipeline skill.
+Use one role when the task is clearly owned by that discipline. Examples: error message rewrite → Content Designer; component token review, UI foundation choice, or intake of copied component source → Design Systems Specialist; UI animation, transition, micro-interaction, motion-token, or reduced-motion design and animation-performance review → Motion Designer; landing-page or hero motion, cursor/hover effect, animated background, or "should we use this animated component" intake → Motion Designer; animated explainer, animated chart for a deck, or an onboarding walkthrough video → Motion Graphics Designer; SQL metric definition → Data Analyst; regression plan → QA Engineer; deployment risk → DevOps Engineer; system integration decision, or whether a library should become a standing dependency → Technical Architect; picking a library for one feature, or checking code against the installed version → Software Engineer; chart or data-visualisation accessibility → Accessibility Specialist; RLS or auth review, threat model, DPIA, dependency-vuln triage, licence and commercial-boundary check, third-party tool-server assessment, AI safety check → Security Specialist; deep or contested research, contradiction analysis, blind-spot review → STORM Researcher; building a card sort, tree test, classification or first-click tool for a study → Research Tool Builder; turning usability test results into a stakeholder report, or theming research reports to a brand → Research Reporter; pricing model or tier design → Pricing Strategist; CRO or content strategy → Growth PMM; brand-guideline check, claims or endorsement review, co-branded or partner material, naming fit, or a reported case of brand misuse or impersonation → Brand Guardian; systematic debugging → diagnose pipeline skill; UI review before release → design-critique pipeline skill.
 
 ### 4. State the invoked role or squad
 
@@ -232,14 +233,18 @@ The most common routing error is not two similar roles competing — it is one s
 |---|---|---|
 | payments, billing, subscription, revenue | Pricing Strategist | Is the question *what to charge* (Pricing), or *how to build or integrate it* (Technical Architect, Software Engineer)? |
 | risk | Delivery Manager | Schedule and dependency risk (Delivery), reliability of the running system (DevOps), or exposure and threat (Security)? |
-| copy, text, label, wording, message | Content Designer | Is comprehension the problem (Content), or is this a mechanical edit (see rule 7)? |
+| copy, text, label, wording, message | Content Designer | Is comprehension the problem (Content), or is this a mechanical edit (see rule 8)? |
 | brand, messaging, claims, campaign | Growth Product Marketing Manager | Is the question what will convert (Growth PMM), whether it is clear (Content), or whether it is true to the brand and safe for its trust (Brand Guardian)? Impersonation used to attack customers is also Security |
 | component, library, design system | Design Systems Specialist | Our own system and tokens (Design Systems), adopting an external dependency across products (Technical Architect), or picking one for a single feature (Software Engineer)? |
-| research, evidence, users | UX Researcher | Does this need new evidence gathered (UX Research), existing behavioural data read (Data Analyst), account signals interpreted (Customer Success), or test results that already exist turned into a report (Research Reporter)? |
+| research, evidence, users | UX Researcher | Does this need new evidence gathered (UX Research), existing behavioural data read (Data Analyst), account signals interpreted (Customer Success), a tool built to run the study (Research Tool Builder), or test results that already exist turned into a report (Research Reporter)? |
 
 The test is ownership of the decision, not topical proximity. A build-versus-buy question about a payments vendor is an architecture decision that happens to mention payments.
 
-### 7. Trivial work needs no specialist
+### 7. Check the model, and ask before sub-agents
+
+Every skill carries a "Model and sub-agents" section; apply it whichever skill or squad is chosen. Before substantial work, say in one line which model is running and which tier the work needs (each skill's `metadata.model_tier`, moved up or down for the task), and ask before switching. Never start sub-agents, parallel agents or a multi-agent workflow without the user's approval and a cap they set. A squad is several roles working in this conversation, one after another; it is not a reason to start sub-agents.
+
+### 8. Trivial work needs no specialist
 
 Mechanical, low-judgement changes — typo fixes, renames, comment additions, dead-code removal, dependency version bumps — go straight to implementation. Do not summon a specialist persona to justify a one-line edit; the routing overhead exceeds the work.
 
