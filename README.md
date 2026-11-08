@@ -320,7 +320,7 @@ and the pull/push handshake used by every skill.
 | `/product-strategist` | Market positioning, vision, strategic bets, competitive framing |
 | `/growth-product-marketing-manager` | Adoption, activation, messaging, funnel, CRO, content strategy, SEO |
 | `/pricing-strategist` | Pricing models, tier structure, packaging, willingness-to-pay |
-| `/brand-protector` | Brand fidelity, claims and trust review, naming and strategy fit, co-branding, suspected brand misuse |
+| `/brand-guardian` | Brand fidelity, claims and trust review, naming and strategy fit, co-branding, suspected brand misuse |
 
 ### Research, insight and data
 
@@ -642,7 +642,7 @@ my-product-team/
 │   │   ├── agents/openai.yaml        # no policy block — this one may self-fire
 │   │   ├── references/               # schema and governance
 │   │   └── assets/PPoT-template.md
-│   ├── brand-protector/
+│   ├── brand-guardian/
 │   │   ├── SKILL.md
 │   │   └── agents/openai.yaml
 │   ├── motion-designer/

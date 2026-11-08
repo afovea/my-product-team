@@ -249,7 +249,7 @@ Each is one small file. **Click a link and it downloads.** Nothing opens.
 [product-strategist](https://github.com/afovea/my-product-team/raw/main/download/product-strategist.zip) ·
 [growth-product-marketing-manager](https://github.com/afovea/my-product-team/raw/main/download/growth-product-marketing-manager.zip) ·
 [pricing-strategist](https://github.com/afovea/my-product-team/raw/main/download/pricing-strategist.zip) ·
-[brand-protector](https://github.com/afovea/my-product-team/raw/main/download/brand-protector.zip)
+[brand-guardian](https://github.com/afovea/my-product-team/raw/main/download/brand-guardian.zip)
 
 **Research, insight and data**
 [ux-researcher](https://github.com/afovea/my-product-team/raw/main/download/ux-researcher.zip) ·
