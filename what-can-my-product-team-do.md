@@ -286,6 +286,8 @@ From this it can help identify:
 
 These models can be grounded in evidence rather than relying on invented personas or unsupported assumptions.
 
+Usability test results can also be turned into a consistent stakeholder report, branded for the team or a client, with every finding traced to the participants behind it.
+
 ---
 
 ## Design and evaluate experiments

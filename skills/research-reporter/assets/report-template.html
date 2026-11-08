@@ -1,0 +1,1473 @@
+<meta charset="utf-8">
+<title>Making energy use make sense · 21 Oct 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="brand-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style id="page-style">
+/* Layout: one reading column, sticky section bar and findings filter, summary before detail, session materials folded away. */
+:root {
+  --bg: #F5F6FA; --surface: #FFFFFF; --ink: #1B1E2E; --muted: #5B6077; --line: #DCDFEA;
+  --accent: #3A3FB0; --accent-soft: #E6E7F8;
+  --pass: #1D7A4C; --pass-soft: #DFF2E6;
+  --minor: #9A5800; --minor-soft: #FBEED6;
+  --major: #B02525; --major-soft: #FBE2E0;
+  --inv: #565B85; --inv-soft: #E8E9F3;
+  --frame: #2A2E42;
+  --q1: #B02525; --q1-on: #FFFFFF; --q2: #F2B9B2; --q2-on: #4A1210;
+  --q3: #D7DAE5; --q3-on: #1B1E2E; --q4: #A8DCBD; --q4-on: #0F3A23;
+  --q5: #1D7A4C; --q5-on: #FFFFFF;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11131D; --surface: #1A1D2B; --ink: #E8EAF4; --muted: #A1A5BD; --line: #2D3146;
+  --accent: #A4A8FF; --accent-soft: #272B4C;
+  --pass: #64CF95; --pass-soft: #163024; --minor: #F2B458; --minor-soft: #352812;
+  --major: #FF8E84; --major-soft: #3B1B1B; --inv: #B8BBDB; --inv-soft: #24273B; --frame: #3A3F58;
+  --q1: #C9443B; --q1-on: #FFFFFF; --q2: #6B3330; --q2-on: #F8DCD9; --q3: #3A3E55; --q3-on: #E8EAF4;
+  --q4: #24583D; --q4-on: #DDF4E6; --q5: #4CC383; --q5-on: #0E2117;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #11131D; --surface: #1A1D2B; --ink: #E8EAF4; --muted: #A1A5BD; --line: #2D3146;
+  --accent: #A4A8FF; --accent-soft: #272B4C;
+  --pass: #64CF95; --pass-soft: #163024; --minor: #F2B458; --minor-soft: #352812;
+  --major: #FF8E84; --major-soft: #3B1B1B; --inv: #B8BBDB; --inv-soft: #24273B; --frame: #3A3F58;
+  --q1: #C9443B; --q1-on: #FFFFFF; --q2: #6B3330; --q2-on: #F8DCD9; --q3: #3A3E55; --q3-on: #E8EAF4;
+  --q4: #24583D; --q4-on: #DDF4E6; --q5: #4CC383; --q5-on: #0E2117;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.6 var(--f-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+body.session { padding-bottom: 84px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: clamp(22px, 3.2vw, 30px); font-weight: 700; }
+h3 { font-size: 19px; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--accent); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.eyebrow { font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; }
+.eyebrow svg.i { font-size: 15px; }
+.muted { color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+svg.i { width: 1em; height: 1em; flex: none; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn { width: 36px; height: 36px; display: inline-grid; place-items: center; border: 1px solid var(--line); background: var(--surface); border-radius: 9px; cursor: pointer; font-size: 17px; flex: none; }
+.icon-btn:hover { background: var(--bg); }
+.btn { display: inline-flex; align-items: center; gap: 7px; font-weight: 500; font-size: 14px; border: 1px solid var(--line); background: var(--surface); border-radius: 9px; padding: 8px 12px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: var(--bg); }
+.btn.primary { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); background: var(--accent); }
+.btn:disabled { opacity: 0.55; cursor: default; }
+
+/* Hero */
+.hero { background: var(--surface); border-bottom: 1px solid var(--line); }
+.hero .wrap { padding-block: 7px 32px; display: grid; gap: 22px; }
+.brand { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 36px; padding-right: 46px; margin-bottom: 10px; }
+/* Theme button: pinned top right; lines up with the section bar's actions once the bar sticks. */
+.theme-dock { position: sticky; top: env(safe-area-inset-top, 0px); height: 0; z-index: 7; pointer-events: none; }
+.theme-dock .wrap { display: flex; justify-content: flex-end; padding-top: 7px; }
+.theme-dock .icon-btn { pointer-events: auto; }
+.dock-gap { width: 36px; flex: none; }
+.logo { font: 700 18px/1 var(--f-display); letter-spacing: 0.02em; display: flex; align-items: center; gap: 8px; }
+.logo .logo-img { height: 28px; width: auto; max-width: 160px; object-fit: contain; }
+.logo .mark { width: 22px; height: 22px; border-radius: 6px; background: var(--accent); display: inline-block; flex: none; }
+.doc-type { font: 500 12px/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; }
+.title-block { display: grid; gap: 10px; max-width: 760px; }
+.title-block .lede { font-size: 17px; color: var(--muted); max-width: 64ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0; }
+.meta div { display: grid; gap: 2px; }
+.meta dt { font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.meta dd { margin: 0; font-weight: 500; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.stat { background: var(--surface); padding: 14px 16px; display: grid; gap: 4px; }
+.stat b { font: 700 28px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stat b small { font-size: 16px; color: var(--muted); font-weight: 600; }
+.stat span { font-size: 13px; color: var(--muted); }
+.privacy { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; align-items: baseline; }
+
+/* Sticky bars */
+.secbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 6; background: var(--surface); border-bottom: 1px solid var(--line); }
+.secbar .wrap { display: flex; align-items: center; gap: 8px; padding-block: 7px; }
+.secbar .links { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; flex: 1; min-width: 0; }
+.secbar .links a { white-space: nowrap; text-decoration: none; color: var(--muted); font-weight: 500; font-size: 14px; padding: 6px 10px; border-radius: 8px; display: inline-flex; gap: 6px; align-items: center; }
+.secbar .links a:hover { background: var(--bg); color: var(--ink); }
+.secbar .links a .dot { width: 8px; height: 8px; border-radius: 50%; }
+.secbar .actions { display: flex; gap: 6px; align-items: center; }
+.secbar .actions .btn { height: 36px; padding-block: 0; }
+.filterbar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--bar-h, 51px)); z-index: 5; background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.filterbar .wrap { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; padding-block: 9px; }
+.filter { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+.filter button { font: 500 13px/1 var(--f-body); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 7px 11px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.filter button .c { font: 500 11px/1 var(--f-mono); color: var(--muted); }
+.filter button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.filter button[aria-pressed="true"] .c { color: var(--surface); opacity: 0.75; }
+.filter-count { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+
+main section { padding-block: 44px 8px; scroll-margin-top: 64px; }
+main section > .wrap { display: grid; gap: 22px; }
+.sec-head { display: grid; gap: 6px; }
+.sec-head .row { display: flex; justify-content: space-between; align-items: end; gap: 10px; flex-wrap: wrap; }
+
+/* Pills */
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 600 13px/1 var(--f-body); padding: 6px 10px 6px 8px; border-radius: 999px; white-space: nowrap; }
+.pill.sm { font-size: 12px; padding: 4px 8px 4px 6px; }
+.pass { color: var(--pass); background: var(--pass-soft); }
+.minor { color: var(--minor); background: var(--minor-soft); }
+.major { color: var(--major); background: var(--major-soft); }
+.inv { color: var(--inv); background: var(--inv-soft); }
+.quiet { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+.acc { color: var(--accent); background: var(--accent-soft); }
+
+/* How to read */
+.howto { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.howto .card { gap: 10px; }
+.howto .badge { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 18px; }
+.howto h3 { font-size: 16.5px; }
+.howto p, .howto li { font-size: 14px; color: var(--muted); }
+.howto ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 7px; }
+.howto li { display: flex; gap: 8px; align-items: center; }
+.howto li .sw { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 13px; flex: none; }
+
+/* Summary */
+.insights { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.insights li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; align-content: start; position: relative; }
+.insights li strong { font: 600 16.5px/1.35 var(--f-display); }
+.insights li p { color: var(--muted); font-size: 14px; }
+.table-box { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+thead th { font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+tbody tr:last-child td { border-bottom: 0; }
+tr.hyp-row td { background: var(--bg); font-weight: 600; }
+tr.hyp-row td .row-flex { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+td a.task-link { color: var(--ink); text-decoration: none; font-weight: 500; }
+td a.task-link:hover { color: var(--accent); text-decoration: underline; }
+.tid { font: 500 12.5px/1 var(--f-mono); color: var(--muted); margin-right: 8px; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag-chip { font: 500 11px/1 var(--f-mono); padding: 4px 7px; border-radius: 5px; background: var(--bg); border: 1px solid var(--line); color: var(--muted); }
+.task-body.solo { grid-template-columns: 1fr; }
+.empty { color: var(--muted); font-style: italic; list-style: none; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 14px 18px; }
+.survey { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 12px; }
+.survey .q h3 { font-size: 16px; line-height: 1.35; }
+.answers, .rank { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 13.5px; }
+.answers li { display: grid; grid-template-columns: minmax(0, 1fr) 80px 70px; gap: 10px; align-items: center; }
+.a-bar { height: 10px; border-radius: 99px; background: var(--bg); overflow: hidden; }
+.a-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.a-n { text-align: right; font-weight: 600; } .a-n small { color: var(--muted); font-weight: 400; }
+.rank { counter-reset: rk; }
+.rank li { display: grid; grid-template-columns: 24px 1fr; gap: 4px 10px; counter-increment: rk; }
+.rank li::before { content: counter(rk); grid-row: span 2; font: 600 12px/22px var(--f-mono); width: 22px; height: 22px; text-align: center; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.rk-meta { font-size: 12.5px; color: var(--muted); }
+.comments summary { cursor: pointer; font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.comments ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13.5px; }
+@media (max-width: 520px) { .answers li { grid-template-columns: 1fr 64px; } .a-bar { grid-column: 1 / -1; grid-row: 2; } }
+.done { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.done b { font-weight: 600; font-size: 15px; }
+.done span { color: var(--muted); font-size: 13px; }
+.ovr { display: flex; align-items: center; gap: 4px; margin-top: 4px; font: 500 11px/1.2 var(--f-mono); color: var(--minor); white-space: nowrap; cursor: help; }
+.ovr svg.i { font-size: 12px; }
+.ease-cell { display: flex; align-items: center; gap: 10px; }
+.ease-cell .seqbar { width: 96px; height: 12px; }
+
+/* Fixes */
+.fixes { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.fix { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; grid-template-columns: 104px 1fr; gap: 6px 16px; position: relative; }
+.fix .prio { grid-row: span 3; align-self: start; }
+.fix h3 { font-size: 17px; }
+.fix p { color: var(--muted); font-size: 14.5px; max-width: 70ch; }
+.fix .foot { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: 13px; color: var(--muted); }
+.fix .foot > span { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ev { font: 500 12px/1 var(--f-mono); text-decoration: none; padding: 4px 7px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.ev:hover { text-decoration: underline; }
+@media (max-width: 560px) { .fix { grid-template-columns: 1fr; } .fix .prio { grid-row: auto; } }
+
+/* Hypothesis + task */
+.hyp-head { display: grid; gap: 10px; padding: 22px 0 4px; border-top: 2px solid var(--ink); }
+.hyp-head .row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.task { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 120px; }
+.task-head { padding: 18px 20px 14px; display: grid; gap: 6px; border-bottom: 1px solid var(--line); }
+.task-head .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: center; }
+.task-head h3 { font-size: 20px; }
+.stim { font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.measures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.measure { padding: 14px 20px 16px; display: grid; gap: 8px; align-content: start; border-right: 1px solid var(--line); min-width: 0; }
+.measure:last-child { border-right: 0; }
+.measure .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.measure .def { font-size: 12.5px; color: var(--muted); }
+.measure .big { font: 700 22px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.measure .big small { font-size: 14px; color: var(--muted); font-weight: 600; }
+.override { font-size: 12.5px; border-left: 3px solid var(--minor); padding: 4px 0 4px 10px; color: var(--ink); }
+.override b { color: var(--minor); }
+.sevbar { display: flex; height: 10px; border-radius: 99px; overflow: hidden; background: var(--line); }
+.sevbar i { display: block; }
+.sevbar .s-none { background: var(--pass); } .sevbar .s-minor { background: var(--minor); } .sevbar .s-major { background: var(--major); }
+.sevkey { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12.5px; color: var(--muted); }
+.sevkey span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; }
+.sevkey .k-none::before { background: var(--pass); } .sevkey .k-minor::before { background: var(--minor); } .sevkey .k-major::before { background: var(--major); }
+.seqbar { display: flex; height: 26px; border-radius: 7px; overflow: hidden; gap: 2px; background: var(--surface); }
+.seqbar i { display: grid; place-items: center; font: 600 12px/1 var(--f-mono); font-style: normal; min-width: 0; }
+.seqbar .q1 { background: var(--q1); color: var(--q1-on); } .seqbar .q2 { background: var(--q2); color: var(--q2-on); }
+.seqbar .q3 { background: var(--q3); color: var(--q3-on); } .seqbar .q4 { background: var(--q4); color: var(--q4-on); }
+.seqbar .q5 { background: var(--q5); color: var(--q5-on); }
+.seq-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+.seq-sum { font-size: 12.5px; color: var(--muted); }
+.seq-sum b { color: var(--ink); font-weight: 600; }
+@media (max-width: 760px) {
+  .measures { grid-template-columns: 1fr; }
+  .measure { border-right: 0; border-bottom: 1px solid var(--line); }
+  .measure:last-child { border-bottom: 0; }
+}
+
+.task-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.task-body > div { padding: 18px 20px; min-width: 0; }
+.task-body > .screens { border-left: 1px solid var(--line); background: var(--bg); }
+.task-body.desktop { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+@media (max-width: 820px) { .task-body, .task-body.desktop { grid-template-columns: 1fr; } .task-body > .screens { border-left: 0; border-top: 1px solid var(--line); } }
+.col-title { font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+.col-title svg.i { font-size: 14px; }
+.findings { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.finding { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; padding: 10px 8px 10px 8px; border-radius: 10px; scroll-margin-top: 130px; }
+.finding .ico { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 15px; }
+.finding .txt { display: grid; gap: 6px; min-width: 0; }
+.finding .ftop { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; font-size: 12px; }
+.finding .ftype { font-weight: 600; }
+.finding .fid { font-family: var(--f-mono); color: var(--muted); }
+.who { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 12px; color: var(--muted); }
+.who svg.i { font-size: 13px; }
+.pid { font: 500 11px/1 var(--f-mono); padding: 3px 5px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); }
+button.pid { cursor: pointer; padding: 4px 6px; }
+button.pid[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.copy { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 4px; border-radius: 6px; opacity: 0; font-size: 14px; display: grid; align-self: start; }
+.finding:hover .copy, .copy:focus-visible { opacity: 1; }
+@media (hover: none) { .copy { opacity: 0.7; } }
+.finding.flash { animation: flash 2.2s ease-out; }
+@keyframes flash { 0%, 40% { background: var(--accent-soft); } 100% { background: transparent; } }
+.none-msg { font-size: 13.5px; color: var(--muted); font-style: italic; }
+.quotes { display: grid; gap: 10px; margin-top: 18px; }
+blockquote { margin: 0; padding: 12px 14px; background: var(--accent-soft); border-radius: 10px; display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: start; }
+blockquote .qmark { width: 30px; height: 30px; border-radius: 8px; background: var(--accent); color: var(--surface); display: grid; place-items: center; font-size: 16px; }
+blockquote .qbody { display: grid; gap: 6px; min-width: 0; }
+blockquote p { font: 500 15.5px/1.45 var(--f-display); }
+blockquote footer { font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { font: 500 13px/1 var(--f-body); border: 0; background: none; color: var(--muted); padding: 7px 12px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.screens .bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.shot { display: grid; justify-items: center; gap: 10px; margin: 0; }
+.shot svg.phone { width: 100%; max-width: 230px; height: auto; cursor: zoom-in; }
+.shot svg.desk { width: 100%; max-width: 480px; height: auto; cursor: zoom-in; }
+.shot img { border-radius: 12px; border: 1px solid var(--line); cursor: zoom-in; max-height: 460px; object-fit: contain; }
+.shot figcaption { font-size: 13px; color: var(--muted); text-align: center; max-width: 40ch; }
+.legend { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); margin-top: 10px; }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 8px; border-radius: 2px; margin-right: 5px; border: 1.5px dashed; vertical-align: middle; }
+.legend .l-hot::before { border-color: var(--major); background: var(--major-soft); }
+.legend .l-new::before { border-color: var(--accent); background: var(--accent-soft); }
+
+.takeaway { padding: 16px 20px 18px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
+.takeaway ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.takeaway li { position: relative; }
+details.materials { border-top: 1px solid var(--line); }
+details.materials summary { cursor: pointer; padding: 12px 20px; font-size: 14px; color: var(--muted); font-weight: 500; list-style: none; display: flex; gap: 8px; align-items: center; }
+details.materials summary::-webkit-details-marker { display: none; }
+details.materials summary .chev { transition: transform .15s; font-size: 14px; }
+details.materials[open] summary .chev { transform: rotate(90deg); }
+details.materials .inner { padding: 0 20px 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; font-size: 14px; }
+.script { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: step; }
+.script li { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: baseline; counter-increment: step; }
+.script li::before { content: counter(step); font: 500 11px/20px var(--f-mono); width: 20px; height: 20px; text-align: center; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); color: var(--muted); }
+.look { list-style: none; padding: 0; margin: 0; display: grid; gap: 7px; }
+.look li { display: grid; grid-template-columns: 20px 1fr auto; gap: 8px; align-items: baseline; }
+.look li .eye { font-size: 15px; transform: translateY(3px); color: var(--accent); }
+.look li.no .eye { color: var(--muted); }
+.look li.no .txt { color: var(--muted); }
+.look .tag { font: 500 11px/1 var(--f-mono); color: var(--muted); margin-left: 6px; white-space: nowrap; }
+
+/* Wireframes */
+.ph-body { fill: var(--frame); }
+.ph-screen { fill: var(--surface); }
+.ph-side { fill: var(--bg); }
+.ph-title { font: 700 13px var(--f-display); fill: var(--ink); }
+.ph-status { fill: var(--line); }
+.url-t { font: 400 7px var(--f-mono); fill: var(--muted); }
+.nav-t { font: 500 8px var(--f-body); fill: var(--muted); }
+.nav-a { fill: var(--accent-soft); }
+.nav-ta { font: 600 8px var(--f-body); fill: var(--accent); }
+.blk-plain { fill: var(--bg); stroke: var(--line); }
+.blk-muted { fill: var(--line); opacity: 0.55; }
+.blk-hot { fill: var(--major-soft); stroke: var(--major); stroke-dasharray: 4 3; stroke-width: 1.5; }
+.blk-new { fill: var(--accent-soft); stroke: var(--accent); stroke-dasharray: 4 3; stroke-width: 1.5; }
+.blk-btn { fill: var(--ink); }
+.blk-t { font: 600 9.5px var(--f-body); fill: var(--ink); }
+.blk-s { font: 400 8.5px var(--f-body); fill: var(--muted); }
+.blk-bt { font: 600 9.5px var(--f-body); fill: var(--surface); }
+.bar-m { fill: var(--muted); opacity: 0.55; }
+.bar-p { fill: var(--accent); }
+.bar-l { font: 600 8px var(--f-mono); fill: var(--accent); }
+.prog-bg { fill: var(--line); } .prog-fg { fill: var(--accent); }
+
+/* Appendix */
+.app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card h3 { display: flex; align-items: center; gap: 8px; }
+.card h3 svg.i { font-size: 17px; color: var(--muted); }
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.key { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 14px; }
+.key li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+footer.end { padding-block: 40px 56px; color: var(--muted); font-size: 13px; }
+footer.end .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px; }
+.totop { display: inline-flex; gap: 8px; align-items: center; text-decoration: none; font-weight: 500; color: var(--ink); border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; }
+.totop:hover { background: var(--bg); }
+
+dialog { border: 0; border-radius: 16px; padding: 0; background: var(--surface); color: var(--ink); width: min(820px, calc(100vw - 32px)); max-height: calc(100vh - 32px); }
+dialog::backdrop { background: rgb(10 12 20 / 0.6); }
+dialog .dlg-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+dialog .dlg-body { padding: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+dialog .dlg-body.desk { grid-template-columns: 1fr; }
+dialog .dlg-body svg { width: 100%; max-width: 300px; height: auto; justify-self: center; }
+dialog .dlg-body svg.desk { max-width: 720px; }
+dialog .dlg-body img { max-width: 100%; justify-self: center; border-radius: 10px; }
+dialog textarea { width: 100%; min-height: 50vh; font: 12.5px/1.5 var(--f-mono); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; resize: vertical; }
+dialog .dlg-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 18px 16px; flex-wrap: wrap; }
+dialog .err { color: var(--major); font-size: 13px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--surface); padding: 10px 14px; border-radius: 10px; font-size: 13.5px; z-index: 30; max-width: calc(100vw - 32px); overflow-wrap: anywhere; }
+body.session .toast { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+.toast input { font: 12px var(--f-mono); width: 100%; margin-top: 6px; }
+.banner { background: var(--minor-soft); color: var(--ink); border-bottom: 1px solid var(--line); }
+.banner .wrap { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding-block: 10px; font-size: 14px; }
+
+/* Edit mode */
+.editbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -6px 24px rgb(0 0 0 / 0.08); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.editbar .wrap { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding-block: 12px; }
+.editbar .state { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.editbar .state .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--pass); }
+.editbar .state.dirty .dot { background: var(--minor); }
+.editbar .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+body.editing [data-edit] { outline: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; border-radius: 3px; cursor: text; min-width: 2ch; display: inline-block; }
+body.editing p[data-edit], body.editing h1[data-edit], body.editing h2[data-edit], body.editing h3[data-edit], body.editing strong[data-edit] { display: block; }
+body.editing [data-edit]:hover { background: var(--accent-soft); }
+body.editing [data-edit]:focus { outline: 2px solid var(--accent); background: var(--surface); }
+body.editing [data-edit]:empty::before { content: "Add text"; color: var(--muted); font-style: italic; }
+.ed-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.add { display: inline-flex; align-items: center; gap: 6px; font: 500 13px/1 var(--f-body); color: var(--accent); background: none; border: 1px dashed var(--accent); border-radius: 8px; padding: 7px 10px; cursor: pointer; justify-self: start; }
+.add:hover { background: var(--accent-soft); }
+.del { background: none; border: 1px solid transparent; color: var(--muted); border-radius: 7px; padding: 4px; cursor: pointer; display: inline-grid; place-items: center; font-size: 14px; align-self: start; }
+.del:hover { color: var(--major); border-color: var(--major); background: var(--major-soft); }
+.abs-del { position: absolute; top: 10px; right: 10px; }
+.ed-select, .ed-input { font-size: 13px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); max-width: 100%; }
+.ed-input { min-width: 0; }
+.results-ed { border-bottom: 1px solid var(--line); padding: 14px 20px 16px; background: var(--accent-soft); display: grid; gap: 10px; }
+.results-ed table { min-width: 460px; background: var(--surface); border-radius: 10px; }
+.results-ed th, .results-ed td { padding: 6px 10px; }
+.results-ed .ov { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.results-ed .ov input { flex: 1; min-width: 200px; }
+.img-ed { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+.img-ed label { cursor: pointer; }
+.img-ed input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+@media print {
+  .secbar, .filterbar, .theme-dock, .copy, .seg, .zoom-btn, .toast, .editbar, .banner, .totop { display: none !important; }
+  body { background: #fff; }
+  .task { break-inside: avoid; }
+  .hyp-head { break-before: page; }
+  .shot[hidden], .finding[hidden] { display: grid !important; }
+}
+</style>
+<style id="brand-style"></style>
+
+<svg id="sprite" width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="5 12.5 10 17.5 19 7"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 7v6"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9.5"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M4 5h16v11H10l-5 4v-4H4z"/><path d="M9 9v2.5M13 9v2.5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-8 8"/></symbol>
+  <symbol id="i-braces" viewBox="0 0 24 24"><path d="M8 4H7a2 2 0 0 0-2 2v4l-2 2 2 2v4a2 2 0 0 0 2 2h1M16 4h1a2 2 0 0 1 2 2v4l2 2-2 2v4a2 2 0 0 1-2 2h-1"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M3.5 16a8.5 8.5 0 1 1 17 0"/><path d="M12 16l4-5"/></symbol>
+  <symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2a5 5 0 0 1 5 5.3"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4h12l-2 4 2 4H5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 0 1 2-2h14v14H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><path d="M4 4l16 16"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></symbol>
+</svg>
+
+<div id="app"></div>
+<dialog id="zoom" aria-labelledby="zoom-title"></dialog>
+<dialog id="jsonDlg" aria-labelledby="json-title"></dialog>
+
+<!--
+  STUDY DATA. Editors can change everything in the page itself (Edit report). This block is what gets saved.
+  results: one entry per participant per task. done = completed the task; sev = none | minor | major; seq = ease score (1..seqScale).
+  The page works out pass/fail, efficiency and ease from these. "override" records a researcher's call that differs from the computed verdict, with a reason.
+  findings.type: major | minor | investigate | positive. "who" lists participant IDs, so counts are always shown out of the total.
+  screens.device: mobile | desktop. Each version is a wireframe spec, or { "src": "data:image/..." } for a real screenshot.
+-->
+<script type="application/json" id="study-data">
+{
+  "study": {
+    "brand": "Larkspur Energy",
+    "team": "Home Energy App · Accounts squad",
+    "title": "Making energy use make sense",
+    "lede": "We tested a redesigned Usage and Bill area of the Larkspur app and account website with seven customers to see whether they could read their usage, set a budget, and trust their bill estimate.",
+    "date": "2026-10-21",
+    "authoredBy": "Jordan Reyes, UX Research",
+    "facilitatedBy": "Priya Nair, UX Research",
+    "analysedBy": "Jordan Reyes and Sam Okafor, Accounts squad",
+    "method": "1:1 moderated sessions, remote, 45 min",
+    "privacy": "Internal. Participants are anonymised as P1–P7. Recordings are kept for 90 days.",
+    "seqScale": 5,
+    "seqLabels": ["Very difficult", "Difficult", "Neutral", "Easy", "Very easy"],
+    "objectives": [
+      "Find out whether customers can read their recent usage and cost without help.",
+      "See whether customers can find and set a monthly budget alert.",
+      "Understand what makes customers trust, or doubt, the bill estimate."
+    ],
+    "methodDetail": [
+      "One-to-one moderated usability testing over video call",
+      "Task-based activities in clickable prototypes (app and website)",
+      "Single Ease Question after each task",
+      "Short follow-up interview"
+    ],
+    "stimulus": [
+      { "label": "App prototype v3 (example link)", "url": "https://example.com/app-prototype-v3" },
+      { "label": "Account website prototype v2 (example link)", "url": "https://example.com/web-prototype-v2" },
+      { "label": "Design file (example link)", "url": "https://example.com/design-file" }
+    ]
+  },
+  "participants": [
+    { "id": "P1", "tariff": "Direct debit", "meter": "Smart", "age": "35–44", "device": "iOS" },
+    { "id": "P2", "tariff": "Prepay", "meter": "Smart", "age": "18–24", "device": "Android" },
+    { "id": "P3", "tariff": "Direct debit", "meter": "Smart + solar", "age": "55–64", "device": "iOS" },
+    { "id": "P4", "tariff": "Direct debit", "meter": "Smart", "age": "45–54", "device": "Android" },
+    { "id": "P5", "tariff": "Prepay", "meter": "Smart", "age": "25–34", "device": "Android" },
+    { "id": "P6", "tariff": "Direct debit", "meter": "Smart + solar", "age": "65+", "device": "iOS" },
+    { "id": "P7", "tariff": "Prepay", "meter": "Smart", "age": "35–44", "device": "iOS" }
+  ],
+  "insights": [
+    { "title": "People think in pounds, not kilowatt-hours", "body": "Leading with yesterday's cost made usage easy to read. All seven found it, and most read the £ figure before the kWh." },
+    { "title": "Budget alerts are effectively hidden", "body": "Only two of seven set an alert. Most looked on the Usage screen, then skipped “Notification preferences” because they took it to mean marketing emails." },
+    { "title": "The weekly chart looks useful but doesn't answer questions", "body": "Participants couldn't tap the bars for figures, and bars of similar height led to wrong answers about the peak day." },
+    { "title": "Showing the source of the estimate builds trust", "body": "Saying the estimate comes from smart meter readings settled doubts. Solar customers also want export credit included." }
+  ],
+  "recommendations": [
+    { "priority": "High", "title": "Add a “Set a budget” entry point on the Usage screen", "detail": "Put the alert where people already look for it, next to this month's spend, and keep the Settings route as a second way in.", "owner": "Accounts squad", "effort": "Medium", "evidence": ["T2.1-F1", "T2.1-F2"] },
+    { "priority": "High", "title": "Label the peak day and make chart bars tappable", "detail": "State the highest day in words under the chart, and give bars a visible pressed state that reveals the day's cost and kWh.", "owner": "Accounts squad", "effort": "Small", "evidence": ["T1.2-F1", "T1.2-F2"] },
+    { "priority": "Medium", "title": "Rename “Notification preferences” to “Alerts and reminders”", "detail": "Separate service alerts from marketing consent so people don't skip the section.", "owner": "Accounts squad", "effort": "Small", "evidence": ["T2.1-F2"] },
+    { "priority": "Medium", "title": "Explain kWh in plain language next to cost", "detail": "A one-line explainer (“1 kWh ≈ running a dishwasher once”) for people who don't know the unit.", "owner": "Content design", "effort": "Small", "evidence": ["T1.1-F2"] },
+    { "priority": "Medium", "title": "Move the year-on-year switch up beside the estimate", "detail": "Put the Month / Year comparison next to the estimate on the website so it's visible without scrolling on smaller laptop screens.", "owner": "Web squad", "effort": "Small", "evidence": ["T3.2-F2", "T3.2-F3"] },
+    { "priority": "Investigate", "title": "Scope export credit in the bill estimate for solar customers", "detail": "Both solar participants expected it. Check data availability with Billing before committing.", "owner": "Billing squad", "effort": "Large", "evidence": ["T3.1-F2"] }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "Customers can understand their energy use at a glance.",
+      "tasks": [
+        {
+          "id": "T1.1",
+          "title": "Find how much energy you used yesterday and what it cost",
+          "stimulus": "App prototype v3 · Home",
+          "script": ["Imagine you've just opened the app in the morning.", "How much energy did you use yesterday, and what did it cost you?"],
+          "lookFor": [
+            { "text": "Do they find yesterday's figure without opening the menu?", "observed": true },
+            { "text": "Do they read the cost or the kWh first?", "observed": true },
+            { "text": "Do they understand what kWh means?", "observed": true },
+            { "text": "Do they express surprise or concern at the figure?", "observed": false }
+          ],
+          "results": {
+            "P1": { "done": true, "sev": "none", "seq": 5 }, "P2": { "done": true, "sev": "none", "seq": 4 },
+            "P3": { "done": true, "sev": "minor", "seq": 4 }, "P4": { "done": true, "sev": "none", "seq": 5 },
+            "P5": { "done": true, "sev": "minor", "seq": 3 }, "P6": { "done": true, "sev": "none", "seq": 5 },
+            "P7": { "done": true, "sev": "none", "seq": 4 }
+          },
+          "findings": [
+            { "id": "T1.1-F1", "type": "positive", "text": "The “Yesterday” tile was the first thing participants read. Most quoted the £ figure before the kWh.", "who": ["P1", "P2", "P4", "P6", "P7"] },
+            { "id": "T1.1-F2", "type": "minor", "text": "Two participants didn't know what kWh meant and weren't sure if 18.4 was a lot.", "who": ["P3", "P5"] }
+          ],
+          "quotes": [
+            { "who": "P4", "text": "Oh, that's nice. It just tells me yesterday was £3.12. That's what I actually want." },
+            { "who": "P5", "text": "What's a kWh? I just want to know if I'm spending too much." }
+          ],
+          "screens": {
+            "device": "mobile",
+            "asIs": { "title": "Home", "caption": "Usage is two taps away, behind the menu.", "blocks": [
+              { "label": "Balance", "sub": "£42.18 in credit", "h": 50 },
+              { "label": "Top up", "h": 26, "tone": "btn" },
+              { "label": "Offers for you", "h": 74, "tone": "muted" },
+              { "label": "Menu › Usage", "sub": "Usage lives here", "h": 40, "tone": "hot" } ] },
+            "toBe": { "title": "Home", "caption": "Yesterday's cost leads, kWh sits underneath.", "blocks": [
+              { "label": "Balance", "sub": "£42.18 in credit", "h": 44 },
+              { "label": "Yesterday · £3.12", "sub": "18.4 kWh · about average", "h": 48, "tone": "new" },
+              { "label": "This week", "h": 92, "chart": [9, 12, 10, 16, 11, 8, 13], "axis": "Mon – Sun" },
+              { "label": "Offers for you", "h": 30, "tone": "muted" } ] }
+          },
+          "takeaway": ["Leading with cost works. Keep £ as the main figure.", "Add a plain-language explainer for kWh."]
+        },
+        {
+          "id": "T1.2",
+          "title": "Tell us which day last week you used the most energy",
+          "stimulus": "App prototype v3 · Usage",
+          "script": ["Go to wherever you'd look for last week's usage.", "Which day did you use the most? How do you know?"],
+          "lookFor": [
+            { "text": "Do they try tapping the bars?", "observed": true },
+            { "text": "Can they name the correct day?", "observed": true },
+            { "text": "Do they need a prompt to compare days?", "observed": true },
+            { "text": "Do they look for a comparison with previous weeks?", "observed": true }
+          ],
+          "results": {
+            "P1": { "done": true, "sev": "minor", "seq": 3 }, "P2": { "done": false, "sev": "major", "seq": 2 },
+            "P3": { "done": true, "sev": "minor", "seq": 3 }, "P4": { "done": true, "sev": "none", "seq": 4 },
+            "P5": { "done": false, "sev": "major", "seq": 1 }, "P6": { "done": false, "sev": "minor", "seq": 3 },
+            "P7": { "done": true, "sev": "minor", "seq": 3 }
+          },
+          "override": { "verdict": "fail", "reason": "4 of 7 completed, but 3 of those 4 needed a prompt. We're treating this as a fail until the chart is retested." },
+          "findings": [
+            { "id": "T1.2-F1", "type": "major", "text": "Participants didn't recognise the bars as tappable, so they couldn't get a figure for any single day.", "who": ["P2", "P5", "P6"] },
+            { "id": "T1.2-F2", "type": "minor", "text": "When two bars were close in height, participants named the wrong day first and corrected themselves only after a prompt.", "who": ["P1", "P3", "P7"] },
+            { "id": "T1.2-F3", "type": "investigate", "text": "Two participants wanted to compare with the same week last year. We don't yet know how common this need is.", "who": ["P4", "P7"] }
+          ],
+          "quotes": [
+            { "who": "P2", "text": "I can see the bars but I can't get any numbers out of it." },
+            { "who": "P6", "text": "Tuesday? Or Wednesday… they look the same to me." }
+          ],
+          "screens": {
+            "device": "mobile",
+            "asIs": { "title": "Usage", "caption": "Unlabelled bars with no tap affordance.", "blocks": [
+              { "label": "Week of 12 Oct", "h": 24 },
+              { "label": "Daily use", "h": 130, "chart": [11, 15, 15.4, 9, 12, 8, 10], "axis": "Mon – Sun", "tone": "hot" },
+              { "label": "Total", "sub": "80 kWh · £24.10", "h": 40 } ] },
+            "toBe": { "title": "Usage", "caption": "Peak day stated in words; bars open a day's detail.", "blocks": [
+              { "label": "Week of 12 Oct", "h": 24 },
+              { "label": "Daily use", "h": 130, "chart": [11, 15, 15.4, 9, 12, 8, 10], "axis": "Mon – Sun", "peak": true },
+              { "label": "Highest: Wed · £4.62", "sub": "Tap any bar for details", "h": 40, "tone": "new" } ] }
+          },
+          "takeaway": ["The chart looks informative but doesn't answer the question.", "Say the peak day in words and make the bars visibly tappable."]
+        }
+      ]
+    },
+    {
+      "id": "H2",
+      "statement": "Customers can set up a monthly budget alert without help.",
+      "tasks": [
+        {
+          "id": "T2.1",
+          "title": "Set an alert for when your monthly spend goes over £90",
+          "stimulus": "App prototype v3 · Settings",
+          "script": ["You'd like the app to warn you if you're on track to spend more than £90 this month.", "Show us how you'd set that up."],
+          "lookFor": [
+            { "text": "Where do they look first?", "observed": true },
+            { "text": "Do they open “Notification preferences”?", "observed": true },
+            { "text": "Do they understand what the £90 includes?", "observed": true },
+            { "text": "Do they give up or ask for help?", "observed": true }
+          ],
+          "results": {
+            "P1": { "done": false, "sev": "major", "seq": 2 }, "P2": { "done": false, "sev": "major", "seq": 1 },
+            "P3": { "done": true, "sev": "minor", "seq": 3 }, "P4": { "done": false, "sev": "major", "seq": 2 },
+            "P5": { "done": false, "sev": "major", "seq": 1 }, "P6": { "done": true, "sev": "minor", "seq": 3 },
+            "P7": { "done": false, "sev": "major", "seq": 2 }
+          },
+          "findings": [
+            { "id": "T2.1-F1", "type": "major", "text": "Participants looked for alerts on the Usage screen, not in Settings, and gave up before finding them.", "who": ["P1", "P2", "P4", "P5", "P7"] },
+            { "id": "T2.1-F2", "type": "major", "text": "“Notification preferences” was read as marketing emails, so participants skipped it even when they reached Settings.", "who": ["P1", "P4", "P7"] },
+            { "id": "T2.1-F3", "type": "minor", "text": "Those who found the alert weren't sure whether £90 included the standing charge.", "who": ["P3", "P6"] }
+          ],
+          "quotes": [
+            { "who": "P1", "text": "I'd expect it right here next to my usage, not buried in settings." },
+            { "who": "P7", "text": "Notification preferences. That's where I turn off the spam, isn't it?" }
+          ],
+          "screens": {
+            "device": "mobile",
+            "asIs": { "title": "Settings", "caption": "Alerts sit inside a section people associate with marketing.", "blocks": [
+              { "label": "Account details", "h": 28 },
+              { "label": "Payment method", "h": 28 },
+              { "label": "Notification preferences", "sub": "Budget alerts are in here", "h": 40, "tone": "hot" },
+              { "label": "Privacy", "h": 28 },
+              { "label": "Help", "h": 28 } ] },
+            "toBe": { "title": "Usage", "caption": "Budget set where spend is shown.", "blocks": [
+              { "label": "October so far", "sub": "£64 of £90 budget", "h": 50, "progress": 0.71, "tone": "new" },
+              { "label": "Set a budget", "h": 26, "tone": "btn" },
+              { "label": "Daily use", "h": 110, "chart": [9, 12, 10, 16, 11, 8, 13], "axis": "Mon – Sun" } ] }
+          },
+          "takeaway": ["The feature works but people can't find it.", "Move the entry point to Usage and rename the Settings section."]
+        }
+      ]
+    },
+    {
+      "id": "H3",
+      "statement": "Customers trust the bill estimate shown on their account.",
+      "tasks": [
+        {
+          "id": "T3.1",
+          "title": "Tell us what you expect your next bill to be, and how sure you are",
+          "stimulus": "Account website prototype v2 · Bill",
+          "script": ["Sign in to your account on the website.", "What do you think your next bill will be? How confident are you in that number?"],
+          "lookFor": [
+            { "text": "Do they find the estimate?", "observed": true },
+            { "text": "Do they open “How we worked this out”?", "observed": true },
+            { "text": "Do they mention meter readings?", "observed": true },
+            { "text": "Do they compare it with past bills?", "observed": false }
+          ],
+          "results": {
+            "P1": { "done": true, "sev": "none", "seq": 4 }, "P2": { "done": true, "sev": "minor", "seq": 3 },
+            "P3": { "done": true, "sev": "none", "seq": 4 }, "P4": { "done": true, "sev": "minor", "seq": 4 },
+            "P5": { "done": true, "sev": "minor", "seq": 3 }, "P6": { "done": true, "sev": "none", "seq": 5 },
+            "P7": { "done": true, "sev": "none", "seq": 4 }
+          },
+          "findings": [
+            { "id": "T3.1-F1", "type": "positive", "text": "Participants who opened “How we worked this out” said it made them more confident in the figure.", "who": ["P1", "P3", "P4", "P6"] },
+            { "id": "T3.1-F2", "type": "investigate", "text": "Both solar customers expected export credit to reduce the estimate. It isn't in the prototype's scope yet.", "who": ["P3", "P6"] },
+            { "id": "T3.1-F3", "type": "minor", "text": "Doubt eased only once participants saw the estimate came from their smart meter, not a guess.", "who": ["P2", "P4", "P5"] }
+          ],
+          "quotes": [
+            { "who": "P6", "text": "If it's from the meter, I'll believe it. But where's my solar money?" }
+          ],
+          "screens": {
+            "device": "desktop",
+            "asIs": { "title": "Your bill", "url": "account.larkspur.example/bill", "nav": ["Overview", "Usage", "Bill", "Payments", "Settings"], "active": 2, "caption": "No sign of where the estimate comes from.", "blocks": [
+              { "label": "Estimated next bill", "sub": "£118.40 · due 3 Nov", "h": 44 },
+              { "label": "Based on your usage", "h": 44, "tone": "muted" },
+              { "label": "Pay now", "h": 22, "tone": "btn" },
+              { "label": "Previous bills", "sub": "Sep £131.20 · Aug £104.75 · Jul £98.10", "h": 60, "span": 2 } ] },
+            "toBe": { "title": "Your bill", "url": "account.larkspur.example/bill", "nav": ["Overview", "Usage", "Bill", "Payments", "Settings"], "active": 2, "caption": "Source of the estimate shown, with a route to the detail.", "blocks": [
+              { "label": "Estimated next bill", "sub": "£118.40 · due 3 Nov", "h": 44 },
+              { "label": "From meter readings", "sub": "1–20 Oct · updated daily", "h": 44, "tone": "new" },
+              { "label": "How we worked this out ›", "h": 22, "tone": "new", "span": 2 },
+              { "label": "Previous bills", "sub": "Sep £131.20 · Aug £104.75 · Jul £98.10", "h": 50, "span": 2 } ] }
+          },
+          "takeaway": ["Showing the source of the estimate builds trust.", "Solar export credit is an open question for Billing."]
+        },
+        {
+          "id": "T3.2",
+          "title": "Compare this month's estimate with the same month last year",
+          "stimulus": "Account website prototype v2 · Bill",
+          "script": ["Is this October going to cost more or less than last October?", "Show us how you'd check."],
+          "lookFor": [
+            { "text": "Do they find the year-on-year switch?", "observed": true },
+            { "text": "Do they understand the % change label?", "observed": true },
+            { "text": "Do they compare the right months?", "observed": true }
+          ],
+          "results": {
+            "P1": { "done": true, "sev": "minor", "seq": 3 }, "P2": { "done": true, "sev": "minor", "seq": 3 },
+            "P3": { "done": true, "sev": "none", "seq": 5 }, "P4": { "done": false, "sev": "major", "seq": 2 },
+            "P5": { "done": true, "sev": "none", "seq": 4 }, "P6": { "done": true, "sev": "none", "seq": 4 },
+            "P7": { "done": false, "sev": "minor", "seq": 3 }
+          },
+          "findings": [
+            { "id": "T3.2-F1", "type": "positive", "text": "The “12% lower than Oct 2025” label was understood by everyone who reached it.", "who": ["P1", "P2", "P3", "P5", "P6"] },
+            { "id": "T3.2-F2", "type": "minor", "text": "The year-on-year switch sat below the chart, out of view on smaller laptop screens. Participants scrolled past it before finding it.", "who": ["P1", "P2", "P7"] },
+            { "id": "T3.2-F3", "type": "major", "text": "One participant compared with last month instead of last year and didn't notice.", "who": ["P4"] }
+          ],
+          "quotes": [
+            { "who": "P3", "text": "12% lower than last year. Good, the panels are earning their keep." },
+            { "who": "P4", "text": "Oh wait, that's September. I wanted last October." }
+          ],
+          "screens": {
+            "device": "desktop",
+            "asIs": { "title": "Your bill", "url": "account.larkspur.example/bill", "nav": ["Overview", "Usage", "Bill", "Payments", "Settings"], "active": 2, "caption": "Comparison switch sits below the chart.", "blocks": [
+              { "label": "Estimated next bill", "sub": "£118.40 · due 3 Nov", "h": 40, "span": 2 },
+              { "label": "Monthly cost", "h": 100, "span": 2, "chart": [14, 12, 10, 9, 8, 9, 11], "axis": "Apr – Oct" },
+              { "label": "Compare with last year", "h": 22, "tone": "hot" } ] },
+            "toBe": { "title": "Your bill", "url": "account.larkspur.example/bill", "nav": ["Overview", "Usage", "Bill", "Payments", "Settings"], "active": 2, "caption": "Change stated up front; switch beside the estimate.", "blocks": [
+              { "label": "Estimated next bill", "sub": "£118.40 · due 3 Nov", "h": 40 },
+              { "label": "12% lower than Oct 2025", "sub": "Month  |  Year", "h": 40, "tone": "new" },
+              { "label": "Monthly cost", "h": 100, "span": 2, "chart": [14, 12, 10, 9, 8, 9, 11], "axis": "Apr – Oct" } ] }
+          },
+          "takeaway": ["The % change label works well.", "Move the comparison switch up and label the months being compared."]
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<script id="page-script">
+(() => {
+  const DATA_EL = document.getElementById('study-data');
+  const ORIGINAL = DATA_EL.textContent;
+  let state = JSON.parse(ORIGINAL);
+  // session = an edit session is open (edit bar shown); editing = edit controls shown (false while previewing).
+  let session = false, editing = false, dirty = false, filter = 'all', saving = false;
+  let editAccess = null; // null | 'artifact' | 'local'
+  let artifactApi = null, pendingRestore = null;
+  const app = document.getElementById('app');
+
+  // ---------- helpers ----------
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const slug = id => String(id).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const icon = n => `<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+  const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+  const get = p => p.split('.').reduce((o, k) => o == null ? o : o[k], state);
+  const set = (p, v) => { const ks = p.split('.'), last = ks.pop(); ks.reduce((o, k) => o[k], state)[last] = v; };
+  const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fmtDate = (d, opts) => { const t = new Date(d + 'T12:00:00'); return isNaN(t) ? d : t.toLocaleDateString('en-GB', opts); };
+  const docTitle = () => `${state.study.title} · ${fmtDate(state.study.date, { day: 'numeric', month: 'short', year: 'numeric' })}`;
+
+  // Editable text: E() for the main copy of a field, M() for read-only mirrors elsewhere on the page.
+  const E = (path, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-edit="${path}"${editing ? ' contenteditable="plaintext-only" spellcheck="true"' : ''}>${esc(get(path))}</${tag}>`;
+  const M = path => `<span data-mirror="${path}">${esc(get(path))}</span>`;
+  const addBtn = (path, tpl, label) => editing ? `<button type="button" class="add" data-add="${path}" data-tpl="${tpl}">${icon('plus')}${esc(label)}</button>` : '';
+  const delBtn = (path, label, cls = '') => editing ? `<button type="button" class="del ${cls}" data-del="${path}" aria-label="Remove ${esc(label)}" title="Remove ${esc(label)}">${icon('trash')}</button>` : '';
+  const sel = (path, options, value, label, kind = 'str') => `<select class="ed-select" data-set="${path}" data-kind="${kind}" aria-label="${esc(label)}">${options.map(([v, t]) => `<option value="${esc(v)}"${String(v) === String(value) ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select>`;
+
+  const FT = {
+    major: { label: 'Major issue', cls: 'major', icon: 'cross', rank: 0 },
+    minor: { label: 'Minor issue', cls: 'minor', icon: 'alert', rank: 1 },
+    investigate: { label: 'Needs investigation', cls: 'inv', icon: 'search', rank: 2 },
+    positive: { label: 'Worked well', cls: 'pass', icon: 'check', rank: 3 }
+  };
+  const VERDICT = { pass: { label: 'Pass', cls: 'pass', icon: 'check' }, fail: { label: 'Fail', cls: 'major', icon: 'cross' }, na: { label: 'Not scored', cls: 'quiet', icon: 'clock' } };
+  const EFF = { none: { label: 'No issues', cls: 'pass', icon: 'check' }, minor: { label: 'Minor issues', cls: 'minor', icon: 'alert' }, major: { label: 'Major issues', cls: 'major', icon: 'cross' }, na: { label: 'Not rated', cls: 'quiet', icon: 'clock' } };
+  // Task groups are hypotheses by default; a study can group by something else (study.groupLabel, e.g. "Area").
+  const groupLabel = () => state.study.groupLabel || 'Hypothesis';
+  const isHyp = () => groupLabel() === 'Hypothesis';
+  const HYPS = {
+    supported: { label: 'Supported', cls: 'pass', icon: 'check' }, partly: { label: 'Partly supported', cls: 'minor', icon: 'alert' }, not: { label: 'Not supported', cls: 'major', icon: 'cross' }, na: { label: 'Not scored', cls: 'quiet', icon: 'clock' }
+  };
+  const AREAS = {
+    supported: { label: 'All tasks passed', cls: 'pass', icon: 'check' }, partly: { label: 'Some tasks passed', cls: 'minor', icon: 'alert' }, not: { label: 'No tasks passed', cls: 'major', icon: 'cross' }, na: { label: 'Not scored', cls: 'quiet', icon: 'clock' }
+  };
+  const HYP = new Proxy({}, { get: (_, k) => (isHyp() ? HYPS : AREAS)[k] });
+  const fmtMs = ms => { if (ms == null) return '–'; const s = Math.round(ms / 1000); return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`; };
+  const PRIO = { High: 'major', Medium: 'minor', Low: 'quiet', Investigate: 'inv' };
+  const pill = (m, sm) => `<span class="pill ${m.cls}${sm ? ' sm' : ''}">${icon(m.icon)}${esc(m.label)}</span>`;
+
+  // ---------- scoring ----------
+  // Pass = more than half completed (3/5, 4/7), matching the original template's guide.
+  // Efficiency = the worst severity that 2+ participants hit.
+  // A task with "scored": false (e.g. an observation task not yet coded) never passes or fails.
+  // A result with done: null is waiting for review and is left out of the completion count.
+  // sev and ms are optional: no sev means efficiency is "Not rated"; ms adds a median time.
+  function score(t) {
+    const all = Object.values(t.results || {}), scale = state.study.seqScale, scored = t.scored !== false;
+    const r = all.filter(x => typeof x.done === 'boolean'), n = r.length, pending = all.length - n;
+    const done = r.filter(x => x.done).length;
+    const computed = !scored ? 'na' : n && done * 2 > n ? 'pass' : 'fail';
+    const verdict = scored ? (t.override?.verdict || computed) : 'na';
+    const sev = { none: 0, minor: 0, major: 0 };
+    all.forEach(x => { if (x.sev in sev) sev[x.sev]++; });
+    const rated = sev.none + sev.minor + sev.major;
+    const eff = !rated ? 'na' : sev.major >= 2 ? 'major' : (sev.minor + sev.major) >= 2 ? 'minor' : 'none';
+    const seqs = all.map(x => Number(x.seq)).filter(Boolean);
+    const seqMean = seqs.length ? seqs.reduce((a, b) => a + b, 0) / seqs.length : NaN;
+    const dist = Array.from({ length: scale }, (_, i) => seqs.filter(s => s === i + 1).length);
+    const times = all.map(x => x.ms).filter(v => v > 0).sort((a, b) => a - b), m = times.length >> 1;
+    const medianMs = times.length ? (times.length % 2 ? times[m] : (times[m - 1] + times[m]) / 2) : null;
+    return { n, done, pending, total: all.length, scored, computed, verdict, overridden: verdict !== computed, sev, rated, eff, seqMean, dist, seqs, medianMs };
+  }
+  const hypVerdict = scores => {
+    const sc = scores.filter(s => s.scored); if (!sc.length) return 'na';
+    const p = sc.filter(s => s.verdict === 'pass').length; return p === sc.length ? 'supported' : p === 0 ? 'not' : 'partly';
+  };
+  const fmtMean = m => isNaN(m) ? '–' : m.toFixed(1);
+
+  // ---------- ease (SEQ) bar ----------
+  // One stacked bar from difficult (red) to easy (green), counts printed in each band.
+  function seqBar(s, compact) {
+    const scale = state.study.seqScale, labels = state.study.seqLabels || [];
+    const band = i => 'q' + (Math.round(i * 4 / (scale - 1)) + 1);
+    const segs = s.dist.map((c, i) => c ? `<i class="${band(i)}" style="flex:${c}" title="${c} × ${esc(labels[i] || i + 1)}">${compact ? '' : c}</i>` : '').join('');
+    return `<div class="seqbar" role="img" aria-label="Ease ratings: ${s.dist.map((c, i) => `${c} ${labels[i] || i + 1}`).join(', ')}">${segs}</div>`;
+  }
+  function seqSummary(s) {
+    const scale = state.study.seqScale, mid = (scale + 1) / 2;
+    const easy = s.seqs.filter(v => v > mid).length, hard = s.seqs.filter(v => v < mid).length, neutral = s.seqs.length - easy - hard;
+    return `<p class="seq-sum"><b>${easy}</b> found it easy · <b>${neutral}</b> neutral · <b>${hard}</b> found it difficult</p>`;
+  }
+
+  // ---------- wireframes ----------
+  function block(x, y, w, h, b) {
+    const tone = b.tone || 'plain';
+    let o = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" class="blk-${tone}"/>`;
+    if (tone === 'btn') return o + `<text x="${x + w / 2}" y="${y + h / 2 + 3.5}" text-anchor="middle" class="blk-bt">${esc(b.label)}</text>`;
+    o += `<text x="${x + 9}" y="${y + 15}" class="blk-t">${esc(b.label)}</text>`;
+    if (b.sub) o += `<text x="${x + 9}" y="${y + 28}" class="blk-s">${esc(b.sub)}</text>`;
+    if (b.chart) {
+      const max = Math.max(...b.chart), top = y + 26, base = y + h - (b.axis ? 14 : 8), cw = (w - 18) / b.chart.length, pk = b.chart.indexOf(max);
+      b.chart.forEach((v, i) => {
+        const bh = (base - top) * v / max, bx = x + 9 + i * cw + 2;
+        o += `<rect x="${bx}" y="${base - bh}" width="${Math.max(2, cw - 5)}" height="${bh}" rx="2" class="${b.peak && i === pk ? 'bar-p' : 'bar-m'}"/>`;
+      });
+      if (b.peak) o += `<text x="${x + 9 + pk * cw + cw / 2 - 0.5}" y="${top - 2}" text-anchor="middle" class="bar-l">PEAK</text>`;
+      if (b.axis) o += `<text x="${x + 9}" y="${base + 10}" class="blk-s">${esc(b.axis)}</text>`;
+    }
+    if (b.progress != null) {
+      o += `<rect x="${x + 9}" y="${y + h - 14}" width="${w - 18}" height="6" rx="3" class="prog-bg"/>`;
+      o += `<rect x="${x + 9}" y="${y + h - 14}" width="${(w - 18) * Math.min(1, b.progress)}" height="6" rx="3" class="prog-fg"/>`;
+    }
+    return o;
+  }
+  function phone(spec, aria) {
+    let y = 50, o = `<rect x="1" y="1" width="178" height="358" rx="24" class="ph-body"/><rect x="8" y="8" width="164" height="344" rx="17" class="ph-screen"/><rect x="70" y="15" width="40" height="5" rx="2.5" class="ph-status"/><text x="20" y="40" class="ph-title">${esc(spec.title)}</text>`;
+    for (const b of spec.blocks || []) { o += block(18, y, 144, b.h, b); y += b.h + 8; }
+    return `<svg class="phone" viewBox="0 0 180 360" role="img" aria-label="${esc(aria)}">${o}</svg>`;
+  }
+  function desktop(spec, aria) {
+    let o = `<rect x="1" y="1" width="358" height="238" rx="10" class="ph-body"/>`;
+    o += [12, 21, 30].map(cx => `<circle cx="${cx}" cy="10" r="2.6" class="ph-status"/>`).join('');
+    o += `<rect x="44" y="4.5" width="200" height="11" rx="5.5" class="ph-screen"/><text x="52" y="12.4" class="url-t">${esc(spec.url || '')}</text>`;
+    o += `<rect x="4" y="19" width="352" height="217" rx="6" class="ph-screen"/><rect x="4" y="19" width="72" height="217" rx="6" class="ph-side"/>`;
+    o += `<rect x="12" y="27" width="10" height="10" rx="3" class="bar-p"/>`;
+    (spec.nav || []).forEach((n, i) => {
+      const ny = 52 + i * 17;
+      if (i === spec.active) o += `<rect x="8" y="${ny - 10}" width="64" height="15" rx="4" class="nav-a"/>`;
+      o += `<text x="14" y="${ny}" class="${i === spec.active ? 'nav-ta' : 'nav-t'}">${esc(n)}</text>`;
+    });
+    o += `<text x="86" y="38" class="ph-title">${esc(spec.title)}</text>`;
+    const X = 86, W = 262, cw = (W - 8) / 2;
+    let y = 48, pending = null;
+    for (const b of spec.blocks || []) {
+      if (b.span === 2) {
+        if (pending != null) { y += pending + 8; pending = null; }
+        o += block(X, y, W, b.h, b); y += b.h + 8;
+      } else if (pending == null) { o += block(X, y, cw, b.h, b); pending = b.h; }
+      else { o += block(X + cw + 8, y, cw, b.h, b); y += Math.max(pending, b.h) + 8; pending = null; }
+    }
+    return `<svg class="desk" viewBox="0 0 360 240" role="img" aria-label="${esc(aria)}">${o}</svg>`;
+  }
+  const screen = (spec, device, aria) => spec?.src ? `<img src="${esc(spec.src)}" alt="${esc(aria)}">` : device === 'desktop' ? desktop(spec || {}, aria) : phone(spec || {}, aria);
+
+  // ---------- small renderers ----------
+  const P = () => state.participants;
+  const N = () => state.participants.length;
+  // Completion is shown as plain numbers: reads the same for 5 or 500 participants.
+  const CHIPS = 8;
+  const verdictCell = (s, t) => `${pill(VERDICT[s.verdict], true)}${s.overridden ? `<span class="ovr" title="${esc(t.override.reason)}">${icon('user')}Researcher call</span>` : ''}`;
+  const doneLabel = s => !s.scored ? '<span class="muted">–</span>' : `<span class="done"><b>${s.done}/${s.n}</b><span>${pct(s.done, s.n)}%</span></span>${s.pending ? `<span class="ovr" style="color:var(--muted)">${s.pending} to review</span>` : ''}`;
+  // Participant fields are study-specific: study.participantFields [{key, label}], else every key except id.
+  const pFields = () => state.participantFields || Object.keys(P()[0] || {}).filter(k => k !== 'id').map(k => ({ key: k, label: k.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase()) }));
+  const pSummary = p => pFields().slice(0, 2).map(f => p[f.key]).filter(Boolean).join(', ');
+  const who = ids => `<span class="who">${icon('users')}<span class="num">${ids.length} of ${N()}</span>${ids.map((id, i) => `<span class="pid"${i >= CHIPS ? ' hidden' : ''}>${esc(id)}</span>`).join('')}${ids.length > CHIPS ? `<button type="button" class="pid more" data-more aria-label="Show all ${ids.length} participants">+${ids.length - CHIPS} more</button>` : ''}</span>`;
+  const whoEd = (fp, ids) => `<span class="who">${icon('users')}${P().map(p => `<button type="button" class="pid" data-who="${fp}" data-pid="${esc(p.id)}" aria-pressed="${ids.includes(p.id)}">${esc(p.id)}</button>`).join('')}</span>`;
+  const findTask = fid => { for (const h of state.hypotheses) for (const t of h.tasks) if ((t.findings || []).some(f => f.id === fid)) return t; return null; };
+
+  function taskHTML(h, hi, t, ti) {
+    const s = score(t), tp = `hypotheses.${hi}.tasks.${ti}`, a = slug(t.id), dev = t.screens?.device === 'desktop' ? 'desktop' : 'mobile';
+    const sevSeg = ['none', 'minor', 'major'].map(k => s.sev[k] ? `<i class="s-${k}" style="width:${pct(s.sev[k], s.rated)}%"></i>` : '').join('');
+    const hasScreens = !!t.screens;
+    const labels = state.study.seqLabels || [];
+    const sorted = (t.findings || []).map((f, fi) => ({ f, fi })).sort((x, y) => (FT[x.f.type]?.rank ?? 9) - (FT[y.f.type]?.rank ?? 9) || y.f.who.length - x.f.who.length);
+    const findings = sorted.map(({ f, fi }) => {
+      const m = FT[f.type] || FT.minor, fp = `${tp}.findings.${fi}`;
+      return `<li class="finding" id="${slug(f.id)}" data-type="${f.type}">
+        <span class="ico ${m.cls}">${icon(m.icon)}</span>
+        <div class="txt">
+          <div class="ftop">${editing ? sel(fp + '.type', Object.entries(FT).map(([k, v]) => [k, v.label]), f.type, 'Finding type') : `<span class="ftype" style="color:var(--${m.cls})">${m.label}</span>`}<span class="fid">${esc(f.id)}</span></div>
+          ${E(fp + '.text', 'p')}
+          ${editing ? whoEd(fp, f.who) : who(f.who)}
+        </div>
+        ${editing ? delBtn(fp, 'finding') : `<button type="button" class="copy" data-copy="${slug(f.id)}" aria-label="Copy link to finding ${esc(f.id)}" title="Copy link">${icon('link')}</button>`}
+      </li>`;
+    }).join('');
+    const quotes = (t.quotes || []).map((q, qi) => {
+      const qp = `${tp}.quotes.${qi}`, p = P().find(p => p.id === q.who);
+      return `<blockquote>
+        <span class="qmark">${icon('quote')}</span>
+        <div class="qbody"><p>“${E(qp + '.text')}”</p>
+          <footer>${editing ? sel(qp + '.who', P().map(p => [p.id, p.id]), q.who, 'Who said this') : `<span class="pid">${esc(q.who)}</span>`}${p && pSummary(p) ? `<span>${esc(pSummary(p))}</span>` : ''}</footer></div>
+        ${delBtn(qp, 'quote')}
+      </blockquote>`;
+    }).join('');
+    const shot = (v, label) => {
+      const spec = t.screens?.[v] || {}, sp = `${tp}.screens.${v}`;
+      return `<figure class="shot" data-v="${v}" ${v === 'asIs' && !editing ? 'hidden' : ''}>
+        ${editing ? `<span class="eyebrow">${label}</span>` : ''}
+        ${screen(spec, dev, `${label}: ${spec.caption || ''}`)}
+        <figcaption>${E(sp + '.caption')}</figcaption>
+        ${editing ? `<div class="img-ed"><label class="btn">${icon('image')}Replace with screenshot<input type="file" accept="image/*" data-img="${sp}"></label>${spec.src ? `<button type="button" class="btn" data-unimg="${sp}">Remove screenshot</button>` : ''}</div>` : ''}
+      </figure>`;
+    };
+    const resultsEd = editing ? `<div class="results-ed">
+        <div class="col-title" style="margin:0">${icon('pencil')}Results per participant</div>
+        <div class="table-box"><table><thead><tr><th>Participant</th><th>Completed</th><th>Friction</th><th>Ease (1–${state.study.seqScale})</th></tr></thead><tbody>
+        ${P().map(p => { const r = t.results[p.id] || {}; const rp = `${tp}.results.${p.id}`; return `<tr><td><span class="pid">${esc(p.id)}</span></td>
+          <td><input type="checkbox" data-set="${rp}.done" data-kind="bool" ${r.done ? 'checked' : ''} aria-label="${esc(p.id)} completed"></td>
+          <td>${sel(rp + '.sev', [['none', 'No issue'], ['minor', 'Minor'], ['major', 'Major']], r.sev || 'none', p.id + ' friction')}</td>
+          <td>${sel(rp + '.seq', Array.from({ length: state.study.seqScale }, (_, i) => [i + 1, `${i + 1} · ${labels[i] || ''}`]), r.seq || '', p.id + ' ease', 'num')}</td></tr>`; }).join('')}
+        </tbody></table></div>
+        <label class="ov"><input type="checkbox" data-set="${tp}.scored" data-kind="bool" ${s.scored ? 'checked' : ''}> Score this task as pass or fail</label>
+        ${!s.scored ? '' : `<div class="ov"><span>Verdict</span>${`<select class="ed-select" data-override="${tp}" aria-label="Verdict">${[['', `Calculated (${s.computed === 'pass' ? 'Pass' : 'Fail'})`], ['pass', 'Researcher call: Pass'], ['fail', 'Researcher call: Fail']].map(([v, l]) => `<option value="${v}"${(t.override?.verdict || '') === v ? ' selected' : ''}>${l}</option>`).join('')}</select>`}
+          ${t.override ? `<input class="ed-input" data-set="${tp}.override.reason" value="${esc(t.override.reason)}" placeholder="Why is this different from the calculated verdict?" aria-label="Reason for verdict">` : ''}</div>`}
+      </div>` : '';
+    return `<article class="task" id="${a}">
+      <header class="task-head">
+        <div class="row"><span class="eyebrow">${esc(h.id)} · Task ${esc(t.id.replace(/^T/, ''))}</span>
+          <span class="ed-row"><span class="stim">${icon(dev === 'desktop' ? 'monitor' : 'phone')}${E(tp + '.stimulus')}</span>${editing && hasScreens ? sel(tp + '.screens.device', [['mobile', 'Mobile'], ['desktop', 'Desktop']], dev, 'Device') : ''}${delBtn(tp, 'task ' + t.id)}</span></div>
+        ${E(tp + '.title', 'h3')}
+        ${(t.tags || []).length ? `<div class="tags">${t.tags.map(x => `<span class="tag-chip">${esc(x)}</span>`).join('')}</div>` : ''}
+      </header>
+      <div class="measures">
+        <div class="measure">
+          <div class="top"><span class="eyebrow">${icon('target')}Effectiveness</span>${pill(VERDICT[s.verdict], true)}</div>
+          ${s.scored
+            ? `<div class="big num">${s.done}<small> of ${s.n} completed · ${pct(s.done, s.n)}%</small></div>
+               ${s.overridden ? `<p class="override"><b>Researcher call:</b> ${esc(t.override.reason)}</p>` : `<p class="def">Pass when more than half complete the task.${s.pending ? ` ${s.pending} result${s.pending === 1 ? '' : 's'} still to review.` : ''}</p>`}`
+            : `<p class="def">${esc(t.scoreNote || 'Observation task: responses need coding before it can pass or fail.')}</p>`}
+        </div>
+        <div class="measure">
+          <div class="top"><span class="eyebrow">${icon('gauge')}Efficiency</span>${pill(EFF[s.eff], true)}</div>
+          ${s.rated ? `<div class="sevbar" role="img" aria-label="${s.sev.none} no issue, ${s.sev.minor} minor, ${s.sev.major} major">${sevSeg}</div>
+          <div class="sevkey num"><span class="k-none">${s.sev.none} no issue</span><span class="k-minor">${s.sev.minor} minor</span><span class="k-major">${s.sev.major} major</span></div>` : ''}
+          ${s.medianMs != null ? `<div class="big num">${fmtMs(s.medianMs)}<small> median time</small></div>` : ''}
+          <p class="def">${s.rated ? esc(t.effNote || 'How much friction each participant hit.') : 'Friction not rated for this task.'}</p>
+        </div>
+        <div class="measure">
+          <div class="top"><span class="eyebrow">${icon('smile')}Ease (SEQ)</span><span class="big num">${fmtMean(s.seqMean)}<small> / ${state.study.seqScale} avg</small></span></div>
+          ${seqBar(s)}
+          <div class="seq-ends"><span>${esc(labels[0] || 'Difficult')}</span><span>${esc(labels[labels.length - 1] || 'Easy')}</span></div>
+          ${seqSummary(s)}
+        </div>
+      </div>
+      ${resultsEd}
+      <div class="task-body ${hasScreens ? dev : 'solo'}">
+        <div>
+          <div class="col-title">${icon('layers')}Findings</div>
+          <ul class="findings">${findings}</ul>
+          <p class="none-msg" hidden>No findings of this type for this task.</p>
+          ${addBtn(tp + '.findings', 'finding', 'Add finding')}
+          ${(quotes || editing) ? `<div class="quotes"><div class="col-title" style="margin:0">${icon('quote')}In their words</div>${quotes}${addBtn(tp + '.quotes', 'quote', 'Add quote')}</div>` : ''}
+        </div>
+        ${!hasScreens ? (editing ? `<div class="screens"><button type="button" class="add" data-screens="${tp}">${icon('image')}Add screens</button></div>` : '') : `<div class="screens">
+          <div class="bar">
+            ${editing ? `<span class="eyebrow">${icon(dev === 'desktop' ? 'monitor' : 'phone')}Screens</span>` : `<div class="seg" role="group" aria-label="Screen version">
+              <button type="button" data-shot="asIs" aria-pressed="false">As is</button>
+              <button type="button" data-shot="toBe" aria-pressed="true">To be</button>
+            </div>`}
+            <button type="button" class="btn zoom-btn" data-zoom="${ti}" data-h="${hi}">${icon('expand')}Compare</button>
+          </div>
+          ${shot('asIs', 'As is')}${shot('toBe', 'To be')}
+          <div class="legend"><span class="l-hot">Where people struggled</span><span class="l-new">Proposed change</span></div>
+        </div>`}
+      </div>
+      ${(t.takeaway || []).length || editing ? `<div class="takeaway"><span class="col-title" style="margin:0">${icon('pin')}Takeaway</span>
+        <ul>${(t.takeaway || []).map((x, i) => `<li>${E(`${tp}.takeaway.${i}`)} ${delBtn(`${tp}.takeaway.${i}`, 'point')}</li>`).join('')}</ul>
+        ${addBtn(tp + '.takeaway', 'string', 'Add point')}
+      </div>` : ''}
+      <details class="materials"${editing ? ' open' : ''}${!editing && !(t.script || []).length && !(t.lookFor || []).length ? ' hidden' : ''}>
+        <summary><span class="chev">${icon('chev')}</span>${icon('clipboard')}Session materials: script and what we watched for</summary>
+        <div class="inner">
+          <div><div class="col-title">Testing script</div><ol class="script">${(t.script || []).map((x, i) => `<li>${E(`${tp}.script.${i}`)}${delBtn(`${tp}.script.${i}`, 'script line')}</li>`).join('')}</ol>${addBtn(tp + '.script', 'string', 'Add line')}</div>
+          <div><div class="col-title">What we watched for</div><ul class="look">${(t.lookFor || []).map((l, i) => {
+            const lp = `${tp}.lookFor.${i}`;
+            const no = l.observed === false; // null/undefined = not recorded either way
+            return `<li class="${no ? 'no' : ''}"><span class="eye">${icon(no ? 'eyeoff' : 'eye')}</span><span class="txt">${E(lp + '.text')}${editing ? ` <label class="tag"><input type="checkbox" data-set="${lp}.observed" data-kind="bool" ${l.observed ? 'checked' : ''}> observed</label>` : no ? '<span class="tag">not observed</span>' : ''}</span>${delBtn(lp, 'item')}</li>`;
+          }).join('')}</ul>${addBtn(tp + '.lookFor', 'look', 'Add item')}</div>
+        </div>
+      </details>
+    </article>`;
+  }
+
+  // ---------- full render ----------
+  function render() {
+    // Older reports had one "author" field: it becomes "Authored by".
+    if (state.study.author != null && state.study.authoredBy == null) { state.study.authoredBy = state.study.author; delete state.study.author; }
+    const S = state.study, hyps = state.hypotheses;
+    const credit = (key, label) => `<div><dt>${label}</dt><dd>${editing || S[key] ? E('study.' + key) : '<span class="muted">Not set</span>'}</dd></div>`;
+    const scored = hyps.map(h => h.tasks.map(score));
+    const verdicts = scored.map(hypVerdict);
+    const all = scored.flat();
+    const allSeq = all.flatMap(s => s.seqs);
+    const allFindings = hyps.flatMap(h => h.tasks.flatMap(t => t.findings || []));
+    const counts = Object.fromEntries(Object.keys(FT).map(k => [k, allFindings.filter(f => f.type === k).length]));
+    const ease = allSeq.length ? allSeq.reduce((a, b) => a + b, 0) / allSeq.length : NaN;
+    document.title = docTitle();
+
+    const scoreRows = hyps.map((h, hi) => `
+      <tr class="hyp-row"><td colspan="5"><div class="row-flex"><a class="task-link" href="#${slug(h.id)}">${h.id !== h.statement ? `<span class="tid">${esc(h.id)}</span>` : ''}${M(`hypotheses.${hi}.statement`)}</a>${pill(HYP[verdicts[hi]], true)}</div></td></tr>
+      ${h.tasks.map((t, ti) => { const s = scored[hi][ti]; return `<tr>
+        <td><a class="task-link" href="#${slug(t.id)}"><span class="tid">${esc(t.id)}</span>${M(`hypotheses.${hi}.tasks.${ti}.title`)}</a></td>
+        <td>${verdictCell(s, t)}</td>
+        <td class="num">${doneLabel(s)}</td>
+        <td>${pill(EFF[s.eff], true)}</td>
+        <td><div class="ease-cell">${seqBar(s, true)}<span class="num">${fmtMean(s.seqMean)}</span></div></td>
+      </tr>`; }).join('')}`).join('');
+
+    const scoredTasks = all.filter(s => s.scored);
+    const recs = !state.recommendations.length && !editing ? `<li class="empty">No recommendations yet. Add them in edit mode once the team has reviewed the findings.</li>` : state.recommendations.map((r, ri) => {
+      const rp = `recommendations.${ri}`;
+      return `<li class="fix">
+        <span class="prio">${editing ? sel(rp + '.priority', Object.keys(PRIO).map(k => [k, k]), r.priority, 'Priority') : `<span class="pill sm ${PRIO[r.priority] || 'quiet'}">${icon('flag')}${esc(r.priority)}</span>`}</span>
+        ${E(rp + '.title', 'h3')}
+        ${E(rp + '.detail', 'p')}
+        <div class="foot"><span>${icon('user')}Owner: ${E(rp + '.owner', 'b', 'ink')}</span><span>${icon('clock')}Effort: ${editing ? sel(rp + '.effort', [['Small', 'Small'], ['Medium', 'Medium'], ['Large', 'Large']], r.effort, 'Effort') : esc(r.effort)}</span>
+          <span>${icon('layers')}Evidence: ${editing ? `<input class="ed-input" data-set="${rp}.evidence" data-kind="list" value="${esc(r.evidence.join(', '))}" aria-label="Evidence finding IDs" placeholder="e.g. T2.1-F1, T2.1-F2">` : r.evidence.filter(findTask).map(id => `<a class="ev" href="#${slug(id)}">${esc(id)}</a>`).join('')}</span></div>
+        ${delBtn(rp, 'recommendation', 'abs-del')}
+      </li>`;
+    }).join('');
+
+    const hypSections = hyps.map((h, hi) => {
+      const passed = scored[hi].filter(s => s.verdict === 'pass').length, nScored = scored[hi].filter(s => s.scored).length, unscored = h.tasks.length - nScored;
+      return `<section id="${slug(h.id)}"><div class="wrap">
+        <div class="hyp-head">
+          <div class="row"><span class="eyebrow">${icon('target')}${esc(groupLabel())} ${hi + 1} of ${hyps.length}</span><span class="ed-row">${pill(HYP[verdicts[hi]])}${delBtn(`hypotheses.${hi}`, groupLabel().toLowerCase() + ' ' + h.id)}</span></div>
+          ${E(`hypotheses.${hi}.statement`, 'h2')}
+          ${h.note || editing ? E(`hypotheses.${hi}.note`, 'p', 'muted') : ''}
+          <p class="muted">${nScored ? `${passed} of ${nScored} scored task${nScored === 1 ? '' : 's'} passed.` : 'No scored tasks yet.'}${unscored ? ` ${unscored} observation task${unscored === 1 ? '' : 's'} not scored.` : ''}</p>
+        </div>
+        ${h.tasks.map((t, ti) => taskHTML(h, hi, t, ti)).join('')}
+        ${addBtn(`hypotheses.${hi}.tasks`, 'task', 'Add task to ' + h.id)}
+      </div></section>`;
+    }).join('');
+
+    const fields = pFields();
+    const ptable = `<div class="table-box"><table style="min-width:440px"><thead><tr><th>ID</th>${fields.map(f => `<th>${esc(f.label)}</th>`).join('')}${editing ? '<th></th>' : ''}</tr></thead><tbody>${P().map((p, pi) => `<tr><td><span class="pid">${esc(p.id)}</span></td>${fields.map(f => `<td>${E(`participants.${pi}.${f.key}`)}</td>`).join('')}${editing ? `<td>${delBtn(`participants.${pi}`, 'participant ' + p.id)}</td>` : ''}</tr>`).join('')}</tbody></table></div>`;
+
+    // Closing questions: choice answers as counts, rankings as average position.
+    const survey = (state.survey || []).map((q, qi) => {
+      const qp = `survey.${qi}`;
+      if (q.kind === 'rank') {
+        const items = [...q.items].sort((a, b) => a.avg - b.avg);
+        return `<div class="card q"><span class="eyebrow">Ranking · ${q.n} answers</span>${E(qp + '.prompt', 'h3')}
+          <ol class="rank">${items.map(it => `<li><span class="rk-label">${esc(it.label)}</span><span class="rk-meta num">avg position <b>${it.avg.toFixed(1)}</b> · ranked first by <b>${it.first}</b></span></li>`).join('')}</ol></div>`;
+      }
+      const max = Math.max(1, ...q.options.map(o => o.count));
+      const comments = q.options.flatMap(o => (o.comments || []).map(c => ({ o: o.label, c })));
+      return `<div class="card q"><span class="eyebrow">${q.n} answers</span>${E(qp + '.prompt', 'h3')}
+        <ul class="answers">${[...q.options].sort((a, b) => b.count - a.count).map(o => `<li><span class="a-label">${esc(o.label)}</span><span class="a-bar"><i style="width:${o.count / max * 100}%"></i></span><span class="a-n num">${o.count}<small> · ${pct(o.count, q.n)}%</small></span></li>`).join('')}</ul>
+        ${comments.length ? `<details class="comments"><summary>${icon('quote')}${comments.length} written answer${comments.length === 1 ? '' : 's'}</summary><ul>${comments.map(x => `<li><span class="muted">${esc(x.o)}:</span> “${esc(x.c)}”</li>`).join('')}</ul></details>` : ''}
+      </div>`;
+    }).join('');
+
+    const scale = S.seqScale;
+    const legendFT = Object.values(FT).map(m => `<li><span class="sw ${m.cls}">${icon(m.icon)}</span>${m.label}</li>`).join('');
+
+    app.innerHTML = `
+    <div class="theme-dock"><div class="wrap"><button type="button" class="icon-btn" data-act="theme" id="themeBtn"></button></div></div>
+    ${pendingRestore ? `<div class="banner"><div class="wrap"><span>You have edits from a save that didn't go through. Restore them?</span><span class="ed-row"><button type="button" class="btn primary" data-act="restore">Restore my edits</button><button type="button" class="btn" data-act="drop">Discard them</button></span></div></div>` : ''}
+    <header class="hero" id="top"><div class="wrap">
+      <div class="brand"><span class="logo">${S.logo ? `<img class="logo-img" src="${esc(S.logo)}" alt="">` : '<span class="mark"></span>'}${E('study.brand')}</span><span class="doc-type">${esc(S.docType || 'Usability testing report')}</span></div>
+      <div class="title-block">
+        <span class="eyebrow">${E('study.team')}</span>
+        ${E('study.title', 'h1')}
+        ${E('study.lede', 'p', 'lede')}
+      </div>
+      <dl class="meta">
+        <div><dt>Date</dt><dd>${editing ? `<input type="date" class="ed-input" data-set="study.date" value="${esc(S.date)}" aria-label="Report date">` : esc(fmtDate(S.date, { day: 'numeric', month: 'long', year: 'numeric' }))}</dd></div>
+        ${credit('authoredBy', 'Authored by')}${credit('facilitatedBy', 'Facilitated by')}${credit('analysedBy', 'Analysed by')}
+        <div><dt>Participants</dt><dd class="num">${N()}</dd></div>
+        <div><dt>Method</dt><dd>${E('study.method')}</dd></div>
+      </dl>
+      <div class="stats">
+        <div class="stat"><b class="num">${scoredTasks.filter(s => s.verdict === 'pass').length}<small> / ${scoredTasks.length}</small></b><span>${scoredTasks.length < all.length ? 'scored tasks passed' : 'tasks passed'}</span></div>
+        <div class="stat"><b class="num">${verdicts.filter(v => v === 'supported').length}<small> / ${hyps.length}</small></b><span>${isHyp() ? 'hypotheses fully supported' : esc(groupLabel().toLowerCase()) + 's where every scored task passed'}</span></div>
+        <div class="stat"><b class="num">${counts.major}</b><span>major issues found</span></div>
+        <div class="stat"><b class="num">${fmtMean(ease)}<small> / ${scale}</small></b><span>average ease across tasks</span></div>
+      </div>
+      <p class="privacy">${icon('lock')}${E('study.privacy')}</p>
+    </div></header>
+
+    <nav class="secbar" aria-label="Sections"><div class="wrap">
+      <div class="links">
+        <a href="#how-to-read">${icon('book')}How to read</a><a href="#summary">Summary</a><a href="#fixes">Priority fixes</a>
+        ${hyps.map((h, hi) => `<a href="#${slug(h.id)}"><span class="dot" style="background:var(--${HYP[verdicts[hi]].cls})"></span>${esc(h.id)}</a>`).join('')}
+        ${(state.survey || []).length ? '<a href="#survey">Closing questions</a>' : ''}
+        <a href="#appendix">Method &amp; participants</a>
+      </div>
+      <div class="actions">
+        ${editAccess && !session ? `<button type="button" class="btn" data-act="edit">${icon('pencil')}Edit report</button>` : ''}
+        <span class="dock-gap" aria-hidden="true"></span>
+      </div>
+    </div></nav>
+
+    <main>
+      <section id="how-to-read"><div class="wrap">
+        <div class="sec-head"><span class="eyebrow">${icon('book')}Before you start</span><h2>How to read this report</h2></div>
+        <div class="howto">
+          <div class="card"><span class="badge acc">${icon('bulb')}</span><h3>Start with the summary</h3><p>The scorecard shows every task at a glance. Priority fixes come next, each linked to the findings behind it.</p></div>
+          <div class="card"><span class="badge acc">${icon('target')}</span><h3>Each task is scored three ways</h3><ul>
+            <li><span class="sw acc">${icon('target')}</span><span><b>Effectiveness:</b> did they complete it?</span></li>
+            <li><span class="sw acc">${icon('gauge')}</span><span><b>Efficiency:</b> how much friction they hit</span></li>
+            <li><span class="sw acc">${icon('smile')}</span><span><b>Ease:</b> how easy they said it was, 1 to ${scale}</span></li></ul></div>
+          <div class="card"><span class="badge acc">${icon('layers')}</span><h3>What the icons mean</h3><ul>${legendFT}<li><span class="sw acc">${icon('quote')}</span>Participant's own words</li></ul></div>
+          <div class="card"><span class="badge acc">${icon('users')}</span><h3>Every finding shows its evidence</h3><p>“3 of ${N()}” is how many participants it affected, and the P-numbers say who. Use the filter to show one type of finding, and the ${icon('link')} link to share a single finding.</p></div>
+        </div>
+      </div></section>
+
+      <section id="summary"><div class="wrap">
+        <div class="sec-head"><span class="eyebrow">${icon('bulb')}Summary</span><h2>What we learned</h2></div>
+        ${!state.insights.length && !editing ? '<p class="empty">No insights yet. Add them in edit mode.</p>' : ''}
+        <ul class="insights">${state.insights.map((x, i) => `<li>${E(`insights.${i}.title`, 'strong')}${E(`insights.${i}.body`, 'p')}${delBtn(`insights.${i}`, 'insight', 'abs-del')}</li>`).join('')}</ul>
+        ${addBtn('insights', 'insight', 'Add insight')}
+        <div class="table-box"><table>
+          <thead><tr><th>${esc(groupLabel())} / task</th><th>Effectiveness</th><th>Completed</th><th>Efficiency</th><th>Ease (difficult → easy)</th></tr></thead>
+          <tbody>${scoreRows}</tbody>
+        </table></div>
+      </div></section>
+
+      <section id="fixes"><div class="wrap">
+        <div class="sec-head"><span class="eyebrow">${icon('flag')}Recommendations</span><h2>Priority fixes</h2><p class="muted">Each fix links to the findings behind it.</p></div>
+        <ol class="fixes">${recs}</ol>
+        ${addBtn('recommendations', 'rec', 'Add recommendation')}
+      </div></section>
+
+      <div id="detail">
+        <section style="padding-bottom:16px"><div class="wrap">
+          <div class="sec-head"><span class="eyebrow">${icon('layers')}Detail</span><h2>Findings by ${esc(groupLabel().toLowerCase())}</h2></div>
+        </div></section>
+        <div class="filterbar"><div class="wrap">
+          <div class="filter" role="group" aria-label="Filter findings">
+            <button type="button" data-filter="all" aria-pressed="${filter === 'all'}">All findings <span class="c">${allFindings.length}</span></button>
+            ${Object.entries(FT).map(([k, m]) => `<button type="button" data-filter="${k}" aria-pressed="${filter === k}"><span style="color:var(--${m.cls})">${icon(m.icon)}</span>${m.label} <span class="c">${counts[k]}</span></button>`).join('')}
+          </div>
+          <span class="filter-count" aria-live="polite"></span>
+        </div></div>
+        ${hypSections}
+        ${editing ? `<section style="padding-top:20px"><div class="wrap">${addBtn('hypotheses', 'hyp', 'Add ' + groupLabel().toLowerCase())}</div></section>` : ''}
+      </div>
+
+      ${(state.survey || []).length ? `<section id="survey"><div class="wrap">
+        <div class="sec-head"><span class="eyebrow">${icon('quote')}After the tasks</span><h2>Closing questions</h2><p class="muted">What participants said when asked directly. Read these opinions alongside what they did.</p></div>
+        <div class="survey">${survey}</div>
+      </div></section>` : ''}
+
+      <section id="appendix"><div class="wrap">
+        <div class="sec-head"><span class="eyebrow">${icon('users')}Appendix</span><h2>Method and participants</h2></div>
+        <div class="app-grid">
+          <div class="card"><h3>${icon('target')}Objectives</h3><ul>${S.objectives.map((x, i) => `<li>${E(`study.objectives.${i}`)} ${delBtn(`study.objectives.${i}`, 'objective')}</li>`).join('')}</ul>${addBtn('study.objectives', 'string', 'Add objective')}</div>
+          <div class="card"><h3>${icon('clipboard')}Method</h3><ul>${S.methodDetail.map((x, i) => `<li>${E(`study.methodDetail.${i}`)} ${delBtn(`study.methodDetail.${i}`, 'method line')}</li>`).join('')}</ul>${addBtn('study.methodDetail', 'string', 'Add method line')}
+            <h3>${icon('monitor')}Test materials</h3><ul>${S.stimulus.map((x, i) => editing
+              ? `<li>${E(`study.stimulus.${i}.label`)}<br><input class="ed-input" style="width:100%" data-set="study.stimulus.${i}.url" value="${esc(x.url)}" aria-label="Link"> ${delBtn(`study.stimulus.${i}`, 'link')}</li>`
+              : `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a></li>`).join('')}</ul>${addBtn('study.stimulus', 'link', 'Add link')}</div>
+        </div>
+        <div class="card"><h3>${icon('users')}Participants</h3>${ptable}${addBtn('participants', 'participant', 'Add participant')}</div>
+        ${(S.scoringNotes || []).length ? `<div class="card"><h3>${icon('clipboard')}How this study's data was scored</h3><ul>${S.scoringNotes.map((x, i) => `<li>${E(`study.scoringNotes.${i}`)}</li>`).join('')}</ul></div>` : ''}
+        <div class="card"><h3>${icon('book')}How we score</h3><ul class="key">
+          <li>${pill(VERDICT.pass, true)}<span><b>Effectiveness.</b> A task passes when more than half of participants complete it (3 of 5, 4 of 7). The researcher can override this, with a written reason.</span></li>
+          <li>${pill(EFF.minor, true)}<span><b>Efficiency.</b> Each participant is rated no issue, minor (completed with some difficulty) or major (significant difficulty or failure). The task shows the worst level that 2 or more people hit.</span></li>
+          <li><span class="pill sm acc">${icon('smile')}SEQ</span><span><b>Ease.</b> Single Ease Question, asked straight after each task: “Overall, how difficult or easy was the task to complete?” on a ${scale}-point scale. The bar runs from difficult (red) to easy (green), with the number of people in each band.</span></li>
+          <li><span class="pill sm inv">${icon('search')}Investigate</span><span><b>Needs investigation.</b> Something we saw but can't yet explain or size. It needs more research before acting on it.</span></li>
+        </ul></div>
+      </div></section>
+    </main>
+    <footer class="end"><div class="wrap"><span>${M('study.brand')} · ${M('study.team')} · ${esc(fmtDate(S.date, { day: 'numeric', month: 'long', year: 'numeric' }))} · ${M('study.authoredBy')}</span><a class="totop" href="#top">${icon('up')}Back to top</a></div></footer>
+    ${session ? `<div class="editbar"><div class="wrap">
+      <span class="state${dirty ? ' dirty' : ''}"><span class="dot"></span>${saving ? 'Saving…' : dirty ? 'Unsaved changes' : 'No changes yet'}<span class="muted">· ${editing ? 'Click any outlined text to edit it' : 'Previewing as readers will see it'}</span></span>
+      <span class="btns">
+        <button type="button" class="btn" data-act="preview" aria-pressed="${!editing}">${editing ? `${icon('eye')}Preview` : `${icon('pencil')}Back to editing`}</button>
+        ${editing ? `<button type="button" class="btn" data-act="json">${icon('braces')}Edit all data</button>` : ''}
+        <button type="button" class="btn" data-act="discard"${dirty ? '' : ' hidden'}>${icon('undo')}Discard changes</button>
+        <button type="button" class="btn primary" data-act="save" ${saving ? 'disabled' : ''} title="${editAccess === 'local' ? 'Saves an updated copy to your Downloads folder' : 'Saves your changes and stops editing'}">${icon('save')}Save</button>
+      </span></div></div>` : ''}`;
+
+    document.body.classList.toggle('editing', editing);
+    document.body.classList.toggle('session', session);
+    applyFilter();
+    paintThemeBtn();
+    measureBar();
+  }
+
+  // ---------- templates for new items ----------
+  function template(kind, arrPath) {
+    const scale = state.study.seqScale, P0 = P()[0]?.id || 'P1';
+    const newTask = (hIndex, n) => ({
+      id: `T${hIndex + 1}.${n + 1}`, title: 'New task', stimulus: 'Prototype · Screen', script: ['Task instruction'], lookFor: [{ text: 'What to look for', observed: true }],
+      results: Object.fromEntries(P().map(p => [p.id, { done: true, sev: 'none', seq: Math.ceil(scale / 2) }])),
+      findings: [], quotes: [],
+      screens: { device: 'mobile', asIs: { title: 'Screen', caption: 'Current design', blocks: [{ label: 'Content', h: 60 }, { label: 'Problem area', h: 50, tone: 'hot' }] }, toBe: { title: 'Screen', caption: 'Proposed design', blocks: [{ label: 'Content', h: 60 }, { label: 'Proposed change', h: 50, tone: 'new' }] } },
+      takeaway: ['Key point']
+    });
+    switch (kind) {
+      case 'string': return 'New point';
+      case 'insight': return { title: 'New insight', body: 'What we saw and why it matters.' };
+      case 'rec': return { priority: 'Medium', title: 'New recommendation', detail: 'What to change.', owner: 'Team', effort: 'Small', evidence: [] };
+      case 'quote': return { who: P0, text: 'Quote' };
+      case 'look': return { text: 'What to look for', observed: true };
+      case 'link': return { label: 'New link', url: 'https://' };
+      case 'finding': {
+        const t = get(arrPath.replace(/\.findings$/, ''));
+        const max = Math.max(0, ...t.findings.map(f => +(f.id.match(/F(\d+)$/) || [0, 0])[1]));
+        return { id: `${t.id}-F${max + 1}`, type: 'minor', text: 'New finding', who: [] };
+      }
+      case 'task': { const hi = +arrPath.split('.')[1]; return newTask(hi, get(arrPath).length); }
+      case 'hyp': { const n = state.hypotheses.length; return { id: `H${n + 1}`, statement: 'New hypothesis', tasks: [newTask(n, 0)] }; }
+      case 'participant': {
+        const id = `P${Math.max(0, ...P().map(p => +p.id.replace(/\D/g, '') || 0)) + 1}`;
+        state.hypotheses.forEach(h => h.tasks.forEach(t => { t.results[id] = { done: true, sev: 'none', seq: Math.ceil(scale / 2) }; }));
+        return { id, ...Object.fromEntries(pFields().map(f => [f.key, ''])) };
+      }
+    }
+  }
+
+  // ---------- edits ----------
+  function changed(rerender = true) {
+    dirty = true;
+    if (rerender) render();
+    else { const st = app.querySelector('.editbar .state'); if (st) { st.classList.add('dirty'); st.firstChild.nextSibling.textContent = 'Unsaved changes'; } const sb = app.querySelector('[data-act="save"]'); if (sb) sb.disabled = false; const db = app.querySelector('[data-act="discard"]'); if (db) db.hidden = false; }
+  }
+  app.addEventListener('input', e => {
+    const el = e.target.closest('[data-edit]');
+    if (!el || !editing) return;
+    const path = el.dataset.edit;
+    set(path, el.textContent);
+    app.querySelectorAll(`[data-mirror="${path}"], [data-edit="${path}"]`).forEach(m => { if (m !== el) m.textContent = el.textContent; });
+    if (path === 'study.title') document.title = docTitle();
+    changed(false);
+  });
+  app.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.closest('[data-edit]')) { e.preventDefault(); e.target.blur(); }
+  });
+  app.addEventListener('change', e => {
+    const el = e.target;
+    if (el.dataset.set) {
+      const k = el.dataset.kind;
+      const v = k === 'bool' ? el.checked : k === 'num' ? Number(el.value) : k === 'list' ? el.value.split(',').map(s => s.trim()).filter(Boolean) : el.value;
+      if (el.dataset.set.includes('.results.') && get(el.dataset.set.replace(/\.[^.]+$/, '')) == null) set(el.dataset.set.replace(/\.[^.]+$/, ''), { done: false, sev: 'none', seq: Math.ceil(state.study.seqScale / 2) });
+      set(el.dataset.set, v);
+      return changed(!(el.tagName === 'INPUT' && (el.type === 'text' || !el.type)));
+    }
+    if (el.dataset.override) {
+      const t = get(el.dataset.override);
+      if (el.value) t.override = { verdict: el.value, reason: t.override?.reason || '' }; else delete t.override;
+      return changed();
+    }
+    if (el.dataset.img) {
+      const f = el.files?.[0]; if (!f) return;
+      if (f.size > 3 * 1024 * 1024) return toast('That image is over 3 MB. Use a smaller screenshot so the report stays quick to load.');
+      const rd = new FileReader();
+      rd.onload = () => { const spec = get(el.dataset.img); spec.src = rd.result; changed(); };
+      rd.readAsDataURL(f);
+    }
+  });
+
+  // ---------- clicks ----------
+  let toastTimer;
+  function toast(html) {
+    document.querySelector('.toast')?.remove();
+    const el = document.createElement('div'); el.className = 'toast'; el.setAttribute('role', 'status'); el.innerHTML = html;
+    document.body.appendChild(el); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.remove(), 5000);
+    return el;
+  }
+  app.addEventListener('click', e => {
+    const t = e.target;
+    const fb = t.closest('[data-filter]'); if (fb) { filter = fb.dataset.filter; app.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b === fb))); return applyFilter(); }
+    const sb = t.closest('[data-shot]');
+    if (sb) {
+      const box = sb.closest('.screens');
+      box.querySelectorAll('[data-shot]').forEach(b => b.setAttribute('aria-pressed', String(b === sb)));
+      box.querySelectorAll('.shot').forEach(f => { f.hidden = f.dataset.v !== sb.dataset.shot; });
+      return;
+    }
+    const zb = t.closest('[data-zoom]');
+    const shotEl = !editing && t.closest('.shot svg, .shot img');
+    if (zb || shotEl) {
+      const art = (zb || shotEl).closest('.task');
+      const [hi, ti] = zb ? [+zb.dataset.h, +zb.dataset.zoom] : (() => { for (const [hi, h] of state.hypotheses.entries()) for (const [ti, tk] of h.tasks.entries()) if (slug(tk.id) === art.id) return [hi, ti]; return [0, 0]; })();
+      return openZoom(state.hypotheses[hi].tasks[ti]);
+    }
+    const mb = t.closest('[data-more]');
+    if (mb) { mb.parentElement.querySelectorAll('.pid[hidden]').forEach(c => { c.hidden = false; }); mb.remove(); return; }
+    const cb = t.closest('[data-copy]');
+    if (cb) {
+      const url = location.href.split('#')[0] + '#' + cb.dataset.copy;
+      const fallback = () => { const el = toast(`Copy this link:<input readonly value="${esc(url)}" aria-label="Link to finding">`); const i = el.querySelector('input'); i.focus(); i.select(); };
+      try { navigator.clipboard.writeText(url).then(() => toast('Link to finding copied'), fallback); } catch { fallback(); }
+      return;
+    }
+    const wb = t.closest('[data-who]');
+    if (wb) { const f = get(wb.dataset.who), id = wb.dataset.pid; f.who = f.who.includes(id) ? f.who.filter(x => x !== id) : P().map(p => p.id).filter(x => x === id || f.who.includes(x)); return changed(); }
+    const ab = t.closest('[data-add]');
+    if (ab) { const arr = get(ab.dataset.add); arr.push(template(ab.dataset.tpl, ab.dataset.add)); return changed(); }
+    const db = t.closest('[data-del]');
+    if (db) {
+      const p = db.dataset.del, ks = p.split('.'), idx = +ks.pop(), arr = get(ks.join('.'));
+      const removed = arr.splice(idx, 1)[0];
+      if (ks.join('.') === 'participants') state.hypotheses.forEach(h => h.tasks.forEach(tk => { delete tk.results[removed.id]; (tk.findings || []).forEach(f => { f.who = f.who.filter(x => x !== removed.id); }); }));
+      return changed();
+    }
+    const scb = t.closest('[data-screens]');
+    if (scb) { const tk = get(scb.dataset.screens); tk.screens = { device: 'mobile', asIs: { title: 'Screen', caption: 'Current design', blocks: [{ label: 'Content', h: 60 }, { label: 'Problem area', h: 50, tone: 'hot' }] }, toBe: { title: 'Screen', caption: 'Proposed design', blocks: [{ label: 'Content', h: 60 }, { label: 'Proposed change', h: 50, tone: 'new' }] } }; return changed(); }
+    const ub = t.closest('[data-unimg]'); if (ub) { delete get(ub.dataset.unimg).src; return changed(); }
+    const act = t.closest('[data-act]')?.dataset.act;
+    if (act === 'theme') return toggleTheme();
+    if (act === 'edit') { session = editing = true; render(); return toast('Editing. Click any outlined text to change it.'); }
+    if (act === 'preview') { return keepPlace(() => { editing = !editing; render(); }); }
+    if (act === 'discard') { state = JSON.parse(ORIGINAL); dirty = false; session = editing = false; return render(); }
+    if (act === 'save') return save();
+    if (act === 'json') return openJson();
+    if (act === 'restore') { state = pendingRestore; pendingRestore = null; clearStash(); session = editing = true; dirty = true; return render(); }
+    if (act === 'drop') { pendingRestore = null; clearStash(); return render(); }
+  });
+
+  // Re-render without losing your place: keep the first visible section or task at the same height on screen.
+  function keepPlace(fn) {
+    const top = (parseFloat(getComputedStyle(root).getPropertyValue('--bar-h')) || 51) + 8;
+    const anchor = [...app.querySelectorAll('.task[id], section[id], .hero')].find(el => el.getBoundingClientRect().bottom > top);
+    const id = anchor?.id, before = anchor?.getBoundingClientRect().top;
+    fn();
+    const el = id && document.getElementById(id);
+    if (el) scrollBy(0, el.getBoundingClientRect().top - before);
+  }
+
+  function applyFilter() {
+    let shown = 0, total = 0;
+    app.querySelectorAll('.task').forEach(tk => {
+      let n = 0;
+      tk.querySelectorAll('.finding').forEach(li => { li.hidden = filter !== 'all' && li.dataset.type !== filter; total++; if (!li.hidden) n++; });
+      shown += n;
+      const msg = tk.querySelector('.none-msg'); if (msg) msg.hidden = n > 0 || filter === 'all';
+    });
+    const fc = app.querySelector('.filter-count');
+    if (fc) fc.textContent = filter === 'all' ? `${total} findings across ${app.querySelectorAll('.task').length} tasks` : `Showing ${shown} of ${total} findings`;
+  }
+
+  function openZoom(t) {
+    const dlg = document.getElementById('zoom'), dev = t.screens?.device === 'desktop' ? 'desktop' : 'mobile';
+    dlg.innerHTML = `<div class="dlg-head"><h3 id="zoom-title">${esc(t.id)} · As is and to be</h3><button class="btn" type="button" data-close>Close</button></div>
+      <div class="dlg-body ${dev === 'desktop' ? 'desk' : ''}">
+        ${['asIs', 'toBe'].map(v => `<figure class="shot"><span class="eyebrow">${v === 'asIs' ? 'As is' : 'To be'}</span>${screen(t.screens[v], dev, v)}<figcaption>${esc(t.screens[v].caption)}</figcaption></figure>`).join('')}
+      </div>`;
+    dlg.showModal();
+  }
+  document.getElementById('zoom').addEventListener('click', e => { if (e.target.id === 'zoom' || e.target.closest('[data-close]')) e.currentTarget.close(); });
+
+  function openJson() {
+    const dlg = document.getElementById('jsonDlg');
+    dlg.innerHTML = `<div class="dlg-head"><h3 id="json-title">Edit all report data</h3><button class="btn" type="button" data-close>Cancel</button></div>
+      <div style="padding:14px 18px 0;display:grid;gap:8px"><p class="muted" style="font-size:13.5px">Everything in the report comes from this data, including participants, results and screens. Change it here for anything the page doesn't let you edit directly.</p>
+      <textarea id="jsonText" spellcheck="false" aria-label="Report data"></textarea></div>
+      <div class="dlg-foot"><span class="err" id="jsonErr" role="alert"></span><button class="btn primary" type="button" data-apply>Apply changes</button></div>`;
+    dlg.querySelector('#jsonText').value = JSON.stringify(state, null, 2);
+    dlg.showModal();
+  }
+  document.getElementById('jsonDlg').addEventListener('click', e => {
+    const dlg = e.currentTarget;
+    if (e.target === dlg || e.target.closest('[data-close]')) return dlg.close();
+    if (e.target.closest('[data-apply]')) {
+      try {
+        const next = JSON.parse(dlg.querySelector('#jsonText').value);
+        const ok = next?.study?.title != null && Array.isArray(next.participants) && Array.isArray(next.hypotheses) && Array.isArray(next.insights) && Array.isArray(next.recommendations)
+          && next.hypotheses.every(h => Array.isArray(h.tasks) && h.tasks.every(t => t.results && t.screens));
+        if (!ok) throw new Error('The data needs study, participants, insights, recommendations and hypotheses, and every task needs results and screens.');
+        state = next; dlg.close(); changed();
+      } catch (err) { dlg.querySelector('#jsonErr').textContent = err instanceof SyntaxError ? `That isn't valid JSON: ${err.message}` : err.message; }
+    }
+  });
+
+  // ---------- theme ----------
+  const root = document.documentElement;
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  function paintThemeBtn() {
+    const b = document.getElementById('themeBtn'); if (!b) return;
+    const d = isDark();
+    b.innerHTML = icon(d ? 'sun' : 'moon');
+    b.setAttribute('aria-label', d ? 'Switch to light theme' : 'Switch to dark theme');
+    b.title = d ? 'Light theme' : 'Dark theme';
+  }
+  function toggleTheme() {
+    root.dataset.theme = isDark() ? 'light' : 'dark';
+    try { localStorage.setItem('report-theme', root.dataset.theme); } catch {}
+    paintThemeBtn();
+  }
+  try { const th = localStorage.getItem('report-theme'); if (th === 'light' || th === 'dark') root.dataset.theme = th; } catch {}
+  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', paintThemeBtn);
+
+  // ---------- sticky offsets ----------
+  function measureBar() { const b = app.querySelector('.secbar'); if (b) root.style.setProperty('--bar-h', b.offsetHeight + 'px'); }
+  addEventListener('resize', measureBar);
+
+  // ---------- saving ----------
+  const RESET = ':root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}img{max-width:100%}[hidden]{display:none!important}';
+  const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">';
+  const DATA_NOTE = '<!' + '-- STUDY DATA. Editors can change everything in the page itself (Edit report). This block is what gets saved. --' + '>';
+  function buildHTML() {
+    const css = document.getElementById('page-style').textContent;
+    const brandCss = document.getElementById('brand-style')?.textContent || '';
+    const fontLink = document.getElementById('brand-fonts');
+    const fonts = fontLink ? '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' + fontLink.outerHTML : FONTS;
+    const js = document.getElementById('page-script').textContent;
+    const sprite = document.getElementById('sprite').outerHTML;
+    const data = JSON.stringify(state, null, 2).replace(/</g, '\\u003c');
+    return `<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>${RESET}</style></head><body>`
+      + `<meta charset="utf-8">\n<title>${esc(docTitle())}</title>\n<meta name="claude:viewport-fit-sides" content="cover">\n${fonts}\n<style id="page-style">${css}</style>\n<style id="brand-style">${brandCss}</style>\n${sprite}\n`
+      + `<div id="app"></div>\n<dialog id="zoom" aria-labelledby="zoom-title"></dialog>\n<dialog id="jsonDlg" aria-labelledby="json-title"></dialog>\n${DATA_NOTE}\n`
+      + `<script type="application/json" id="study-data">\n${data}\n<\/script>\n<script id="page-script">${js}<\/script>\n</body></html>`;
+  }
+  const STASH = 'report-pending-save';
+  const clearStash = () => { try { sessionStorage.removeItem(STASH); } catch {} };
+  async function save() {
+    if (saving) return;
+    if (!dirty) { session = editing = false; return render(); }
+    if (editAccess === 'local') {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([buildHTML()], { type: 'text/html' }));
+      a.download = `${slug(state.study.title)}-${state.study.date}.html`;
+      document.body.appendChild(a); a.click(); a.remove();
+      dirty = false; session = editing = false; render(); return toast('Saved. The updated report is in your Downloads folder.');
+    }
+    saving = true; render();
+    try { sessionStorage.setItem(STASH, JSON.stringify(state)); } catch {}
+    const attempt = () => artifactApi.publish(buildHTML());
+    try {
+      await attempt().catch(async err => { if (err?.code === 'upstream_error') { await new Promise(r => setTimeout(r, 800 + Math.random() * 800)); return attempt(); } throw err; });
+      toast('Saved. Loading the new version…');
+    } catch (err) {
+      saving = false;
+      const code = err?.code;
+      if (code === 'conflict') { toast('Someone saved a newer version. Loading it now; your edits are kept in this browser so you can restore them.'); return; }
+      clearStash();
+      if (['not_writer', 'not_granted', 'not_declared', 'consent_required', 'capability_disabled', 'capability_removed'].includes(code)) { editAccess = null; session = editing = false; render(); return toast('This view is read-only, so changes can’t be saved here. Ask the report owner for edit access.'); }
+      render();
+      if (code === 'too_large') return toast('The report is too large to save. Replace big screenshots with smaller images and try again.');
+      if (code === 'rate_limited') return toast('Saving too often. Wait a moment, then save again.');
+      toast('Couldn’t save just now. Your changes are still here; try again in a moment.');
+    }
+  }
+  addEventListener('beforeunload', e => { if (dirty && !saving) { e.preventDefault(); e.returnValue = ''; } });
+
+  // ---------- hash reveal ----------
+  function reveal() {
+    const id = location.hash.slice(1); if (!id) return;
+    const el = document.getElementById(id); if (!el) return;
+    if (el.hidden) { filter = 'all'; app.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === 'all'))); applyFilter(); }
+    if (id === 'top') return scrollTo({ top: 0, behavior: reduceMotion() ? 'auto' : 'smooth' });
+    el.scrollIntoView({ block: el.classList.contains('finding') ? 'center' : 'start', behavior: reduceMotion() ? 'auto' : 'smooth' });
+    if (el.classList.contains('finding')) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  }
+  addEventListener('hashchange', reveal);
+  addEventListener('beforeprint', () => document.querySelectorAll('details').forEach(d => d.open = true));
+
+  // ---------- boot ----------
+  try { const s = sessionStorage.getItem(STASH); if (s) { if (s !== JSON.stringify(state)) pendingRestore = JSON.parse(s); else sessionStorage.removeItem(STASH); } } catch {}
+  render();
+  reveal();
+  (async () => {
+    if (window.claude?.use) {
+      const [art, user] = await Promise.all([window.claude.use('artifact'), window.claude.use('user')]);
+      if (!art) return;
+      const can = user ? await user.canEdit() : false;
+      if (can) { artifactApi = art; editAccess = 'artifact'; render(); }
+    } else if (location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname)) {
+      editAccess = 'local'; render();
+    }
+  })();
+})();
+</script>

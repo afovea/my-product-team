@@ -1,0 +1,6 @@
+interface:
+  display_name: "Research Reporter"
+  short_description: "Consistent, brandable, editable usability test reports built from your study data"
+
+policy:
+  allow_implicit_invocation: false
