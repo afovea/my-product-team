@@ -1,8 +1,8 @@
 # product-team-skills
 
-A coordinated product team as **30 Agent Skills** — 21 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice — with a routing brain that decides which one a request belongs to.
+A coordinated product team as **31 Agent Skills** — 22 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice — with a routing brain that decides which one a request belongs to.
 
-Invoke a role when you want a specific discipline's judgement: a PRD, a component spec, an accessibility review, a brand review, a threat model, a motion spec, an animated explainer, a release decision. Run the pipeline when a coding task should be classified, chunked and verified rather than just done.
+Invoke a role when you want a specific discipline's judgement: a PRD, a component spec, an accessibility review, a brand review, a threat model, a motion spec, an animated explainer, a usability test report, a release decision. Run the pipeline when a coding task should be classified, chunked and verified rather than just done.
 
 Every role is project-agnostic, so the same suite works on any codebase without dragging another project's context along.
 
@@ -29,7 +29,7 @@ The same model as a FigJam workshop kit: a run-sheet per capability, timed zones
   - [F · Codex, and other `SKILL.md` hosts](#f--codex-and-other-skillmd-hosts)
 - [Invoking a skill](#invoking-a-skill) — naming a role in chat, `/name` in Claude Code, and why automatic selection differs by host
 - [Project Point of Truth](#project-point-of-truth) — the `/ppot` practice and the pull/push handshake every skill uses
-- [The 30 skills](#the-30-skills) — every role and pipeline skill, grouped, with when to reach for it
+- [The 31 skills](#the-31-skills) — every role and pipeline skill, grouped, with when to reach for it
 - [The Figma board](#the-figma-board) — the FigJam companion a team runs the work on
 - [Install options](#install-options) — all routes compared, and what each one actually gives you
   - [Which route](#which-route)
@@ -57,10 +57,10 @@ most common failed install.
 |---|---|---|
 | **Claude web** — `claude.ai` in a browser, chatting | Upload each role | [A](#a--claude-web-claudeai-in-a-browser) |
 | **Claude app** — desktop app, **Chat** tab | Upload each role | [B](#b--claude-app-chat-tab) |
-| **Claude app** — desktop app, **Code** tab | Two typed lines, all 30 | [C](#c--claude-app-code-tab-claude-code) |
-| **Claude Code** — a terminal | Two typed lines, all 30 | [D](#d--claude-code-in-a-terminal) |
+| **Claude app** — desktop app, **Code** tab | Two typed lines, all 31 | [C](#c--claude-app-code-tab-claude-code) |
+| **Claude Code** — a terminal | Two typed lines, all 31 | [D](#d--claude-code-in-a-terminal) |
 | **Claude Code on the web** — `claude.ai/code`, cloud sessions | A committed settings file | [E](#e--claude-code-on-the-web-cloud-sessions) |
-| **Codex** — or any host reading `SKILL.md` | One command, all 30 | [F](#f--codex-and-other-skillmd-hosts) |
+| **Codex** — or any host reading `SKILL.md` | One command, all 31 | [F](#f--codex-and-other-skillmd-hosts) |
 
 ---
 
@@ -73,7 +73,7 @@ Chat, in a browser. Download the roles you want and upload them.
 2. Download a role — say
    [product-designer.zip](https://github.com/afovea/my-product-team/raw/main/download/product-designer.zip)
    or [product-manager.zip](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip).
-   All 30 are in [`download/`](./download). **Do not unzip them.**
+   All 31 are in [`download/`](./download). **Do not unzip them.**
 3. **Settings → Capabilities → Skills → +** → upload the file → switch it on.
 4. Ask for what you want, naming the role: *"As a product designer, our reports
    page is blank for new users. Design the empty state."*
@@ -96,7 +96,7 @@ Already done it in the browser? Your skills are already here. Skip this.
 
 ### C · Claude app, Code tab (Claude Code)
 
-Not chat — this is Claude Code inside the app. Installs all 30 at once, with no
+Not chat — this is Claude Code inside the app. Installs all 31 at once, with no
 terminal: the two lines go into the ordinary message box.
 
 ```
@@ -169,7 +169,7 @@ cd my-product-team
 ./install.sh --agents --personal
 ```
 
-All 30 into `~/.agents/skills/`, available in every project. Restart Codex, then:
+All 31 into `~/.agents/skills/`, available in every project. Restart Codex, then:
 
 ```
 $product-manager Turn this vague feature request into a delivery-ready ticket.
@@ -248,7 +248,7 @@ explicitly with `/name`, or via [the routing brain](#the-routing-brain-optional-
 when you don't know which discipline you want.
 
 Codex is told the same thing in its own dialect. It does not read
-`disable-model-invocation`, so each of those 29 skills carries an
+`disable-model-invocation`, so each of those 30 skills carries an
 `agents/openai.yaml` setting `policy.allow_implicit_invocation: false`. Without
 that file the roles would fire on their own there — the exact behaviour measured
 and rejected above. CI checks the two stay in step, so a new skill cannot suppress
@@ -304,7 +304,7 @@ and the pull/push handshake used by every skill.
 
 [↑ Back to contents](#contents)
 
-## The 30 skills
+## The 31 skills
 
 ### Shared project knowledge
 
@@ -330,6 +330,7 @@ and the pull/push handshake used by every skill.
 | `/data-analyst` | Metrics, dashboards, funnels, experiments, behavioural evidence |
 | `/customer-success` | Customer feedback, retention signals, adoption blockers |
 | `/storm-researcher` | Contested or strategic research — five-perspective scan, contradiction mapping, adversarial review |
+| `/research-reporter` | Usability test results turned into a consistent, brandable, editable stakeholder report |
 
 ### Design and experience
 
@@ -392,7 +393,7 @@ exact error text. The summary:
 
 | Route | Command | You get |
 |---|---|---|
-| **Plugin** *(recommended)* | `/plugin install product-team` | All 30 skills **plus** the gate hook. Updatable with one command. No routing brain |
+| **Plugin** *(recommended)* | `/plugin install product-team` | All 31 skills **plus** the gate hook. Updatable with one command. No routing brain |
 | **Desktop app** | **+** → Plugins → Add plugin | The same, without a terminal |
 | **Cloud / web** | two keys in the repo's `.claude/settings.json` | The same, for everyone opening a cloud session on that repo |
 | **Routing only** | `install.sh --routing-only /path/to/project` | The routing brain alone, for when the plugin already supplies the skills |
@@ -416,7 +417,7 @@ It copies the skills, appends the routing brain to `CLAUDE.md` — or `AGENTS.md
 ### Which route
 
 - **Just want the skills?** Plugin — terminal, desktop app, or a committed `.claude/settings.json` for cloud sessions.
-- **Want role arbitration too?** Plugin *plus* `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 30 skills on disk, which claims the bare `/name` and then goes stale independently of the plugin.
+- **Want role arbitration too?** Plugin *plus* `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 31 skills on disk, which claims the bare `/name` and then goes stale independently of the plugin.
 - **Want it pinned and tracked in the consuming repo?** Submodule.
 - **On claude.ai or the desktop app's Chat tab?** Those are a different product from Claude Code — download a ZIP from [`download/`](./download) and upload it, per [INSTALL.md](./INSTALL.md#part-4--claude-for-chatting-browser-or-chat-tab).
 
@@ -430,7 +431,7 @@ Enterprise overrides personal, and personal overrides project. Plugin skills are
 
 ### Context cost, and how to turn it down
 
-Installing 30 skills is not free. Two different costs, and the second is the one that actually bites.
+Installing 31 skills is not free. Two different costs, and the second is the one that actually bites.
 
 **Always-on** — every skill's `name` and `description` are preloaded into the system prompt so the host knows what exists. That is **~2,300 tokens on every session**, including projects with nothing to do with product work. Nothing else loads until a skill is invoked.
 
@@ -633,7 +634,7 @@ my-product-team/
 ├── .codex-plugin/
 │   └── plugin.json                   # the same, for Codex. Points at skills/
 │                                     #   and hooks/, so nothing is duplicated
-├── skills/                           # all 30 skills, flat, one directory each
+├── skills/                           # all 31 skills, flat, one directory each
 │   ├── product-manager/
 │   │   ├── SKILL.md
 │   │   └── agents/openai.yaml        # Codex display name + invocation policy

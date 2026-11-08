@@ -1,0 +1,18 @@
+{
+  "name": "UX Research",
+  "docType": "Usability testing report",
+  "logo": null,
+  "fonts": {
+    "display": { "family": "Bricolage Grotesque", "google": "Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700", "fallback": "\"Segoe UI\", system-ui, sans-serif" },
+    "body": { "family": "IBM Plex Sans", "google": "IBM+Plex+Sans:wght@400;500;600", "fallback": "\"Segoe UI\", system-ui, sans-serif" },
+    "mono": { "family": "IBM Plex Mono", "google": "IBM+Plex+Mono:wght@400;500", "fallback": "ui-monospace, \"SF Mono\", Menlo, monospace" }
+  },
+  "light": {
+    "bg": "#F5F6FA", "surface": "#FFFFFF", "ink": "#1B1E2E", "muted": "#5B6077", "line": "#DCDFEA",
+    "accent": "#3A3FB0", "accent-soft": "#E6E7F8"
+  },
+  "dark": {
+    "bg": "#11131D", "surface": "#1A1D2B", "ink": "#E8EAF4", "muted": "#A1A5BD", "line": "#2D3146",
+    "accent": "#A4A8FF", "accent-soft": "#272B4C"
+  }
+}

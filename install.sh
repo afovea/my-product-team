@@ -71,7 +71,7 @@ Most people want the plugin instead. In Claude Code:
     /plugin marketplace add afovea/my-product-team
     /plugin install product-team
 
-That gives you all 30 skills plus the gate-enforcement hook, updatable with one
+That gives you all 31 skills plus the gate-enforcement hook, updatable with one
 command. Use this script when you also want the routing brain, or when plugins
 are unavailable (WSL, offline, a non-Claude-Code host).
 
