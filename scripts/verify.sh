@@ -96,8 +96,9 @@ for f in skills/*/SKILL.md; do
       PARITY_ISSUES=1
     fi
   elif [ -f "$oy" ] && grep -q 'allow_implicit_invocation' "$oy"; then
-    # ppot is the deliberate exception: its natural-language phrases are its
-    # interface, so it must stay implicitly invokable on both hosts.
+    # ppot and route are the deliberate exceptions: ppot's natural-language
+    # phrases are its interface, and route is the plain-language front door to
+    # the roles, so both must stay implicitly invokable on both hosts.
     bad "$n: fires on its own in Claude Code, but Codex is told not to"
     PARITY_ISSUES=1
   fi

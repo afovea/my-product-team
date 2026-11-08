@@ -1,7 +1,8 @@
 # product-team-skills
 
-A product team you can call on: **32 Agent Skills** covering strategy, research, design, engineering, quality and delivery, plus a delivery pipeline for coding work and a shared record of what the project knows.
+A product team you can call on: **33 Agent Skills** covering strategy, research, design, engineering, quality and delivery, plus a delivery pipeline for coding work and a shared record of what the project knows.
 
+- **Not sure who to ask?** Describe the problem in plain words. The router picks the role, squad or workflow and does the work.
 - **Ask one expert.** A product manager for a PRD, an accessibility specialist for a review, a security specialist for a threat model, a motion designer for an interaction spec. Each one works the way that discipline works.
 - **Run a whole piece of work.** [Workflows](#workflows) chain the skills from a rough idea to evidence that it worked, with the checkpoints where a person decides.
 - **Build with checks that hold.** The [delivery pipeline](#delivery-pipeline) classifies a coding task, builds it in small verified chunks and won't finish while the project's checks fail.
@@ -15,7 +16,7 @@ The skills work in Claude Code, claude.ai, the Claude app and Codex, and on any 
 - [Get started](#get-started) — install by where you use Claude, in a few lines each
 - [Use the skills](#use-the-skills) — how to call a role in Claude Code, claude.ai and Codex
 - [Workflows](#workflows) — seventeen recipes that chain the skills, from an idea to evidence it worked
-- [The 32 skills](#the-32-skills) — every role and pipeline skill, grouped, with when to reach for it
+- [The 33 skills](#the-33-skills) — every role and pipeline skill, grouped, with when to reach for it
 - [How the skills work together](#how-the-skills-work-together) — the Project Point of Truth, model and sub-agent checks, and the routing brain
   - [Project Point of Truth](#project-point-of-truth)
   - [Model and sub-agents](#model-and-sub-agents)
@@ -43,7 +44,7 @@ Which Claude you're using decides how to install, and the methods aren't interch
 | Where you are | What to do | Step by step |
 |---|---|---|
 | **claude.ai** in a browser, or the Claude app's **Chat** tab | Upload the roles you want, one ZIP each | [INSTALL Part 4](./INSTALL.md#part-4--claude-for-chatting-browser-or-chat-tab) |
-| **Claude Code**: the Claude app's **Code** tab, or a terminal | Two typed lines install all 32 | [Part 2](./INSTALL.md#part-2--claude-code-in-the-desktop-app) (app), [Part 3](./INSTALL.md#part-3--claude-code-in-a-terminal) (terminal) |
+| **Claude Code**: the Claude app's **Code** tab, or a terminal | Two typed lines install all 33 | [Part 2](./INSTALL.md#part-2--claude-code-in-the-desktop-app) (app), [Part 3](./INSTALL.md#part-3--claude-code-in-a-terminal) (terminal) |
 | **Claude Code cloud sessions** (`claude.ai/code`) | Commit a project install to the repository | [Part 7](./INSTALL.md#part-7--claude-code-cloud-sessions) |
 | **Codex**, or another host that reads `SKILL.md` | One command | [Part 6](./INSTALL.md#part-6--codex-and-other-hosts-that-read-skillmd) |
 
@@ -65,7 +66,7 @@ In the Code tab's message box, or after starting `claude` in a terminal, type:
 /plugin install product-team@productteam-skills
 ```
 
-The second line opens a panel: choose **Install for you (user scope)**. Then type `/product-team:` and the 32 roles appear:
+The second line opens a panel: choose **Install for you (user scope)**. Then type `/product-team:` and all 33 skills appear:
 
 ```
 /product-team:product-manager Turn this vague feature request into a delivery-ready ticket.
@@ -95,7 +96,7 @@ cd my-product-team
 ./install.sh --agents --personal
 ```
 
-All 32 go into `~/.agents/skills/`, available in every project. Restart Codex, then:
+All 33 go into `~/.agents/skills/`, available in every project. Restart Codex, then:
 
 ```
 $product-manager Turn this vague feature request into a delivery-ready ticket.
@@ -108,6 +109,14 @@ $product-manager Turn this vague feature request into a delivery-ready ticket.
 ## Use the skills
 
 **Give the role the actual task in the same message.** A role called with nothing to do asks you what you want.
+
+**Not sure which role?** Just describe the problem in your own words. The router, `route`, can start on its own for product-team work: it names the role, squad or workflow in one line, with its reason, then reads that role's skill and does the work. To call it explicitly:
+
+```
+/product-team:route Our activation rate fell last month and nobody knows why.
+```
+
+`$route` in Codex. In claude.ai, upload `route.zip` alongside the roles it should choose between.
 
 ### In Claude Code
 
@@ -149,7 +158,8 @@ In Claude Code and Codex, no role starts on its own: describing a design problem
 
 Claude Code is told this with `disable-model-invocation: true` in each skill. Codex is told with `policy.allow_implicit_invocation: false` in each skill's `agents/openai.yaml`, and CI checks the two stay in step.
 
-Two exceptions:
+Three exceptions:
+- **`route`** starts from plain language, because it's the front door to the roles. Claude only has to decide whether a request is product-team work, which it does reliably; `route` then makes the hard choice of role with explicit rules.
 - **`ppot`** answers natural phrases such as "bring me up to speed" and "record our decision", because those phrases are how it's meant to be used.
 - **claude.ai and the Chat tab** have no commands, so Claude choosing is the only way in. The ZIPs therefore ship without the switch, and naming the role in your sentence steers the choice.
 
@@ -223,14 +233,15 @@ The guide also has a best-use card for every skill and the ownership rules for w
 
 [↑ Back to contents](#contents)
 
-## The 32 skills
+## The 33 skills
 
-Run each one as `/product-team:<name>` in Claude Code, `$<name>` in Codex, or by naming the role in claude.ai. The [workflows](#workflows) say which to use when, and each skill's "Works with" section names its neighbours.
+Run each one as `/product-team:<name>` in Claude Code, `$<name>` in Codex, or by naming the role in claude.ai. Not sure which? Start with `route`. The [workflows](#workflows) say which to use when, and each skill's "Works with" section names its neighbours.
 
-### Shared project knowledge
+### Shared project knowledge, and the router
 
 | Skill | Use when |
 |---|---|
+| `route` | **Not sure who to ask.** Describe the problem in plain words, or run it by name; it picks the role, squad or workflow, says why, and does the work as that role. Starts on its own for product-team work |
 | `ppot` | Project briefings, facts, decisions, assumptions, durable learning, contradictions, knowledge reviews, and checking artefacts against project truth |
 
 ### Product and strategy
@@ -355,7 +366,7 @@ The section's text lives once, in [`reference/model-and-sub-agents.md`](./refere
 > "This chart distinguishes four series by colour alone." → Accessibility Specialist
 > "Fix the typo in the footer." → no specialist; it is a mechanical edit
 
-With the plugin, it **names** the role and gives you its command, because the roles never start on their own. With a project install, where the skill files sit in the project, Claude reads and follows the right one itself. Install it with `./install.sh --routing-only /path/to/project` alongside the plugin, or as part of a project install; [INSTALL.md](./INSTALL.md#part-5--optional--let-claude-pick-the-expert) has both.
+The `route` skill carries the same rules wherever the plugin is installed: describe a problem, or run `/product-team:route`, and it picks the role and does the work, reading the role's skill itself. The routing brain is the always-on version for a project: with the plugin, it **names** the role and gives you its command, because the roles never start on their own. With a project install, where the skill files sit in the project, Claude reads and follows the right one itself. Install it with `./install.sh --routing-only /path/to/project` alongside the plugin, or as part of a project install; [INSTALL.md](./INSTALL.md#part-5--optional--let-claude-pick-the-expert) has both.
 
 It also defines **six squads** for cross-functional work — Discovery, Definition, Delivery, Validation, Growth, Platform — because "is this ready to ship?" is not one discipline's call.
 
@@ -461,7 +472,7 @@ Every route, compared. **[INSTALL.md](./INSTALL.md) walks each one through to a 
 
 | Route | Command | You get |
 |---|---|---|
-| **Plugin** *(recommended)* | `/plugin install product-team@productteam-skills` | All 32 skills **plus** the gate hook and a once-a-day update reminder. Updatable with one command ([how](./INSTALL.md#keeping-it-up-to-date)). No routing brain |
+| **Plugin** *(recommended)* | `/plugin install product-team@productteam-skills` | All 33 skills **plus** the gate hook and a once-a-day update reminder. Updatable with one command ([how](./INSTALL.md#keeping-it-up-to-date)). No routing brain |
 | **Desktop app** | the same two lines in the Code tab, or **+** → **Add plugins** | The same, without a terminal |
 | **Cloud sessions** | `install.sh /path/to/repo`, then commit | The skills and routing brain for every cloud session on that repository. Cloud sessions don't load plugins |
 | **Routing only** | `install.sh --routing-only /path/to/project` | The routing brain alone, for when the plugin already supplies the skills |
@@ -485,7 +496,7 @@ It copies the skills, appends the routing brain to `CLAUDE.md` — or `AGENTS.md
 ### Which route
 
 - **Just want the skills?** The plugin, in the terminal or the desktop app. For cloud sessions, a committed project install.
-- **Want role arbitration too?** Plugin *plus* `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 32 skills on disk, which takes the short `/name` and then goes stale independently of the plugin.
+- **Want role arbitration too?** The plugin's `route` skill does it on demand. For routing that shapes every answer in a project, add `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 32 skills on disk, which takes the short `/name` and then goes stale independently of the plugin.
 - **Want it pinned and tracked in the consuming repo?** Submodule.
 - **On claude.ai or the desktop app's Chat tab?** Those are a different product from Claude Code — download a ZIP from [`download/`](./download) and upload it, per [INSTALL.md](./INSTALL.md#part-4--claude-for-chatting-browser-or-chat-tab).
 
@@ -503,7 +514,7 @@ Enterprise overrides personal, and personal overrides project. `./install.sh --v
 
 ### Context cost, and how to turn it down
 
-Installing 32 skills is not free. Two different costs, and the second is the one that actually bites.
+Installing 33 skills is not free. Two different costs, and the second is the one that actually bites.
 
 **Always-on** — every skill's `name` and `description` are preloaded into the system prompt so the host knows what exists. That is **about 2,700 tokens on every session**, including projects with nothing to do with product work. Nothing else loads until a skill is invoked.
 
@@ -630,7 +641,7 @@ my-product-team/
 ├── .codex-plugin/
 │   └── plugin.json                   # the same, for Codex. Points at skills/
 │                                     #   and hooks/, so nothing is duplicated
-├── skills/                           # all 32 skills, flat, one directory each
+├── skills/                           # all 33 skills, flat, one directory each
 │   ├── product-manager/
 │   │   ├── SKILL.md
 │   │   └── agents/openai.yaml        # Codex display name + invocation policy
@@ -686,7 +697,7 @@ my-product-team/
 
 - All skills use **UK English**.
 - Every skill carries the standard `name` and `description`. Role and pipeline skills additionally use the repository's Claude-specific invocation and metadata fields. The PPoT practice keeps portable minimal frontmatter, adding only `metadata.model_tier` and `metadata.version`.
-- Every skill also carries an `agents/openai.yaml` with its display name and short description for Codex. The 31 that set `disable-model-invocation: true` add `policy.allow_implicit_invocation: false` there, which is the same instruction in Codex's dialect; `ppot` deliberately omits it. `scripts/verify.sh` fails if the two ever disagree, so adding a skill means adding both.
+- Every skill also carries an `agents/openai.yaml` with its display name and short description for Codex. The 31 that set `disable-model-invocation: true` add `policy.allow_implicit_invocation: false` there, which is the same instruction in Codex's dialect; `ppot` and `route` deliberately omit both. `scripts/verify.sh` fails if the two ever disagree, so adding a skill means adding both.
 - Keep skill bodies **under 500 lines**, per [Anthropic's authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Past that, move detail into that skill's `references/` and link to it with a stated trigger for when to read it.
 - Every skill has a `## Works with` section naming who it takes work from and hands work to, drawn from [docs/workflows.md](./docs/workflows.md). When one changes, change the other end too; `scripts/check-handoffs.py` fails on a one-way link.
 - Every skill carries two shared sections, `## Handing over work` and `## Model and sub-agents`, plus a `metadata.model_tier` and a `metadata.version`. Edit the sections only in `reference/handing-over-work.md` and `reference/model-and-sub-agents.md`, then run `python3 scripts/sync-shared-sections.py`; CI fails if a copy drifts or a skill has no tier or version.

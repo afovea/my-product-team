@@ -5,7 +5,7 @@ none of them assume you write code.
 
 | You are using | Time | Go to |
 |---|---|---|
-| **Claude Code in the desktop app** — no terminal, all 32 skills at once | 3 min | **[Part 2](#part-2--claude-code-in-the-desktop-app)** |
+| **Claude Code in the desktop app** — no terminal, all 33 skills at once | 3 min | **[Part 2](#part-2--claude-code-in-the-desktop-app)** |
 | **Claude Code in a terminal** — same result, typed commands | 3 min | **[Part 3](#part-3--claude-code-in-a-terminal)** |
 | **Claude for chatting** — browser or the app's Chat tab | 5 min | **[Part 4](#part-4--claude-for-chatting-browser-or-chat-tab)** |
 
@@ -56,7 +56,7 @@ These instructions assume Claude is already installed and you are signed in.
 
 ## Part 2 — Claude Code in the desktop app
 
-No terminal. This installs all 32 skills in one go.
+No terminal. This installs all 33 skills in one go.
 
 ### Step 1 · Open the Code tab
 
@@ -103,7 +103,7 @@ your plugins, so installing in one installs in both.
 ### Step 3 · Choose who it is for
 
 The install line doesn't install straight away. It opens a panel showing what the
-plugin adds: 32 skills and two hooks. Choose:
+plugin adds: 33 skills and two hooks. Choose:
 
 - **Install for you (user scope)**: every folder you open. Pick this one.
 - *Install for all collaborators on this repository*, or *Install for you, in
@@ -117,8 +117,8 @@ Then read the last line it prints:
 
 ### Step 4 · Check it worked
 
-Type `/product-team:` in the message box and stop. A list drops down with all 32
-roles, such as `/product-team:product-manager`. If that list appears, you are
+Type `/product-team:` in the message box and stop. A list drops down with all 33
+skills, such as `/product-team:product-manager`. If that list appears, you are
 installed.
 
 ### Step 5 · Use it
@@ -146,9 +146,13 @@ as skills you uploaded to claude.ai or an `install.sh` copy: see
 A role with no task attached will just ask what you want, so give it the work in
 the same message.
 
-**Optional:** [Part 5](#part-5--optional--let-claude-pick-the-expert) adds a
-routing brain that names the right expert when you describe a problem in plain
-words.
+**Not sure which expert?** Just describe the problem. The router can start on
+its own for product-team work: it picks the role, squad or workflow, says which,
+and gets on with it. You can also call it by name:
+
+```
+/product-team:route Our activation rate fell last month and nobody knows why.
+```
 
 ---
 
@@ -267,10 +271,11 @@ Each is one small file. **Click a link and it downloads.** Nothing opens.
 | [ppot.zip](https://github.com/afovea/my-product-team/raw/main/download/ppot.zip) | Project briefings, decisions, assumptions, durable learning, and knowledge review |
 
 <details>
-<summary><b>All 32 — click to see the full list</b></summary>
+<summary><b>All 33 — click to see the full list</b></summary>
 
-**Shared project knowledge**
-[ppot](https://github.com/afovea/my-product-team/raw/main/download/ppot.zip)
+**Shared project knowledge, and the router**
+[ppot](https://github.com/afovea/my-product-team/raw/main/download/ppot.zip) ·
+[route](https://github.com/afovea/my-product-team/raw/main/download/route.zip)
 
 **Product and strategy**
 [product-manager](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip) ·
@@ -360,8 +365,15 @@ you work rather than a question back.
 
 ## Part 5 — optional · let Claude pick the expert
 
-**Claude Code only** (Parts 2 and 3). Adds a decision layer so you can describe a
-problem in plain words and Claude works out which role it belongs to:
+**With the plugin, you already have this.** Describe the problem in plain words,
+or run `/product-team:route` with it. The router picks the role, squad or workflow,
+says why in a line, then reads that role's skill and does the work. Nothing to
+install.
+
+The rest of this part is the **routing brain**, the same rules kept in a project's
+`CLAUDE.md` so they shape every answer in that folder, without typing `route`.
+**Claude Code only** (Parts 2 and 3). It lets you describe a problem in plain words
+and Claude works out which role it belongs to:
 
 > "The error message when a payment fails is confusing. Rewrite it."
 > → Content Designer
@@ -378,7 +390,8 @@ per folder rather than everywhere.
 **What it can and can't do with the plugin.** The roles never start on their own;
 that's deliberate, because automatic selection picks badly. So with the plugin,
 the routing brain **names** the right role and gives you its command, for example
-`/product-team:content-designer`, and you run it. If you want Claude to work as the
+`/product-team:content-designer`, and you run it, or run `/product-team:route` and
+let it do both. If you want Claude to work as the
 role without that step, use a project install instead
 ([Advanced routes](#advanced-routes)): the skill files are then in the project,
 and Claude reads and follows the right one itself.
@@ -434,7 +447,7 @@ cd my-product-team
 ./install.sh --agents --personal
 ```
 
-That puts all 32 skills in `~/.agents/skills/`, where Codex finds them in every
+That puts all 33 skills in `~/.agents/skills/`, where Codex finds them in every
 project. Start Codex and type `$product-` — the roles should autocomplete.
 
 For one project instead, and to get the routing brain with it:
@@ -469,7 +482,8 @@ because both use the same event contract.
 
 The one thing to know is that the roles do **not** fire on their own. That is
 deliberate — automatic selection by keyword picks badly, so `$name` is how you
-choose. The exception is `$ppot`, whose natural-language phrases are its intended
+choose. The exceptions are `$route`, the plain-language front door that picks a
+role for you, and `$ppot`, whose natural-language phrases are its intended
 interface. See [Invoking a skill](./README.md#use-the-skills).
 
 ---
@@ -620,7 +634,8 @@ replace it:
 ./install.sh --agents --personal
 ```
 
-`$ppot` is the deliberate exception and is supposed to respond to phrases like
+`$route` and `$ppot` are the deliberate exceptions: `$route` steps in when you
+describe product-team work without naming a role, and `$ppot` responds to phrases like
 "bring me up to speed".
 
 ### `claude: command not found`
@@ -681,7 +696,7 @@ help.
 
 ## Which route gives you what
 
-| | The 32 skills | Delivery pipeline | Routing brain | Gate enforcement |
+| | The 33 skills | Delivery pipeline | Routing brain | Gate enforcement |
 |---|---|---|---|---|
 | Claude Code, desktop app or terminal (plugin) | ✅ all at once | ✅ | names the role, via [Part 5](#part-5--optional--let-claude-pick-the-expert) | ✅ |
 | Claude Code, a project install | ✅ all at once | ✅ | ✅ follows the role itself | ❌ the hook comes with the plugin |
@@ -703,8 +718,8 @@ For teams and repositories. The [README](./README.md) has the detail.
 |---|---|---|
 | Plugin for a whole repository | `/plugin install product-team@productteam-skills`, then **Install for all collaborators on this repository** | switches the plugin on in the repository's committed `.claude/settings.json`. Each collaborator still runs the two install lines once, and cloud sessions don't load it |
 | Cloud sessions | `./install.sh /path/to/repo`, then commit | the skills and routing brain in the repository, for every cloud session on it ([Part 7](#part-7--claude-code-cloud-sessions)) |
-| Project | `./install.sh /path/to/project` | 32 skills on disk + the routing brain |
-| Personal | `./install.sh --personal` | 32 skills on disk, every project |
+| Project | `./install.sh /path/to/project` | 33 skills on disk + the routing brain |
+| Personal | `./install.sh --personal` | 33 skills on disk, every project |
 | Routing only | `./install.sh --routing-only /path` | the routing brain, nothing else |
 | Submodule | `./install.sh --submodule /path` | pinned to a tag, symlinked |
 | Any of the above, for Codex | add `--agents` | the same, written to `.agents/skills/` and `AGENTS.md` |

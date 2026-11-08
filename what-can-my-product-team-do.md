@@ -772,7 +772,7 @@ Examples include:
 - **Take a product from idea to MVP**
 - **Determine what the product team should work on next**
 
-These jobs are often more useful entry points than invoking individual specialists directly. [docs/workflows.md](./docs/workflows.md) gives the step-by-step recipe for each. The appropriate skills can be assembled around the problem, contribute their perspectives, challenge one another where useful, and synthesise the result.
+These jobs are often more useful entry points than invoking individual specialists directly. [docs/workflows.md](./docs/workflows.md) gives the step-by-step recipe for each, and the `route` skill picks one from a plain description of the problem. The appropriate skills can be assembled around the problem, contribute their perspectives, challenge one another where useful, and synthesise the result.
 
 ---
 

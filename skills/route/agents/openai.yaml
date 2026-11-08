@@ -1,0 +1,4 @@
+interface:
+  display_name: "Route"
+  short_description: "Describe a problem; it picks the role, squad or workflow and does the work"
+  default_prompt: "Use $route to work out which expert should handle this, then do the work."
