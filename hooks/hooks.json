@@ -1,5 +1,5 @@
 {
-  "description": "Enforces the pipeline gate chain before a turn can close",
+  "description": "Enforces the pipeline gate chain before a turn can close, and says once a day when a newer product-team release exists",
   "hooks": {
     "Stop": [
       {
@@ -8,6 +8,18 @@
             "type": "command",
             "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/gate-stop.py\"",
             "timeout": 1800
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/update-check.py\"",
+            "timeout": 10
           }
         ]
       }

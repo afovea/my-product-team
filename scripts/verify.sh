@@ -29,7 +29,7 @@ done
 
 PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/product-team-skills-pycache"
 export PYTHONPYCACHEPREFIX
-for p in scripts/gate-chain.py scripts/sync-shared-sections.py scripts/check-handoffs.py hooks/gate-stop.py; do
+for p in scripts/gate-chain.py scripts/sync-shared-sections.py scripts/check-handoffs.py hooks/gate-stop.py hooks/update-check.py; do
   if python3 -m py_compile "$p" 2>/dev/null; then ok "$p"; else bad "$p does not compile"; fi
 done
 
@@ -48,6 +48,17 @@ if [ -n "$CLAUDE_V" ] && [ "$CLAUDE_V" = "$CODEX_V" ]; then
   ok "plugin versions agree ($CLAUDE_V)"
 else
   bad "plugin versions differ — claude '$CLAUDE_V', codex '$CODEX_V'"
+fi
+
+# The update reminder compares installed versions with release tags. A version
+# behind the newest tag would tell everyone on it to "update" to an older release.
+NEWEST_TAG="$(git tag -l 'v*' --sort=-v:refname 2>/dev/null | head -1)"
+if [ -z "$NEWEST_TAG" ]; then
+  ok "no release tags yet"
+elif python3 -c "import sys; v=lambda s: tuple(int(x) for x in s.lstrip('v').split('.')); sys.exit(0 if v(sys.argv[1]) >= v(sys.argv[2]) else 1)" "$CLAUDE_V" "$NEWEST_TAG"; then
+  ok "plugin version $CLAUDE_V is not behind the newest tag ($NEWEST_TAG)"
+else
+  bad "plugin version $CLAUDE_V is behind the newest release tag $NEWEST_TAG"
 fi
 
 # ------------------------------------------------------------ skill contract
