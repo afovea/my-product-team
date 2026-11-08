@@ -29,7 +29,7 @@ done
 
 PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/product-team-skills-pycache"
 export PYTHONPYCACHEPREFIX
-for p in scripts/gate-chain.py hooks/gate-stop.py; do
+for p in scripts/gate-chain.py scripts/sync-shared-sections.py hooks/gate-stop.py; do
   if python3 -m py_compile "$p" 2>/dev/null; then ok "$p"; else bad "$p does not compile"; fi
 done
 
@@ -92,6 +92,11 @@ for f in skills/*/SKILL.md; do
   fi
 done
 [ "$PARITY_ISSUES" -eq 0 ] && ok "$(ls -d skills/*/ | wc -l | tr -d ' ') skills invoke the same way on both"
+
+# Every skill checks the model and asks before starting sub-agents, in the same words.
+# Skills install one at a time, so each carries its own copy; this catches a copy that drifts.
+group "Skills carry the shared model and sub-agent section"
+if python3 scripts/sync-shared-sections.py --check; then :; else FAILED=1; fi
 
 # ------------------------------------------------------------------- zips
 

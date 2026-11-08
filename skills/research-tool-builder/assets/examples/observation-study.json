@@ -1,0 +1,148 @@
+{
+  "studyId": "account-settings-live",
+  "title": "Account settings on the live site",
+  "version": 1,
+  "brief": {
+    "body": "You'll use our website to do a few everyday things with your account, and tell us how it went. There are no right or wrong answers: we are testing the website, not you. About 20 minutes.",
+    "minutes": 20
+  },
+  "consent": {
+    "notice": 1,
+    "heading": "Before you begin",
+    "text": "We record your answers, how long each task takes, notes the researcher makes while you work, and anything you type. You are identified only by a code, never your name. Any call recording is kept by the call software, not this tool.\n\nYour answers are used only for this study and deleted 90 days after it ends. You can stop at any time.",
+    "items": [
+      {
+        "id": "data-notice",
+        "label": "I've read how my answers will be used",
+        "required": true
+      },
+      {
+        "id": "over-18",
+        "label": "I'm 18 or over",
+        "required": true
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "new",
+      "label": "New customer"
+    },
+    {
+      "id": "long",
+      "label": "Customer over a year"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "Customers can change their contact details without help."
+    },
+    {
+      "id": "H2",
+      "statement": "Customers can find and understand their notification settings."
+    }
+  ],
+  "codes": [
+    {
+      "id": "search",
+      "label": "Used search"
+    },
+    {
+      "id": "menu",
+      "label": "Opened the main menu"
+    },
+    {
+      "id": "help",
+      "label": "Needed a hint"
+    },
+    {
+      "id": "error",
+      "label": "Hit an error message"
+    },
+    {
+      "id": "hesitated",
+      "label": "Hesitated over a label"
+    }
+  ],
+  "shuffleTasks": false,
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Change your phone number",
+      "hypothesis": "H1",
+      "scenario": "You've got a new phone number. Change it on your account.",
+      "link": {
+        "url": "https://example.com/account",
+        "label": "Open the website"
+      },
+      "questions": [
+        {
+          "id": "managed",
+          "kind": "choice",
+          "prompt": "Did you manage to do it?",
+          "options": [
+            "Yes",
+            "Partly",
+            "No"
+          ],
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "T2",
+      "title": "Turn off marketing emails",
+      "hypothesis": "H2",
+      "scenario": "You get too many offers by email. Stop them, but keep emails about your orders.",
+      "link": {
+        "url": "https://example.com/account",
+        "label": "Open the website"
+      },
+      "questions": [
+        {
+          "id": "managed",
+          "kind": "choice",
+          "prompt": "Did you manage to do it?",
+          "options": [
+            "Yes",
+            "Partly",
+            "No"
+          ],
+          "required": true
+        },
+        {
+          "id": "where",
+          "kind": "choice",
+          "prompt": "What was the setting called?",
+          "options": [
+            "Marketing preferences",
+            "Notifications",
+            "Privacy",
+            "I don't remember"
+          ],
+          "correct": "Notifications"
+        }
+      ]
+    },
+    {
+      "id": "T3",
+      "title": "How you keep track of orders",
+      "scenario": "Tell me how you usually keep track of an order once you have placed it.",
+      "levels": false,
+      "ease": false,
+      "notesPrompt": false
+    }
+  ],
+  "closing": [
+    {
+      "id": "overall",
+      "kind": "text",
+      "prompt": "What one thing would make your account easier to manage?"
+    }
+  ],
+  "thanks": {
+    "heading": "Thank you",
+    "body": "That's everything. Thank you for your time."
+  }
+}

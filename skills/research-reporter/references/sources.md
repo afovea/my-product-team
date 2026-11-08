@@ -17,6 +17,24 @@ One converter per source tool, in `scripts/converters/`. Each turns that tool's 
 5. Add a `_selfcheck()` with asserts for the parsing and mapping rules, run before conversion.
 6. Run it on the real export, then `report.py build` and `report.py check --names`.
 
+## research-sessions (tools built with research-tool-builder)
+
+Every tool built with the `research-tool-builder` skill exports the same format, `research-sessions` version 1, whatever its method. One converter reads them all:
+
+```bash
+python3 scripts/converters/research_sessions.py export.json [more.json …] > study.json
+```
+
+| Method | Scored per person | Findings generated |
+|---|---|---|
+| `tree-test` | Yes: the chosen answer against the accepted paths | Direct and indirect success, most common wrong answers, give-ups |
+| `first-click` | Yes: the first click's tier | Main and acceptable first clicks, most common wrong first clicks in the prototype's own words, give-ups |
+| `card-sort` | No | Closed and hybrid: agreement per card. Open: cards grouped together by 75% or more, cards with no consistent home, group names used |
+| `classification` | No | Agreement between raters, items everyone agreed on, items under 70% agreement, unsure and unfamiliar flags |
+| `stimulus`, and any method without its own findings | Where the run's `outcome.success` is set, or the task's questions have `correct` answers | Who succeeded and who did not (with the check questions they got wrong), give-ups, runs left to judge, and the most-chosen answer to each question with no right answer |
+
+Common to all: participants by code and segment, how each session was run (moderated in person, moderated remotely or self-run, and whether the participant stopped early), the test setup in the scoring notes, a column per between-participant condition, entries as `P3-e1`, `P3-e2` in repeated studies, a comparison by variant when a task's runs showed different ones, answers to each task's own questions in the survey section (correct answers marked), `outcome.friction` as efficiency where a module sets it, "Not asked" for tasks without the ease question, findings from moderator-recorded outcome levels, observation codes and moderator notes (including reviews of imported sessions), time away from the tool, the content's own hypothesis wording, ease on a 5-point scale labelled "Ease (1–5)", confidence where asked, the four longest notes per task as quotes, closing questions (choice, multiple choice, scale, ranking and written answers), and low-ease findings. Practice sessions, unresolved imported copies and sessions still in progress are left out. Sessions on a different content version from the majority are left out and named in the scoring notes.
+
 ## wayfinding-check
 
 Exports from the wayfinding-check prototype testing tool (`"app": "wayfinding-check"`): self-run, unmoderated sessions on a clickable prototype, mobile and desktop.

@@ -1,0 +1,105 @@
+{
+  "studyId": "homepage-first-click",
+  "title": "Homepage first click",
+  "version": 1,
+  "brief": {
+    "body": "You'll see a prototype of a shop's homepage and be asked where you would click first for a few tasks. About 5 minutes.",
+    "minutes": 5
+  },
+  "consent": {
+    "notice": 1,
+    "heading": "Before you begin",
+    "text": "We record your answers, how long each task takes and anything you type. You are identified only by a code, never your name.\n\nYour answers stay on this device until the research team exports them, are used only for this study, and are deleted 90 days after it ends. You can stop at any time.",
+    "items": [
+      {
+        "id": "data-notice",
+        "label": "I've read how my answers will be used",
+        "required": true
+      },
+      {
+        "id": "over-18",
+        "label": "I'm 18 or over",
+        "required": true
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "customer",
+      "label": "Customer"
+    },
+    {
+      "id": "prospect",
+      "label": "Not yet a customer"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "People find order tracking from the homepage header, not the footer."
+    },
+    {
+      "id": "H2",
+      "statement": "The sale banner is recognised as the way into discounted items."
+    }
+  ],
+  "device": "desktop",
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Track an order",
+      "scenario": "You ordered a lamp last week. Where would you click first to see where it is?",
+      "hypothesis": "H1",
+      "start": "#home",
+      "endOn": "first-click",
+      "targets": {
+        "main": [
+          {
+            "zone": "header-orders"
+          }
+        ],
+        "acceptable": [
+          {
+            "zone": "footer-help"
+          }
+        ]
+      }
+    },
+    {
+      "id": "T2",
+      "title": "Find discounted items",
+      "scenario": "You'd like to see what's on sale. Where would you click first?",
+      "hypothesis": "H2",
+      "start": "#home",
+      "endOn": "first-click",
+      "device": "mobile",
+      "targets": {
+        "main": [
+          {
+            "zone": "sale-banner"
+          }
+        ],
+        "acceptable": [
+          {
+            "zone": "nav-sale"
+          }
+        ]
+      }
+    }
+  ],
+  "closing": [
+    {
+      "id": "q-rank",
+      "kind": "rank",
+      "prompt": "Put these in order of how much they help you trust a shop.",
+      "items": [
+        "Customer reviews",
+        "Clear returns policy",
+        "Secure payment logos"
+      ]
+    }
+  ],
+  "thanks": {
+    "body": "That's everything. Thank you."
+  }
+}

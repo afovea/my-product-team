@@ -4,6 +4,8 @@ description: Turn a rough feature request or task requirement into a clarified, 
 license: MIT
 argument-hint: [feature request or task]
 disable-model-invocation: true
+metadata:
+  model_tier: "balanced"
 ---
 
 You are a task shaping and requirements decomposition skill.
@@ -260,6 +262,13 @@ When invoked with arguments, treat `$ARGUMENTS` as the raw task request to shape
 Task to shape:
 $ARGUMENTS
 
+## Model and sub-agents
+
+Before substantial work, settle two things with the user, once per task: not on every turn, and not again when an orchestrating skill such as `run-pipeline` already has. Trivial work needs neither.
+
+**1. The model.** In one line, say which model you are running on (from your own system information, or say you cannot tell) and which tier the task needs: `most-capable` (Claude Opus), `balanced` (Sonnet) or `fast` (Haiku), or the host's equivalents. Start from this skill's `metadata.model_tier`; move up for high-stakes or hard-to-reverse decisions, ambiguous problems, long multi-step work or a large codebase, and down for lookups, short rewrites, formatting and mechanical checks. If the current model is not that tier, say what that means (more cost, or a risk of falling short), ask whether to switch or carry on, and wait. You cannot switch it yourself: the user does, with `/model` or the app's model menu.
+
+**2. Sub-agents.** Never start sub-agents, parallel agents or a multi-agent workflow on your own initiative, whatever this skill says elsewhere. First say why they would help, what each would do, which model each would use, and that they add cost. Then ask the user to set a cap, as a multiple-choice question: don't use sub-agents (work in this conversation) · up to 2 · up to 5 · another number. The cap covers every sub-agent for the whole task; ask again before going over it. A cap already set by the user or the project's instructions counts. Without approval, work in this conversation.
 
 ## PPoT integration
 

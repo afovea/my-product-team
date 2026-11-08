@@ -1,0 +1,6 @@
+/* First click: the prototype at its device size, scaled to the stage and framed apart from the tool. */
+.fc-wrap { display: grid; gap: 10px; }
+.fc-hint { font-size: 14px; }
+.fc-stage { width: 100%; display: grid; justify-items: center; }
+.fc-box { position: relative; overflow: hidden; border-radius: 12px; border: 1px solid var(--line); background: #FFFFFF; box-shadow: 0 6px 24px rgb(0 0 0 / .12); }
+.fc-box iframe { border: 0; transform-origin: 0 0; position: absolute; left: 0; top: 0; background: #FFFFFF; }

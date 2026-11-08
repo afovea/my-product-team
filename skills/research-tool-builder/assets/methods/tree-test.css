@@ -1,0 +1,12 @@
+/* Tree test: breadcrumb, one level of the menu, inline confirmation. Deliberately plain: the words are the test. */
+.tt-wrap { display: grid; gap: 12px; max-width: 640px; }
+.tt-crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 14px; }
+.tt-crumbs li + li::before { content: "›"; color: var(--muted); margin: 0 6px 0 2px; }
+.tt-crumb { border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 6px 2px; min-height: 36px; }
+.tt-crumbs [aria-current] { font-weight: 600; }
+.tt-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.tt-node { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 48px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); text-align: left; cursor: pointer; font-weight: 500; }
+.tt-node:hover { border-color: var(--accent); }
+.tt-node.on { border-color: var(--accent); background: var(--accent-soft); }
+.tt-chev { color: var(--muted); font-size: 20px; line-height: 1; }
+.tt-confirm { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; padding: 10px 12px; margin-top: 6px; border-radius: 10px; background: var(--accent-soft); }

@@ -1,0 +1,157 @@
+{
+  "studyId": "help-navigation-tree",
+  "title": "Help navigation",
+  "version": 1,
+  "brief": {
+    "body": "You'll be asked to find things in a website's menu. The menu is just words, with no design. About 5 minutes.",
+    "minutes": 5
+  },
+  "consent": {
+    "notice": 1,
+    "heading": "Before you begin",
+    "text": "We record your answers, how long each task takes and anything you type. You are identified only by a code, never your name.\n\nYour answers stay on this device until the research team exports them, are used only for this study, and are deleted 90 days after it ends. You can stop at any time.",
+    "items": [
+      {
+        "id": "data-notice",
+        "label": "I've read how my answers will be used",
+        "required": true
+      },
+      {
+        "id": "over-18",
+        "label": "I'm 18 or over",
+        "required": true
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "customer",
+      "label": "Customer"
+    },
+    {
+      "id": "prospect",
+      "label": "Not yet a customer"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "People look for refunds under Returns, not Payments."
+    },
+    {
+      "id": "H2",
+      "statement": "Address changes are found under Account without detours."
+    }
+  ],
+  "tree": [
+    {
+      "label": "Shop",
+      "children": [
+        {
+          "label": "Women"
+        },
+        {
+          "label": "Men"
+        },
+        {
+          "label": "Home"
+        },
+        {
+          "label": "Gift cards"
+        }
+      ]
+    },
+    {
+      "label": "Help",
+      "children": [
+        {
+          "label": "Orders",
+          "children": [
+            {
+              "label": "Track an order"
+            },
+            {
+              "label": "Change or cancel"
+            },
+            {
+              "label": "Missing items"
+            }
+          ]
+        },
+        {
+          "label": "Returns",
+          "children": [
+            {
+              "label": "Start a return"
+            },
+            {
+              "label": "Refund timing"
+            }
+          ]
+        },
+        {
+          "label": "Payments",
+          "children": [
+            {
+              "label": "Payment methods"
+            },
+            {
+              "label": "Invoices"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Account",
+      "children": [
+        {
+          "label": "Profile"
+        },
+        {
+          "label": "Addresses"
+        },
+        {
+          "label": "Password and security"
+        },
+        {
+          "label": "Close account"
+        }
+      ]
+    }
+  ],
+  "shuffleTasks": true,
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Refund timing",
+      "scenario": "You sent something back a week ago. Find out when your money will arrive.",
+      "hypothesis": "H1",
+      "accepted": [
+        [
+          "Help",
+          "Returns",
+          "Refund timing"
+        ]
+      ],
+      "backtrackTolerance": 0
+    },
+    {
+      "id": "T2",
+      "title": "New address",
+      "scenario": "You've moved house. Find where to update your address for future orders.",
+      "hypothesis": "H2",
+      "accepted": [
+        [
+          "Account",
+          "Addresses"
+        ]
+      ],
+      "backtrackTolerance": 0,
+      "confidence": "How confident are you that you found the right place?"
+    }
+  ],
+  "thanks": {
+    "body": "That's everything. Thank you."
+  }
+}

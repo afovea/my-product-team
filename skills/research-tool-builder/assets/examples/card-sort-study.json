@@ -1,0 +1,79 @@
+{
+  "studyId": "help-centre-topics",
+  "title": "Help centre topics",
+  "version": 1,
+  "brief": {
+    "heading": "What happens next",
+    "body": "You'll sort some help-centre topics into groups, twice. It takes about 10 minutes.\n\nThere are no right or wrong answers. We're testing how the topics are organised, not you.",
+    "minutes": 10
+  },
+  "consent": {
+    "notice": 1,
+    "heading": "Before you begin",
+    "text": "We record where you put each card, how long each sort takes and anything you type. We do not record your name: you are identified only by a code.\n\nYour answers are kept on this device until the research team exports them, and are used only to improve the help centre. They are deleted 90 days after the study ends.\n\nYou can stop at any time, and ask us to delete your answers by quoting your code.",
+    "items": [
+      { "id": "data-notice", "label": "I've read how my answers will be used", "required": true },
+      { "id": "over-18", "label": "I'm 18 or over", "required": true }
+    ]
+  },
+  "segments": [
+    { "id": "customer", "label": "Customer" },
+    { "id": "prospect", "label": "Not yet a customer" }
+  ],
+  "hypotheses": [
+    { "id": "H1", "statement": "People group account and billing topics together, apart from delivery topics." },
+    { "id": "H2", "statement": "The proposed five sections hold every topic without a \"miscellaneous\" catch-all." }
+  ],
+  "shuffleTasks": false,
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Group the topics your own way",
+      "scenario": "Sort these help topics into groups that make sense to you, and give each group a name.",
+      "hypothesis": "H1",
+      "mode": "open",
+      "allowOther": true,
+      "cards": [
+        { "id": "c1", "label": "Change my password" },
+        { "id": "c2", "label": "Update my card details" },
+        { "id": "c3", "label": "Track my parcel" },
+        { "id": "c4", "label": "Download an invoice" },
+        { "id": "c5", "label": "Return an item" },
+        { "id": "c6", "label": "Close my account" },
+        { "id": "c7", "label": "Change my delivery address" },
+        { "id": "c8", "label": "Why was I charged twice?" }
+      ]
+    },
+    {
+      "id": "T2",
+      "title": "Place the topics in our sections",
+      "scenario": "Put each help topic in the section where you'd expect to find it.",
+      "hypothesis": "H2",
+      "mode": "closed",
+      "allowOther": true,
+      "confidence": "How confident are you that you'd find these topics in those sections?",
+      "categories": [
+        { "id": "account", "label": "Your account" },
+        { "id": "payments", "label": "Payments and billing" },
+        { "id": "delivery", "label": "Delivery" },
+        { "id": "returns", "label": "Returns and refunds" },
+        { "id": "security", "label": "Privacy and security" }
+      ],
+      "cards": [
+        { "id": "d1", "label": "Change my password" },
+        { "id": "d2", "label": "Update my card details" },
+        { "id": "d3", "label": "Track my parcel" },
+        { "id": "d4", "label": "Download an invoice" },
+        { "id": "d5", "label": "Return an item" },
+        { "id": "d6", "label": "Report a suspicious email" },
+        { "id": "d7", "label": "Change my delivery address" },
+        { "id": "d8", "label": "Get a refund for a missing item" }
+      ]
+    }
+  ],
+  "closing": [
+    { "id": "q-hardest", "kind": "choice", "prompt": "Which sort was harder?", "options": ["Grouping them my own way", "Using the given sections", "About the same"] },
+    { "id": "q-missing", "kind": "text", "prompt": "Was there a section you expected that wasn't there?" }
+  ],
+  "thanks": { "heading": "Thank you", "body": "That's everything. Your answers help us organise the help centre." }
+}

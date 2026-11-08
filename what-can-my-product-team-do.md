@@ -286,7 +286,7 @@ From this it can help identify:
 
 These models can be grounded in evidence rather than relying on invented personas or unsupported assumptions.
 
-Usability test results can also be turned into a consistent stakeholder report, branded for the team or a client, with every finding traced to the participants behind it.
+Studies can be run on consistent tools the team builds itself (card sorts, tree tests, first-click, five-second, preference and comprehension tests, questionnaires, diary studies and design comparisons, with a catalogue placing every other method) that record consent, identify participants by code and export one session format. Their results, and those from other testing tools, can be turned into a consistent stakeholder report, branded for the team or a client, with every finding traced to the participants behind it.
 
 ---
 

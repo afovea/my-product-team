@@ -1,0 +1,7 @@
+/* Observation: the moderator's logging panel, or the participant's pointer to the product. */
+.ob-wrap { display: grid; gap: 14px; max-width: 760px; }
+.ob-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ob-row .input { flex: 1 1 240px; }
+.ob-codes, .ob-levels { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.ob-clock { font-variant-numeric: tabular-nums; }
+.ob-open { text-decoration: none; display: inline-flex; }

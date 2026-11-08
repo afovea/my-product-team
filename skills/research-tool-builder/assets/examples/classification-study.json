@@ -1,0 +1,116 @@
+{
+  "studyId": "support-request-types",
+  "title": "Support request types",
+  "version": 1,
+  "brief": {
+    "body": "You'll read some messages customers sent to support, and say what kind of request each one is, using the descriptions given. About 8 minutes.",
+    "minutes": 8
+  },
+  "consent": {
+    "notice": 1,
+    "heading": "Before you begin",
+    "text": "We record your answers, how long each task takes and anything you type. You are identified only by a code, never your name.\n\nYour answers stay on this device until the research team exports them, are used only for this study, and are deleted 90 days after it ends. You can stop at any time.",
+    "items": [
+      {
+        "id": "data-notice",
+        "label": "I've read how my answers will be used",
+        "required": true
+      },
+      {
+        "id": "over-18",
+        "label": "I'm 18 or over",
+        "required": true
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "agent",
+      "label": "Support agent"
+    },
+    {
+      "id": "lead",
+      "label": "Team lead"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "Support staff classify requests into the four proposed types the same way, without needing \"Other\"."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Classify support requests",
+      "scenario": "Choose the request type each message belongs to.",
+      "hypothesis": "H1",
+      "confidence": "How confident are you in your choices overall?",
+      "categories": [
+        {
+          "code": "A",
+          "label": "Account access",
+          "definition": "Can't sign in, locked out, password or two-step problems."
+        },
+        {
+          "code": "B",
+          "label": "Billing",
+          "definition": "Charges, refunds, invoices and payment methods."
+        },
+        {
+          "code": "C",
+          "label": "Order problem",
+          "definition": "Late, missing, damaged or wrong items."
+        },
+        {
+          "code": "D",
+          "label": "Product question",
+          "definition": "How something works, sizes, compatibility, care."
+        }
+      ],
+      "items": [
+        {
+          "id": "Q1",
+          "text": "I've been charged twice for the same order"
+        },
+        {
+          "id": "Q2",
+          "text": "The code you texted me never arrives"
+        },
+        {
+          "id": "Q3",
+          "text": "Parcel says delivered but nothing here"
+        },
+        {
+          "id": "Q4",
+          "text": "Is the blue one machine washable?"
+        },
+        {
+          "id": "Q5",
+          "text": "Can I get a VAT invoice for my company?"
+        },
+        {
+          "id": "Q6",
+          "text": "The box was crushed and the lamp is broken"
+        }
+      ]
+    }
+  ],
+  "closing": [
+    {
+      "id": "q-hardest",
+      "kind": "choice",
+      "prompt": "Which two types were hardest to tell apart?",
+      "options": [
+        "Account access and Billing",
+        "Billing and Order problem",
+        "Order problem and Product question",
+        "None were hard"
+      ],
+      "other": true
+    }
+  ],
+  "thanks": {
+    "body": "That's everything. Thank you."
+  }
+}

@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!--CSP-->
+<title>{{TITLE}}</title>
+<!--FONTS-->
+<style id="base-style">
+/* Shared shell for research tools. Tokens match research-reporter, so a brand profile themes tools and reports alike.
+   Layout: one centred column; sticky moderator header; participant screens are single cards; task material sits on its own stage. */
+:root {
+  --bg: #F5F6FA; --surface: #FFFFFF; --ink: #1B1E2E; --muted: #5B6077; --line: #DCDFEA;
+  --accent: #3A3FB0; --accent-soft: #E6E7F8;
+  --pass: #1D7A4C; --pass-soft: #DFF2E6; --minor: #9A5800; --minor-soft: #FBEED6;
+  --major: #B02525; --major-soft: #FBE2E0; --inv: #565B85; --inv-soft: #E8E9F3;
+  --stage: #EEF0F6;
+  --f-display: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11131D; --surface: #1A1D2B; --ink: #E8EAF4; --muted: #A1A5BD; --line: #2D3146;
+  --accent: #A4A8FF; --accent-soft: #272B4C;
+  --pass: #64CF95; --pass-soft: #163024; --minor: #F2B458; --minor-soft: #352812;
+  --major: #FF8E84; --major-soft: #3B1B1B; --inv: #B8BBDB; --inv-soft: #24273B; --stage: #151824;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #11131D; --surface: #1A1D2B; --ink: #E8EAF4; --muted: #A1A5BD; --line: #2D3146;
+  --accent: #A4A8FF; --accent-soft: #272B4C;
+  --pass: #64CF95; --pass-soft: #163024; --minor: #F2B458; --minor-soft: #352812;
+  --major: #FF8E84; --major-soft: #3B1B1B; --inv: #B8BBDB; --inv-soft: #24273B; --stage: #151824;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.55 var(--f-body); min-height: 100vh; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.2; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(24px, 4vw, 32px); }
+h2 { font-size: 20px; }
+h3 { font-size: 16px; }
+p { margin: 0; }
+a { color: var(--accent); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+h1:focus { outline: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.muted { color: var(--muted); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 20px; }
+.wrap.wide { max-width: 1180px; }
+
+/* Header */
+.top { position: sticky; top: 0; z-index: 10; background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .bar { max-width: 1180px; margin: 0 auto; padding: 8px max(16px, env(safe-area-inset-right, 0px)) 8px max(16px, env(safe-area-inset-left, 0px)); display: flex; align-items: center; gap: 12px; min-height: 52px; }
+.top .title { font: 600 15px/1.2 var(--f-display); display: flex; align-items: center; gap: 8px; min-width: 0; }
+.top .title img { height: 24px; width: auto; }
+.top .title span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.top nav { display: flex; gap: 2px; margin-left: 8px; }
+.top nav button { border: 0; background: none; padding: 8px 12px; border-radius: 8px; color: var(--muted); font-weight: 500; cursor: pointer; min-height: 40px; }
+.top nav button[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+.top .spacer { flex: 1; }
+.save { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.save .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pass); }
+.save.bad { color: var(--major); font-weight: 600; } .save.bad .dot { background: var(--major); }
+.save.warn .dot { background: var(--minor); }
+.progress { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.progress .track { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.progress .track i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .2s; }
+
+/* Cards and controls */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; display: grid; gap: 16px; }
+.audience { font: 600 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 17px; color: var(--muted); max-width: 62ch; }
+.body-copy { max-width: 62ch; white-space: pre-line; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; cursor: pointer; text-decoration: none; color: var(--ink); }
+.btn:hover { background: var(--bg); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.btn.primary:hover { filter: brightness(1.08); background: var(--accent); }
+.btn.quiet { border-color: transparent; background: none; color: var(--muted); }
+.btn.danger { color: var(--major); border-color: var(--major); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn .key { font: 500 11px/1 var(--f-mono); padding: 3px 5px; border-radius: 4px; border: 1px solid currentColor; opacity: .7; }
+.field { display: grid; gap: 6px; }
+.field label, .field .label { font-weight: 600; }
+.field .hint { font-size: 14px; color: var(--muted); }
+.input, textarea.input, select.input { min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); width: 100%; }
+textarea.input { min-height: 96px; resize: vertical; }
+.input[aria-invalid="true"] { border-color: var(--major); }
+.error { color: var(--major); font-size: 14px; font-weight: 500; }
+.note { border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+.note.warn { background: var(--minor-soft); color: var(--ink); }
+.note.bad { background: var(--major-soft); color: var(--ink); }
+.note.info { background: var(--accent-soft); color: var(--ink); }
+.check { display: flex; gap: 10px; align-items: flex-start; min-height: 44px; }
+.check input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+
+/* Scales: a labelled radio group, every point named */
+.scale { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; }
+.scale legend { font-weight: 600; padding: 0; margin-bottom: 4px; }
+.scale .points { display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 8px; }
+.scale .points label { display: grid; justify-items: center; gap: 6px; padding: 10px 6px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; text-align: center; font-size: 13px; min-height: 44px; }
+.scale .points input { position: absolute; opacity: 0; pointer-events: none; }
+.scale .points b { font: 600 18px/1 var(--f-display); }
+.scale .points input:checked + span { color: var(--accent); }
+.scale .points label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.scale .points label:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 520px) { .scale .points { grid-template-columns: 1fr; } .scale .points label { grid-template-columns: 28px 1fr; justify-items: start; text-align: left; } }
+
+/* Rank question */
+.rank { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.rank li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.rank .pos { font: 600 13px/28px var(--f-mono); text-align: center; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+.rank .mv { display: flex; gap: 4px; }
+.rank .mv button { min-width: 44px; min-height: 40px; }
+
+/* Task stage: test material is visibly apart from the tool */
+.task-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.task-bar .scenario { font-weight: 600; max-width: 70ch; }
+.stage { background: var(--stage); border: 2px dashed var(--line); border-radius: 16px; padding: 16px; min-height: 240px; }
+.stage-label { font: 600 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+/* Moderator tables and figures */
+.table-box { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 12px/1.3 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+.badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 99px; background: var(--bg); border: 1px solid var(--line); white-space: nowrap; }
+.badge.ok { background: var(--pass-soft); color: var(--pass); border-color: transparent; }
+.badge.warn { background: var(--minor-soft); color: var(--minor); border-color: transparent; }
+.badge.bad { background: var(--major-soft); color: var(--major); border-color: transparent; }
+.figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.figure { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 2px; }
+.figure b { font: 700 22px/1.1 var(--f-display); }
+.figure span { font-size: 13px; color: var(--muted); }
+.code { font-family: var(--f-mono); font-size: 13px; }
+
+/* Dialogs */
+.overlay { position: fixed; inset: 0; background: rgb(10 12 20 / .55); display: grid; place-items: center; padding: 16px; z-index: 40; }
+.dialog { background: var(--surface); color: var(--ink); border-radius: 14px; padding: 22px; max-width: 520px; width: 100%; display: grid; gap: 14px; box-shadow: 0 20px 60px rgb(0 0 0 / .25); }
+.kbd { font: 500 12px/1 var(--f-mono); padding: 3px 6px; border-radius: 5px; border: 1px solid var(--line); background: var(--bg); }
+.shortcuts { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; font-size: 14px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+@media print { .top, .actions { display: none; } }
+</style>
+<style id="brand-style">{{BRAND_CSS}}</style>
+<style id="method-style">{{METHOD_CSS}}</style>
+</head>
+<body>
+<div id="live" class="sr-only" aria-live="polite"></div>
+<div id="app"></div>
+<div id="overlay"></div>
+<script type="application/json" id="tool-config">{{CONFIG}}</script>
+<script type="application/json" id="study-content">{{CONTENT}}</script>
+<script id="shell">
+/* Research tool shell. One state, one dispatch, one render. Method modules register with Shell.register(). */
+(function () {
+  'use strict';
+  var CONFIG = JSON.parse(document.getElementById('tool-config').textContent);
+  var EMBEDDED = JSON.parse(document.getElementById('study-content').textContent);
+  var FORMAT = 'research-sessions', FORMAT_VERSION = 1;
+  var EASE = ['Very difficult', 'Difficult', 'Neither easy nor difficult', 'Easy', 'Very easy'];
+  var CONFIDENCE = ['Not at all confident', 'Slightly confident', 'Moderately confident', 'Very confident', 'Completely confident'];
+  var CODE_RE = /^[A-Za-z]{1,3}\d{1,4}$/;
+  var EVENT_CAP = 1000;
+  // Who is at the screen. A participant copy is always the participant. On a shared link one page serves both:
+  // the link's owner and editors get the moderator screens, everyone else the participant screens.
+  var PARTICIPANT = CONFIG.build === 'participant';
+  // The test setup the user chose (see references/foundations.md, section 9). Older builds have none.
+  var SETUP = CONFIG.setup || { facilitation: PARTICIPANT ? 'self-run' : 'in-person', device: PARTICIPANT ? 'participant' : 'moderator' };
+  var MODES = { 'in-person': 'Moderated in person', remote: 'Moderated remotely', 'self-run': 'Participant alone' };
+  var method = null;
+
+  // ---------------------------------------------------------------- helpers
+  function el(tag, attrs) {
+    var n = document.createElement(tag), kids = Array.prototype.slice.call(arguments, 2);
+    for (var k in (attrs || {})) {
+      var v = attrs[k];
+      if (v == null || v === false) continue;
+      if ((k === 'disabled' || k === 'checked' || k === 'selected' || k === 'required') && !v) continue; // 0 and '' mean off, not on
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k.slice(0, 2) === 'on') n.addEventListener(k.slice(2), v);
+      else if (k === 'style') n.setAttribute('style', v);
+      else n.setAttribute(k, v === true ? '' : v);
+    }
+    kids.forEach(function add(c) { if (c == null || c === false) return; if (Array.isArray(c)) return c.forEach(add); n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return n;
+  }
+  function now() { return Date.now(); }
+  function iso(ms) { return ms == null ? null : new Date(ms).toISOString(); }
+  function uid(p) { return p + '_' + Math.random().toString(36).slice(2, 8) + now().toString(36).slice(-4); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function median(xs) { if (!xs.length) return null; var s = xs.slice().sort(function (a, b) { return a - b; }), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; }
+  function fmtMs(ms) { if (ms == null) return '–'; var s = Math.round(ms / 1000); return s < 60 ? s + 's' : Math.floor(s / 60) + 'm ' + String(s % 60).padStart(2, '0') + 's'; }
+  function fnv(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) { var a = seed >>> 0; return function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function shuffle(list, rand) { var a = list.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function sha256(text) {
+    if (!(window.crypto && crypto.subtle)) return Promise.resolve(null);
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return x.toString(16).padStart(2, '0'); }).join(''); });
+  }
+  function contentHash(c) { return fnv(JSON.stringify(c)).toString(16).padStart(8, '0'); }
+  function announce(msg) { var live = document.getElementById('live'); live.textContent = ''; setTimeout(function () { live.textContent = msg; }, 30); }
+  function today() { return new Date().toISOString().slice(0, 10); }
+
+  // ---------------------------------------------------------------- state
+  var S = {
+    content: null, hash: null, contents: {}, contentErrors: [], contentWarnings: [],
+    view: 'session', step: 'setup', sessions: {}, session: null, cur: null,
+    confirm: null, dialog: null, save: { mode: 'memory', ok: true, at: null, message: '' },
+    form: {}, lastStep: null, tour: null, fileMessage: ''
+  };
+
+  // Moves between steps that are allowed. Anything else is refused.
+  var NEXT = {
+    setup: ['handoff-in', 'consent'], 'handoff-in': ['consent'], consent: ['brief', 'thanks'], brief: ['intro', 'thanks'],
+    // A task that asks nothing afterwards skips rating, so active can lead straight to the next task or the closing questions.
+    intro: ['active', 'thanks'], active: ['rating', 'intro', 'closing', 'thanks'], rating: ['intro', 'closing', 'thanks'], closing: ['thanks'],
+    thanks: ['handoff-out', 'debrief', 'setup'], 'handoff-out': ['debrief'], debrief: ['setup'], withdrawn: ['setup']
+  };
+  var PARTICIPANT_STEPS = { consent: 1, brief: 1, intro: 1, active: 1, rating: 1, closing: 1, thanks: 1, withdrawn: 1 };
+  // A moderator-led method (observation) keeps the device with the moderator: no hand-over, and the
+  // moderator reads the participant screens out. Only on a moderator copy.
+  function led() { return !PARTICIPANT && !!(method && method.moderatorLed && method.moderatorLed(S.content)); }
+  // Hand-over screens only when the device passes between people in the same room.
+  function handsOver(s) { return !PARTICIPANT && !led() && s.mode !== 'remote'; }
+  function audience() { return led() ? 'Moderator, with the participant' : 'Participant'; }
+
+  function move(to) {
+    if (to !== 'setup' && (NEXT[S.step] || []).indexOf(to) < 0) throw new Error('Not allowed: ' + S.step + ' → ' + to);
+    S.step = to; S.confirm = null;
+    if (S.session) { S.session.current = { step: to, task: S.cur ? S.cur.index : null, taskState: S.cur ? S.cur.state : null, run: S.cur ? S.cur.run : null }; }
+  }
+
+  // ---------------------------------------------------------------- content
+  function validateContent(c) {
+    var errors = [], warnings = [];
+    if (!c || typeof c !== 'object') return { errors: ['Content is not an object.'], warnings: [] };
+    ['studyId', 'title'].forEach(function (k) { if (!c[k]) errors.push('Missing "' + k + '".'); });
+    if (c.studyId && !/^[a-z0-9-]{2,60}$/.test(c.studyId)) errors.push('"studyId" must be lower-case letters, digits and hyphens.');
+    if (!Array.isArray(c.tasks) || !c.tasks.length) errors.push('Add at least one task.');
+    var ids = {};
+    (c.tasks || []).forEach(function (t, i) {
+      if (!t.id) errors.push('Task ' + (i + 1) + ' has no id.'); else if (ids[t.id]) errors.push('Task id "' + t.id + '" is used twice.'); else ids[t.id] = 1;
+      if (!t.title) errors.push('Task "' + (t.id || i + 1) + '" has no title.');
+      if (t.hypothesis && !(c.hypotheses || []).some(function (h) { return h.id === t.hypothesis; })) errors.push('Task "' + t.id + '" refers to hypothesis "' + t.hypothesis + '", which is not listed.');
+    });
+    (c.hypotheses || []).forEach(function (h) { if (!h.statement) errors.push('Hypothesis "' + h.id + '" has no wording.'); });
+    if (!c.consent || !c.consent.text || !Array.isArray(c.consent.items) || !c.consent.items.length) errors.push('Add a consent notice with at least one item.');
+    function checkQuestions(qs, where) {
+      var seen = {};
+      (qs || []).forEach(function (q) {
+        if (!q.id || !q.prompt) errors.push('Every ' + where + ' question needs an id and a prompt.');
+        else if (seen[q.id]) errors.push(where + ' question id "' + q.id + '" is used twice.'); else seen[q.id] = 1;
+        if (['choice', 'choices', 'rank', 'text', 'scale'].indexOf(q.kind) < 0) errors.push(where + ' question "' + q.id + '" has an unknown kind "' + q.kind + '".');
+        if ((q.kind === 'choice' || q.kind === 'choices' || q.kind === 'rank') && !((q.options || q.items || []).length >= 2)) errors.push(where + ' question "' + q.id + '" needs at least two options.');
+        if (q.kind === 'scale' && !((q.labels || []).length >= 2)) errors.push(where + ' question "' + q.id + '" needs its scale labels.');
+      });
+    }
+    checkQuestions(c.closing, 'Closing');
+    (c.tasks || []).forEach(function (t) { checkQuestions(t.questions, 'Task ' + t.id); });
+    var codeIds = {};
+    (c.codes || []).forEach(function (k) { if (!k.id || !k.label) errors.push('Every observation code needs an id and a label.'); else if (codeIds[k.id]) errors.push('Observation code "' + k.id + '" is used twice.'); else codeIds[k.id] = 1; });
+    if (c.repeat && !(c.repeat.entries >= 2)) errors.push('"repeat.entries" must be 2 or more: the number of sessions each participant does.');
+    Object.keys(c.fixedOrders || {}).forEach(function (code) { (c.fixedOrders[code] || []).forEach(function (id) { if (!ids[id]) errors.push('Fixed order for ' + code + ' names unknown task "' + id + '".'); }); });
+    if (method && method.validate) { var r = method.validate(c); errors = errors.concat(r.errors || []); warnings = warnings.concat(r.warnings || []); }
+    if ((c.tasks || []).length > 12) warnings.push('More than 12 tasks: sessions may run long and later tasks suffer from fatigue.');
+    return { errors: errors, warnings: warnings };
+  }
+  function useContent(c) {
+    var v = validateContent(c);
+    S.content = c; S.hash = contentHash(c); S.contents[S.hash] = c; S.contentErrors = v.errors; S.contentWarnings = v.warnings;
+  }
+
+  // ---------------------------------------------------------------- storage
+  // Delivery decides storage: shared-link uses the page's shared store, everything else the device.
+  var Store = (function () {
+    // Shared layout: sessions/<person>/s/<session>, plus a marker doc sessions/<person> so moderators can list people.
+    // The link's rules let each person read and write only their own subtree, and editors read and review them all.
+    // A participant copy keeps its own sessions apart, so a pilot on the moderator's device never mixes the two copies.
+    var mem = {}, db = null, me = null, owner = {}, prefix = function () { return 'rt:' + S.content.studyId + (CONFIG.build === 'participant' ? ':p' : '') + ':'; };
+    function path(id) { return 'sessions/' + (owner[id] || me) + '/s/' + id; }
+    function localOk() { try { var k = '__rt_probe__'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; } catch (e) { return false; } }
+    return {
+      init: function (userId) {
+        var wantShared = CONFIG.delivery === 'shared-link' && window.claude && window.claude.use && userId;
+        var p = wantShared ? window.claude.use('db').catch(function () { return null; }) : Promise.resolve(null);
+        me = userId || null;
+        return p.then(function (d) {
+          db = d;
+          S.save.mode = db ? 'shared' : localOk() ? 'device' : 'memory';
+          if (wantShared && !db) S.save.message = 'Shared storage is not available here, so sessions are saved on this device only.';
+          if (S.save.mode === 'memory') { S.save.ok = false; S.save.message = 'This browser is not letting the tool save. Export each session before closing the page.'; }
+        });
+      },
+      loadAll: function () {
+        if (db) {
+          var people = PARTICIPANT ? Promise.resolve([me]) : db.collection('sessions').limit(1000).get().then(function (snap) { return snap.docs.map(function (d) { return d.id; }); });
+          return people.then(function (ids) {
+            return Promise.all(ids.map(function (u) { return db.collection('sessions/' + u + '/s').limit(1000).get().then(function (snap) { return snap.docs.map(function (d) { owner[d.id] = u; return d.data(); }); }); }));
+          }).then(function (lists) { var out = {}; lists.forEach(function (l) { l.forEach(function (v) { if (v && v.studyId === S.content.studyId) out[v.id] = v; }); }); return out; });
+        }
+        var out = {};
+        if (S.save.mode === 'device') { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf(prefix() + 'session:') === 0) { try { var v = JSON.parse(localStorage.getItem(k)); out[v.id] = v; } catch (e) {} } } }
+        else { for (var m in mem) out[m] = clone(mem[m]); }
+        return Promise.resolve(out);
+      },
+      put: function (s) {
+        var text = JSON.stringify(s);
+        if (db) {
+          var mark = owner[s.id] ? Promise.resolve() : db.doc('sessions/' + me).set({ at: iso(now()) });
+          return mark.then(function () { return db.doc(path(s.id)).set(JSON.parse(text)); }).then(function () { return db.doc(path(s.id)).get(); })
+            .then(function (snap) { if (!snap.exists) throw new Error('The shared store did not keep the save.'); });
+        }
+        if (S.save.mode === 'device') {
+          return new Promise(function (ok, fail) {
+            try { localStorage.setItem(prefix() + 'session:' + s.id, text); if (localStorage.getItem(prefix() + 'session:' + s.id) !== text) throw new Error('The save did not read back the same.'); ok(); }
+            catch (e) { fail(e.name === 'QuotaExceededError' ? new Error('This device is out of storage space.') : e); }
+          });
+        }
+        mem[s.id] = JSON.parse(text); return Promise.resolve();
+      },
+      remove: function (id) {
+        if (db) return db.doc(path(id)).delete();
+        if (S.save.mode === 'device') localStorage.removeItem(prefix() + 'session:' + id); else delete mem[id];
+        return Promise.resolve();
+      },
+      getContent: function () {
+        if (db) return db.doc('config/content-' + EMBEDDED.studyId).get().then(function (snap) { return snap.exists ? snap.data() : null; }).catch(function () { return null; });
+        if (CONFIG.build === 'participant') return Promise.resolve(null); // participants run the content they were sent
+        try { var raw = S.save.mode === 'device' && localStorage.getItem('rt:' + EMBEDDED.studyId + ':content'); return Promise.resolve(raw ? JSON.parse(raw) : null); } catch (e) { return Promise.resolve(null); }
+      },
+      putContent: function (c) {
+        if (db) return db.doc('config/content-' + c.studyId).set(clone(c));
+        try { localStorage.setItem('rt:' + c.studyId + ':content', JSON.stringify(c)); return Promise.resolve(); } catch (e) { return Promise.reject(e); }
+      },
+      getImports: function () {
+        if (db) return db.doc('config/imports-' + EMBEDDED.studyId).get().then(function (snap) { return snap.exists ? (snap.data().list || []) : []; }).catch(function () { return []; });
+        try { return Promise.resolve(JSON.parse(localStorage.getItem('rt:' + EMBEDDED.studyId + ':imports') || '[]')); } catch (e) { return Promise.resolve([]); }
+      },
+      putImports: function (list) {
+        if (db) return db.doc('config/imports-' + EMBEDDED.studyId).set({ list: list });
+        try { localStorage.setItem('rt:' + EMBEDDED.studyId + ':imports', JSON.stringify(list)); } catch (e) {}
+        return Promise.resolve();
+      },
+      clearContent: function () {
+        if (db) return db.doc('config/content-' + EMBEDDED.studyId).delete().catch(function () {});
+        try { localStorage.removeItem('rt:' + EMBEDDED.studyId + ':content'); } catch (e) {}
+      }
+    };
+  })();
+
+  var saveTimer = null;
+  function persist(soon) {
+    if (!S.session) return;
+    S.session.updatedAt = iso(now());
+    clearTimeout(saveTimer);
+    var go = function () {
+      var s = S.session; S.sessions[s.id] = s;
+      Store.put(s).then(function () { S.save.ok = S.save.mode !== 'memory'; S.save.at = now(); if (S.save.ok) S.save.error = ''; paintSave(); })
+        .catch(function (e) { S.save.ok = false; S.save.error = e.message || String(e); paintSave(); announce('Saving failed: ' + S.save.error); });
+    };
+    if (soon) saveTimer = setTimeout(go, 400); else go();
+  }
+  var away = false, resizeTimer = null;
+  function awayCheck() {
+    if (S.step !== 'active' || !S.cur || !S.cur.run.beganAt) return;
+    var gone = document.hidden || !document.hasFocus();
+    if (gone !== away) { away = gone; ctx.log(gone ? 'focus-lost' : 'focus-back'); persist(true); }
+  }
+  document.addEventListener('visibilitychange', awayCheck); window.addEventListener('blur', awayCheck); window.addEventListener('focus', awayCheck);
+  window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { if (S.step === 'active' && S.cur) ctx.log('resize', { w: innerWidth, h: innerHeight }); }, 500); });
+  window.addEventListener('pagehide', function () { if (saveTimer) { clearTimeout(saveTimer); persist(false); } });
+  window.addEventListener('beforeunload', function (e) { if (S.step === 'active') { e.preventDefault(); e.returnValue = ''; } });
+
+  // ---------------------------------------------------------------- sessions
+  function defaultMode() { return SETUP.facilitation === 'mixed' ? (PARTICIPANT ? 'self-run' : null) : SETUP.facilitation; }
+  function newSession(code, segment, practice, mode) {
+    var c = S.content, seed = fnv(c.studyId + ':' + code.toUpperCase());
+    var rand = rng(seed), ids = c.tasks.map(function (t) { return t.id; });
+    var order = (c.fixedOrders && c.fixedOrders[code.toUpperCase()]) ? c.fixedOrders[code.toUpperCase()].slice() : (c.shuffleTasks ? shuffle(ids, rand) : ids);
+    var itemOrder = {}, conditions = {};
+    c.tasks.forEach(function (t) { if (method.itemOrder) { var o = method.itemOrder(t, rand); if (o) itemOrder[t.id] = o; } });
+    (c.conditions || []).forEach(function (cond) { conditions[cond.id] = cond.values[Math.floor(rand() * cond.values.length)]; });
+    return {
+      id: uid('s'), studyId: c.studyId, participant: code.toUpperCase(), segment: segment || null, practice: !!practice,
+      mode: mode || defaultMode() || 'in-person', contentHash: S.hash, contentVersion: c.version || 1,
+      consent: null, plan: { seed: seed, order: order, itemOrder: itemOrder, conditions: conditions },
+      status: 'in-progress', startedAt: iso(now()), updatedAt: iso(now()), finishedAt: null, interruptions: 0,
+      runs: [], closing: {}, debrief: { notes: '', checkedFreeText: false }, current: null
+    };
+  }
+  function taskById(id) { return S.content.tasks.filter(function (t) { return t.id === id; })[0]; }
+  function orderOf(s) { return s.plan.order; }
+
+  function startTask(index) {
+    var s = S.session, task = taskById(orderOf(s)[index]);
+    var prev = s.runs.filter(function (r) { return r.taskId === task.id; });
+    S.cur = { index: index, task: task, state: null, tourMs: 0, run: {
+      id: uid('r'), taskId: task.id, attempt: prev.length + 1, retakeOf: prev.length ? prev[prev.length - 1].id : null,
+      status: null, device: null, scale: 1, presentedAt: iso(now()), beganAt: null, endedAt: null, readingMs: null, durationMs: null,
+      outcome: null, ease: null, confidence: null, notes: null, events: [], eventsTruncated: false,
+      moderator: { reviewed: false, override: null, codes: {}, notes: '' } } };
+    if (task.variant) S.cur.run.variant = task.variant;
+    move('intro');
+    if (index === 0 && method.tour && method.tour.length && !s.runs.length) S.tour = { step: 0, openedAt: now() };
+    persist();
+  }
+  var ctx = {
+    el: el, announce: announce,
+    led: function () { return led(); },
+    codes: function () { return S.content.codes || []; },
+    log: function (type, data) {
+      var r = S.cur.run; if (r.events.length >= EVENT_CAP) { r.eventsTruncated = true; return; }
+      var e = { t: now() - Date.parse(r.beganAt), type: type }; for (var k in (data || {})) e[k] = data[k]; r.events.push(e);
+    },
+    update: function () { if (S.session) { S.session.current.taskState = S.cur.state; persist(true); } render(); },
+    save: function () { if (S.session) { S.session.current.taskState = S.cur.state; persist(true); } },
+    finish: function (reason) { if (S.step === 'active') { endTask(reason || 'finished'); render(); } },
+    setRun: function (fields) { if (!S.cur || S.cur.run.endedAt) return; for (var f in fields) S.cur.run[f] = fields[f]; },
+    rand: function () { return rng(S.session.plan.seed + S.cur.index); }
+  };
+  function beginTask() {
+    var r = S.cur.run; r.beganAt = iso(now()); r.readingMs = Math.max(0, Date.parse(r.beganAt) - Date.parse(r.presentedAt) - S.cur.tourMs);
+    S.cur.state = method.start(S.cur.task, S.session.plan, ctx);
+    away = false; move('active'); ctx.log('ready'); persist();
+  }
+  function endTask(reason) {
+    var r = S.cur.run; r.endedAt = iso(now()); r.durationMs = Date.parse(r.endedAt) - Date.parse(r.beganAt);
+    r.status = reason === 'gave-up' ? 'gave-up' : 'completed';
+    r.outcome = method.outcome(S.cur.task, S.cur.state, reason);
+    ctx.log('end', { reason: reason });
+    // Time spent away from the tool during the task: in another tab, app or window.
+    var gone = null, awayMs = 0; r.events.forEach(function (e) { if (e.type === 'focus-lost') gone = e.t; else if (e.type === 'focus-back' && gone != null) { awayMs += e.t - gone; gone = null; } });
+    if (gone != null) awayMs += r.durationMs - gone; if (awayMs) r.awayMs = awayMs;
+    S.form = { ease: null, confidence: null, notes: '', answers: {} };
+    if (!asksAfter(S.cur.task)) return finishRating();
+    move('rating'); persist();
+  }
+  // What the rating step asks: ease (unless the task turns it off), confidence, the task's own questions, notes.
+  function asksAfter(t) { return t.ease !== false || !!t.confidence || (t.questions || []).length > 0 || t.notesPrompt !== false; }
+  function answered(q, a) { var v = a[q.id]; return q.kind === 'rank' || (!!v && !!(v.choice || (v.choices && v.choices.length) || v.value || (v.text && v.text.trim()))); }
+  function fillRanks(qs, a) { (qs || []).forEach(function (q) { if (q.kind === 'rank' && !a[q.id]) a[q.id] = { order: (q.items || q.options).slice() }; }); return a; }
+  function finishRating() {
+    var r = S.cur.run, t = S.cur.task;
+    r.ease = t.ease === false ? null : S.form.ease; r.confidence = t.confidence ? S.form.confidence : null; r.notes = (S.form.notes || '').trim() || null;
+    if ((t.questions || []).length) r.answers = clone(fillRanks(t.questions, S.form.answers || {}));
+    S.session.runs.push(r);
+    var next = S.cur.index + 1; S.cur = null;
+    if (next < orderOf(S.session).length) return startTask(next);
+    if ((S.content.closing || []).length) { S.form = { closing: {} }; move('closing'); }
+    else finishSession();
+    persist();
+  }
+  function finishSession() {
+    S.session.status = 'completed'; S.session.finishedAt = iso(now()); move('thanks'); persist();
+  }
+  // The participant stops. Keep: what they did is kept as ended early. Withdraw: the session is deleted.
+  function stopSession(keep) {
+    var s = S.session; if (!s) return;
+    if (S.cur && S.cur.run.beganAt && !S.cur.run.endedAt) { S.cur.run.status = 'interrupted'; S.cur.run.endedAt = iso(now()); s.runs.push(S.cur.run); }
+    S.cur = null; S.tour = null;
+    if (keep) { s.status = 'ended-early'; s.stoppedBy = 'participant'; s.finishedAt = iso(now()); move('thanks'); persist(); announce('Stopped. What you did so far is kept.'); return; }
+    clearTimeout(saveTimer); saveTimer = null; // nothing may save the session after it is deleted
+    var id = s.id; S.session = null; delete S.sessions[id];
+    Store.remove(id).catch(function () {}); S.step = 'withdrawn'; announce('Your answers have been deleted.');
+  }
+  function endEarly() {
+    if (!S.session) return;
+    if (S.cur && S.cur.run.beganAt && !S.cur.run.endedAt) { S.cur.run.status = 'interrupted'; S.cur.run.endedAt = iso(now()); S.session.runs.push(S.cur.run); }
+    S.session.status = 'ended-early'; S.session.finishedAt = iso(now()); S.cur = null; S.session.current = null; persist();
+    S.session = null; S.step = 'setup'; S.view = 'session'; announce('Session ended early and kept.');
+  }
+  function resume(s) {
+    S.session = s; var c = s.current || { step: 'consent' };
+    S.contents[s.contentHash] = S.contents[s.contentHash] || S.content;
+    if (s.contentHash !== S.hash) { S.fileMessage = 'This session started on content version ' + s.contentVersion + '. It continues on that version.'; }
+    if (c.step === 'active' && c.run) {
+      // A reload mid-task: keep the attempt as interrupted and run the task again.
+      var r = c.run; r.status = 'interrupted'; r.endedAt = s.updatedAt; s.runs.push(r); s.interruptions++;
+      S.cur = null; S.step = 'brief'; startTask(c.task); return;
+    }
+    if ((c.step === 'intro' || c.step === 'rating') && c.task != null) {
+      if (c.step === 'rating' && c.run) { S.cur = { index: c.task, task: taskById(orderOf(s)[c.task]), run: c.run, state: c.taskState, tourMs: 0 }; S.form = { ease: null, confidence: null, notes: '', answers: {} }; S.step = 'rating'; return; }
+      S.step = 'brief'; startTask(c.task); return;
+    }
+    S.step = c.step || 'consent'; if (S.step === 'closing') S.form = { closing: {} };
+  }
+
+  // ---------------------------------------------------------------- export and import
+  function envelope(list) {
+    var used = {}; list.forEach(function (s) { used[s.contentHash] = S.contents[s.contentHash] || (s.contentHash === S.hash ? S.content : null); });
+    return { format: FORMAT, formatVersion: FORMAT_VERSION, exportedAt: iso(now()),
+      tool: { method: method.id, methodVersion: method.version, label: method.label, build: CONFIG.build },
+      study: { id: S.content.studyId, title: S.content.title, delivery: CONFIG.delivery, setup: SETUP },
+      contents: used, sessions: list.map(function (s) { var c = clone(s); delete c.current; delete c.handedIn; return c; }), imports: S.imports || [] };
+  }
+  function handedIn(msg) { S.fileMessage = msg; announce(msg); if (/^(Saved|Copied)/.test(msg)) { S.session.handedIn = iso(now()); persist(); } render(); }
+  function fileCode(s) { return s.participant + (s.wave ? '-e' + s.wave : ''); }
+  function fileName(code) { return S.content.studyId + '_' + method.id + '_' + (code || 'all') + '_' + today() + '.json'; }
+  function saveFile(name, text) {
+    var viaHost = window.claude && window.claude.use ? window.claude.use('downloads').catch(function () { return null; }) : Promise.resolve(null);
+    return viaHost.then(function (dl) {
+      if (dl) return dl.save({ filename: name, data: text }).then(function () { return 'Saved ' + name + '.'; });
+      var a = el('a', { href: URL.createObjectURL(new Blob([text], { type: 'application/json' })), download: name });
+      document.body.appendChild(a); a.click(); a.remove(); return 'Saved ' + name + ' to your downloads.';
+    }).catch(function (e) { return 'Could not save the file (' + (e.code || e.message) + '). Use Copy instead.'; });
+  }
+  function copyText(text) {
+    return (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { return 'Copied. Paste it into an email or a file.'; }, function () { return 'Copy did not work here. Select the text below and copy it.'; });
+  }
+  function importFile(file) {
+    return file.text().then(function (text) {
+      var data; try { data = JSON.parse(text); } catch (e) { throw new Error(file.name + ' is not a session file.'); }
+      if (data.format !== FORMAT) throw new Error(file.name + ' is not a research-sessions file.');
+      if (data.formatVersion > FORMAT_VERSION) throw new Error(file.name + ' was made by a newer tool. Update this tool first.');
+      if (!data.study || data.study.id !== S.content.studyId) throw new Error(file.name + ' belongs to another study (' + (data.study && data.study.id) + ').');
+      return sha256(text).then(function (hash) {
+        if (hash && (S.imports || []).some(function (i) { return i.sha256 === hash; })) return file.name + ' was already imported. Nothing changed.';
+        var added = 0, dupes = 0;
+        for (var h in (data.contents || {})) S.contents[h] = S.contents[h] || data.contents[h];
+        var jobs = (data.sessions || []).map(function (s) {
+          var have = S.sessions[s.id];
+          if (have && JSON.stringify(have.runs) === JSON.stringify(s.runs)) return Promise.resolve();
+          if (have) { s = clone(s); s.conflictWith = s.id; s.id = s.id + '-' + (hash || uid('x')).slice(0, 6); dupes++; } else added++;
+          S.sessions[s.id] = s; return Store.put(s);
+        });
+        S.imports = (S.imports || []).concat([{ file: file.name, sha256: hash, at: iso(now()), sessions: (data.sessions || []).length }]);
+        jobs.push(Store.putImports(S.imports));
+        return Promise.all(jobs).then(function () { return 'Imported ' + file.name + ': ' + added + ' new session' + (added === 1 ? '' : 's') + (dupes ? ', ' + dupes + ' conflicting copy kept for you to choose' : '') + '.'; });
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------- render
+  var focusKey = null;
+  function paintSave() { var s = document.querySelector('[data-save]'); if (s) s.replaceWith(saveBadge()); }
+  function saveBadge() {
+    var m = S.save, label = !m.ok ? ('Not saved: ' + (m.error || m.message)) : m.mode === 'shared' ? 'Saved to the shared store' : 'Saved on this device';
+    return el('span', { class: 'save' + (!m.ok ? ' bad' : m.message ? ' warn' : ''), 'data-save': '', role: !m.ok ? 'alert' : null, title: m.message || '' },
+      el('span', { class: 'dot', 'aria-hidden': 'true' }), label + (m.ok && m.at ? ' · ' + new Date(m.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''));
+  }
+  function header() {
+    var participant = PARTICIPANT_STEPS[S.step] && S.view === 'session' || PARTICIPANT;
+    var brand = CONFIG.brand || {};
+    return el('header', { class: 'top' }, el('div', { class: 'bar' },
+      el('div', { class: 'title' }, brand.logo ? el('img', { src: brand.logo, alt: '' }) : null, el('span', { text: S.content.title })),
+      !participant ? el('nav', { 'aria-label': 'Moderator views' }, [['session', 'Session'], ['results', 'Results'], ['content', 'Study content']].map(function (v, i) {
+        return el('button', { type: 'button', 'aria-current': S.view === v[0] ? 'page' : null, 'data-k': 'view-' + v[0], onclick: function () { setView(v[0]); } }, v[1]);
+      })) : null,
+      el('span', { class: 'spacer' }),
+      canStop() ? el('button', { type: 'button', class: 'btn quiet', 'data-k': 'stop', onclick: function () { S.dialog = 'stop'; render(); } }, 'Stop') : null,
+      !participant ? saveBadge() : null,
+      !participant ? el('button', { type: 'button', class: 'btn quiet', 'aria-label': 'Keyboard shortcuts', 'data-k': 'help', onclick: function () { S.dialog = 'shortcuts'; render(); } }, '?') : null,
+      !participant ? el('button', { type: 'button', class: 'btn quiet', 'data-k': 'theme', 'aria-label': 'Switch theme', onclick: toggleTheme }, isDark() ? 'Light' : 'Dark') : null));
+  }
+  // Anyone taking part without a moderator beside them can stop at any time, as the consent notice promises.
+  function canStop() { return !!S.session && S.view === 'session' && ['consent', 'brief', 'intro', 'active', 'rating', 'closing'].indexOf(S.step) >= 0 && !led() && (PARTICIPANT || S.session.mode !== 'in-person'); }
+  function progress() {
+    if (!S.session) return null;
+    var n = orderOf(S.session).length, i = S.cur ? S.cur.index + (S.step === 'rating' ? 1 : 0) : S.step === 'closing' || S.step === 'thanks' ? n : 0;
+    var label = S.cur ? 'Task ' + (S.cur.index + 1) + ' of ' + n : S.step === 'closing' ? 'Last few questions' : S.step === 'thanks' ? 'Finished' : 'Before you start';
+    return el('div', { class: 'progress' }, el('span', { text: label }),
+      el('div', { class: 'track', role: 'progressbar', 'aria-label': 'Progress', 'aria-valuemin': '0', 'aria-valuemax': String(n), 'aria-valuenow': String(i) }, el('i', { style: 'width:' + (n ? i / n * 100 : 0) + '%' })));
+  }
+  function screen(audience, heading, kids) {
+    return el('section', { class: 'card' }, el('span', { class: 'audience', text: audience }), el('h1', { tabindex: '-1', text: heading }), kids);
+  }
+  function primary(label, onclick, opts) {
+    opts = opts || {};
+    return el('button', { type: 'button', class: 'btn primary', 'data-primary': '', 'data-k': opts.k || 'primary', disabled: opts.disabled, onclick: onclick }, label, el('span', { class: 'key', 'aria-hidden': 'true' }, '↵'));
+  }
+  function twoStep(key, label, onconfirm, cls) {
+    if (S.confirm === key) return el('span', { class: 'actions', role: 'group', 'aria-label': 'Confirm ' + label.toLowerCase() },
+      el('button', { type: 'button', class: 'btn danger', 'data-k': key + '-yes', onclick: function () { S.confirm = null; onconfirm(); render(); } }, 'Confirm: ' + label),
+      el('button', { type: 'button', class: 'btn', 'data-k': key + '-no', onclick: function () { S.confirm = null; focusKey = key; render(); } }, 'Cancel'));
+    return el('button', { type: 'button', class: 'btn ' + (cls || 'quiet'), 'data-k': key, onclick: function () { S.confirm = key; focusKey = key + '-no'; render(); } }, label);
+  }
+  function scale(name, legend, labels, value, onpick) {
+    return el('fieldset', { class: 'scale' }, el('legend', { text: legend }),
+      el('div', { class: 'points', style: '--n:' + labels.length }, labels.map(function (lab, i) {
+        return el('label', {}, el('input', { type: 'radio', name: name, value: String(i + 1), checked: value === i + 1, 'data-k': name + '-' + (i + 1), onchange: function () { onpick(i + 1); } }),
+          el('span', {}, el('b', { text: String(i + 1) })), el('span', { text: lab }));
+      })));
+  }
+
+  var VIEWS = {
+    setup: function () {
+      var c = S.content, f = S.form, open = Object.keys(S.sessions).map(function (k) { return S.sessions[k]; }).filter(function (s) { return s.status === 'in-progress'; });
+      var blocked = S.contentErrors.length;
+      var codeErr = f.codeError;
+      return [
+        blocked ? el('div', { class: 'note bad', role: 'alert' }, el('b', { text: 'The study content has problems, so sessions cannot start. ' }), S.contentErrors.join(' ')) : null,
+        S.save.message ? el('div', { class: 'note warn' }, S.save.message) : null,
+        open.length && !PARTICIPANT ? el('div', { class: 'card' }, el('h2', { text: 'Unfinished sessions' }),
+          open.map(function (s) {
+            return el('div', { class: 'actions' }, el('span', { class: 'code', text: s.participant }), el('span', { class: 'muted', text: s.runs.length + ' of ' + s.plan.order.length + ' tasks done' }),
+              el('button', { type: 'button', class: 'btn', 'data-k': 'resume-' + s.id, onclick: function () { resume(s); render(); } }, 'Resume'),
+              twoStep('end-' + s.id, 'End early and keep', function () { S.session = s; S.cur = null; endEarly(); }),
+              twoStep('discard-' + s.id, 'Discard', function () { Store.remove(s.id); delete S.sessions[s.id]; announce('Session ' + s.participant + ' discarded.'); }));
+          })) : null,
+        screen(PARTICIPANT ? 'Participant' : 'Moderator', PARTICIPANT ? 'Welcome' : 'Start a session', [
+          PARTICIPANT ? el('p', { class: 'lede', text: 'Enter the code you were given to begin.' }) : el('p', { class: 'lede', text: c.brief && c.brief.minutes ? 'About ' + c.brief.minutes + ' minutes. ' + c.tasks.length + ' tasks.' : c.tasks.length + ' tasks.' }),
+          el('div', { class: 'field' }, el('label', { for: 'code', text: 'Participant code' }), el('span', { class: 'hint', id: 'code-hint', text: 'Letters then numbers, like P3. Never a name.' }),
+            el('input', { id: 'code', class: 'input', 'data-k': 'code', autocomplete: 'off', spellcheck: 'false', value: f.code || '', 'aria-describedby': 'code-hint', 'aria-invalid': codeErr ? 'true' : null, oninput: function (e) { f.code = e.target.value; } }),
+            codeErr ? el('span', { class: 'error', role: 'alert', text: codeErr }) : null),
+          (c.segments || []).length && !PARTICIPANT ? el('div', { class: 'field' }, el('label', { for: 'segment', text: 'Segment' }),
+            el('select', { id: 'segment', class: 'input', 'data-k': 'segment', onchange: function (e) { f.segment = e.target.value; } }, el('option', { value: '', text: 'Choose…' }),
+              c.segments.map(function (sg) { return el('option', { value: sg.id, selected: f.segment === sg.id, text: sg.label }); }))) : null,
+          !PARTICIPANT && SETUP.facilitation === 'mixed' ? el('fieldset', { class: 'scale' }, el('legend', { text: 'How is this session run?' }), el('div', { style: 'display:grid;gap:6px' },
+            ['in-person', 'remote', 'self-run'].map(function (m, i) { return el('label', { class: 'check' }, el('input', { type: 'radio', name: 'mode', 'data-k': i ? 'mode-' + m : 'mode', checked: f.mode === m, onchange: function () { f.mode = m; } }), el('span', { text: MODES[m] })); }))) : null,
+          !PARTICIPANT ? el('label', { class: 'check' }, el('input', { type: 'checkbox', 'data-k': 'practice', checked: !!f.practice, onchange: function (e) { f.practice = e.target.checked; } }), el('span', {}, 'Practice run', el('br'), el('span', { class: 'muted', text: 'Saved and flagged, but left out of results and reports.' }))) : null,
+          el('div', { class: 'actions' }, primary(PARTICIPANT ? 'Start' : 'Start session', startSession, { disabled: blocked }))
+        ])
+      ];
+    },
+    'handoff-in': function () {
+      return screen('Moderator', 'Hand the device to the participant', [el('p', { class: 'lede', text: 'The next screens are for ' + S.session.participant + '. Results and controls stay hidden until the device comes back.' }),
+        el('div', { class: 'actions' }, primary('The participant has the device', function () { move('consent'); persist(); render(); }))]);
+    },
+    consent: function () {
+      var c = S.content.consent, f = S.form.consent = S.form.consent || {};
+      var missing = c.items.filter(function (it) { return it.required !== false && !f[it.id]; });
+      return screen(audience(), c.heading || 'Before you begin', [
+        led() ? el('div', { class: 'note info' }, 'Read this to the participant, then tick only what they agree to.') : null,
+        el('div', { class: 'body-copy', text: c.text }),
+        el('div', { role: 'group', 'aria-label': 'Consent' }, c.items.map(function (it) {
+          return el('label', { class: 'check' }, el('input', { type: 'checkbox', 'data-k': 'consent-' + it.id, checked: !!f[it.id], onchange: function (e) { f[it.id] = e.target.checked; render(); } }), el('span', { text: it.label + (it.required === false ? ' (optional)' : '') }));
+        })),
+        el('div', { class: 'actions' }, primary('Continue', function () {
+          S.session.consent = { notice: c.notice || 1, items: c.items.filter(function (it) { return f[it.id]; }).map(function (it) { return it.id; }), at: iso(now()) };
+          if (led()) S.session.consent.recordedBy = 'moderator';
+          move('brief'); persist(); render();
+        }, { disabled: missing.length > 0 }),
+        missing.length ? el('span', { class: 'muted', text: 'Tick the required boxes to continue.' }) : null)
+      ]);
+    },
+    brief: function () {
+      var b = S.content.brief || {};
+      return screen(audience(), b.heading || 'What happens next', [el('div', { class: 'body-copy lede', text: b.body || 'You will do ' + S.content.tasks.length + ' short tasks. There are no right or wrong answers: we are testing the design, not you.' }),
+        el('div', { class: 'actions' }, primary('Continue', function () { startTask(0); render(); }))]);
+    },
+    intro: function () {
+      var t = S.cur.task;
+      return screen(audience(), 'Task ' + (S.cur.index + 1) + ' of ' + orderOf(S.session).length, [
+        el('p', { class: 'lede', text: t.scenario || t.prompt || t.title }),
+        el('p', { class: 'muted', text: 'Read this, then press Begin when you are ready.' }),
+        el('div', { class: 'actions' }, primary('Begin', function () { beginTask(); render(); }))]);
+    },
+    active: function () {
+      var t = S.cur.task, check = method.canFinish ? method.canFinish(t, S.cur.state) : { ok: true };
+      return [
+        el('div', { class: 'task-bar' }, el('h1', { class: 'scenario', tabindex: '-1', text: t.scenario || t.prompt || t.title })),
+        el('section', { class: 'stage', 'aria-label': 'Task' }, el('div', { class: 'stage-label', 'aria-hidden': 'true', text: 'Task' }), method.render(t, S.cur.state, ctx)),
+        taskActions(t, check)
+      ];
+    },
+    rating: function () {
+      var t = S.cur.task, f = S.form, qs = t.questions || [];
+      var need = (t.ease === false || f.ease) && (!t.confidence || f.confidence) && qs.every(function (q) { return !q.required || answered(q, f.answers); });
+      return screen(audience(), t.ease === false && !t.confidence ? (t.questionsHeading || 'A few questions') : 'How was that?', [
+        led() ? el('div', { class: 'note info' }, 'Ask the participant, and enter their answers.') : null,
+        t.ease === false ? null : scale('ease', 'Overall, how easy or difficult was this task?', EASE, f.ease, function (v) { f.ease = v; render(); }),
+        t.confidence ? scale('confidence', t.confidence, CONFIDENCE, f.confidence, function (v) { f.confidence = v; render(); }) : null,
+        qs.map(function (q) { return closingQuestion(q, f.answers); }),
+        t.notesPrompt !== false ? el('div', { class: 'field' }, el('label', { for: 'notes', text: t.notesPrompt || 'Anything you would like to add? (optional)' }),
+          el('textarea', { id: 'notes', class: 'input', 'data-k': 'notes', oninput: function (e) { f.notes = e.target.value; } }, f.notes || '')) : null,
+        el('div', { class: 'actions' }, primary('Continue', function () { finishRating(); render(); }, { disabled: !need }))
+      ]);
+    },
+    closing: function () {
+      var qs = S.content.closing, a = S.form.closing;
+      return screen(audience(), 'A few last questions', [
+        qs.map(function (q) { return closingQuestion(q, a); }),
+        el('div', { class: 'actions' }, primary('Finish', function () {
+          S.session.closing = clone(fillRanks(qs, a)); finishSession(); render();
+        }))
+      ]);
+    },
+    thanks: function () {
+      var th = S.content.thanks || {}, stopped = S.session.status === 'ended-early';
+      if (stopped) th = { heading: 'You stopped early', body: 'Thank you for the time you gave. What you did so far is kept; you can still ask for it to be deleted.' };
+      if (PARTICIPANT && S.save.mode === 'shared' && S.save.ok) {
+        return screen('Participant', th.heading || 'Thank you', [el('p', { class: 'lede', text: th.body || 'You have finished.' }),
+          el('div', { class: 'note info' }, 'Your answers are saved for the research team. You can close this page.')]);
+      }
+      if (PARTICIPANT) {
+        var text = JSON.stringify(envelope([S.session]), null, 2), name = fileName(fileCode(S.session));
+        return screen('Participant', th.heading || 'Thank you', [el('p', { class: 'lede', text: th.body || 'You have finished.' }),
+          el('div', { class: 'note info' }, el('b', { text: 'One last step: ' }), 'save your answers as a file and send it back the way you were asked to. Nothing has been sent anywhere yet.'),
+          el('div', { class: 'actions' }, primary('Save my answers', function () { saveFile(name, text).then(function (m) { handedIn(m); }); }),
+            el('button', { type: 'button', class: 'btn', 'data-k': 'copy', onclick: function () { copyText(text).then(function (m) { handedIn(m); }); } }, 'Copy instead')),
+          S.fileMessage ? el('p', { class: 'muted', role: 'status', text: S.fileMessage }) : null]);
+      }
+      return screen('Participant', th.heading || 'Thank you', [el('p', { class: 'lede', text: th.body || 'You have finished. Please hand the device back.' }),
+        el('div', { class: 'actions' }, handsOver(S.session) ? primary('Hand back to the moderator', function () { move('handoff-out'); render(); })
+          : primary('Go to debrief', function () { move('debrief'); S.form = { notes: S.session.debrief.notes, checked: false }; persist(); render(); }))]);
+    },
+    withdrawn: function () {
+      return screen('Participant', 'Your answers have been deleted', [el('p', { class: 'lede', text: 'Nothing from this session is kept. Thank you for your time.' }),
+        PARTICIPANT ? el('p', { class: 'muted', text: 'You can close this page.' })
+          : el('div', { class: 'actions' }, primary('Hand back to the moderator', function () { S.form = {}; move('setup'); render(); }))]);
+    },
+    'handoff-out': function () {
+      return screen('Moderator', 'Session finished', [el('p', { class: 'lede', text: 'The device is back with you. Add your notes before the next participant.' }),
+        el('div', { class: 'actions' }, primary('Go to debrief', function () { move('debrief'); S.form = { notes: S.session.debrief.notes, checked: false }; persist(); render(); }))]);
+    },
+    debrief: function () {
+      var f = S.form, written = function (set) { return Object.keys(set || {}).some(function (k) { var v = set[k]; return v && (v.comment || v.text); }); };
+      var hasText = S.session.runs.some(function (r) { return r.notes || written(r.answers); }) || written(S.session.closing);
+      return screen('Moderator', 'Debrief: ' + S.session.participant, [
+        el('div', { class: 'field' }, el('label', { for: 'debrief', text: 'Your notes' }), el('textarea', { id: 'debrief', class: 'input', 'data-k': 'debrief', oninput: function (e) { f.notes = e.target.value; S.session.debrief.notes = f.notes; persist(true); } }, f.notes || '')),
+        hasText ? el('label', { class: 'check' }, el('input', { type: 'checkbox', 'data-k': 'checked-text', checked: !!f.checked, onchange: function (e) { f.checked = e.target.checked; render(); } }),
+          el('span', {}, "I've checked the participant's written answers for names, emails or other personal details")) : null,
+        el('div', { class: 'actions' }, primary('Done: next participant', function () {
+          S.session.debrief = { notes: (f.notes || '').trim(), checkedFreeText: !hasText || !!f.checked }; S.session.current = null; persist();
+          S.session = null; S.form = {}; move('setup'); render();
+        }, { disabled: hasText && !f.checked }))
+      ]);
+    }
+  };
+
+  function finishLabel(t) { return (typeof method.finishLabel === 'function' ? method.finishLabel(t, led()) : method.finishLabel) || "I've finished"; }
+  function taskActions(t, check) {
+    return el('div', { class: 'actions', id: 'task-actions' },
+      method.finishButton === false || (typeof method.finishButton === 'function' && !method.finishButton(t)) ? null
+        : check.ok ? primary(finishLabel(t), function () { endTask('finished'); render(); }, { k: 'finish' })
+        : S.confirm === 'finish' ? twoStep('finish', check.confirm || 'Finish anyway', function () { endTask('finished'); })
+        : el('button', { type: 'button', class: 'btn primary', 'data-k': 'finish', disabled: !check.confirm, onclick: function () { S.confirm = 'finish'; focusKey = 'finish-no'; render(); } }, finishLabel(t)),
+      check.message ? el('span', { class: 'muted', text: check.message }) : null,
+      el('span', { class: 'spacer', style: 'flex:1' }),
+      twoStep('gave-up', (led() && method.giveUpLabel) || "I can't do this", function () { endTask('gave-up'); }));
+  }
+
+  function closingQuestion(q, a) {
+    var name = 'q-' + q.id;
+    if (q.kind === 'text') return el('div', { class: 'field' }, el('label', { for: name, text: q.prompt }), el('textarea', { id: name, class: 'input', 'data-k': name, oninput: function (e) { a[q.id] = { text: e.target.value }; } }, (a[q.id] || {}).text || ''));
+    if (q.kind === 'scale') return scale(name, q.prompt, q.labels, (a[q.id] || {}).value, function (v) { a[q.id] = { value: v }; render(); });
+    if (q.kind === 'choice' || q.kind === 'choices') {
+      var multi = q.kind === 'choices', cur = a[q.id] || (multi ? { choices: [] } : {});
+      var opts = q.options.concat(q.other ? ['Other'] : []);
+      return el('fieldset', { class: 'scale' }, el('legend', { text: q.prompt }), el('div', { style: 'display:grid;gap:6px' }, opts.map(function (o, i) {
+        var on = multi ? cur.choices.indexOf(o) >= 0 : cur.choice === o;
+        return el('label', { class: 'check' }, el('input', { type: multi ? 'checkbox' : 'radio', name: name, 'data-k': name + '-' + i, checked: on, onchange: function (e) {
+          if (multi) { cur.choices = e.target.checked ? cur.choices.concat([o]) : cur.choices.filter(function (x) { return x !== o; }); a[q.id] = cur; }
+          else a[q.id] = { choice: o, comment: (a[q.id] || {}).comment }; render();
+        } }), el('span', { text: o }));
+      })), (cur.choice === 'Other' || (cur.choices || []).indexOf('Other') >= 0 || (q.follow && cur.choice && q.follow[cur.choice])) ?
+        el('div', { class: 'field' }, el('label', { for: name + '-c', text: (q.follow && q.follow[cur.choice]) || 'Tell us more' }),
+          el('input', { id: name + '-c', class: 'input', 'data-k': name + '-c', value: cur.comment || '', oninput: function (e) { (a[q.id] = a[q.id] || cur).comment = e.target.value; } })) : null);
+    }
+    if (q.kind === 'rank') {
+      var items = (a[q.id] && a[q.id].order) || (q.items || q.options).slice();
+      var mv = function (i, d) { var o = items.slice(), j = i + d; if (j < 0 || j >= o.length) return; var t = o[i]; o[i] = o[j]; o[j] = t; a[q.id] = { order: o }; focusKey = name + '-' + j + (d < 0 ? '-up' : '-down'); announce(t + ' moved to position ' + (j + 1) + '.'); render(); };
+      return el('fieldset', { class: 'scale' }, el('legend', { text: q.prompt }), el('p', { class: 'muted', text: 'Use the arrows to put them in order, most important first.' }),
+        el('ol', { class: 'rank' }, items.map(function (it, i) {
+          return el('li', {}, el('span', { class: 'pos', 'aria-hidden': 'true', text: String(i + 1) }), el('span', { text: it }),
+            el('span', { class: 'mv' }, el('button', { type: 'button', class: 'btn', 'data-k': name + '-' + i + '-up', disabled: i === 0, 'aria-label': 'Move ' + it + ' up', onclick: function () { mv(i, -1); } }, '↑'),
+              el('button', { type: 'button', class: 'btn', 'data-k': name + '-' + i + '-down', disabled: i === items.length - 1, 'aria-label': 'Move ' + it + ' down', onclick: function () { mv(i, 1); } }, '↓')));
+        })));
+    }
+    return null;
+  }
+
+  function startSession() {
+    var f = S.form, code = (f.code || '').trim();
+    if (!CODE_RE.test(code)) { f.codeError = /\s|@/.test(code) ? 'That looks like a name or an email. Use a code like P3 instead.' : 'Enter a code: letters then numbers, like P3.'; focusKey = 'code'; render(); return; }
+    var mine = Object.keys(S.sessions).map(function (k) { return S.sessions[k]; }).filter(function (s) { return s.participant === code.toUpperCase() && !s.practice && !s.conflictWith && s.status !== 'ended-early'; });
+    var entries = S.content.repeat ? S.content.repeat.entries : 1, open = mine.some(function (s) { return s.status === 'in-progress'; });
+    if (!f.practice && (open || mine.length >= entries)) {
+      f.codeError = code.toUpperCase() + (open ? ' has a session in progress. Resume it instead.' : entries > 1 ? ' has done all ' + entries + ' sessions.' : ' already has a session. Use another code, or resume theirs.');
+      focusKey = 'code'; render(); return;
+    }
+    f.codeError = null;
+    if (!PARTICIPANT && SETUP.facilitation === 'mixed' && !f.mode) { f.codeError = 'Choose how this session is run.'; focusKey = 'mode'; render(); return; }
+    S.session = newSession(code, f.segment, f.practice, f.mode); S.sessions[S.session.id] = S.session;
+    if (S.content.repeat && !f.practice) S.session.wave = mine.length + 1;
+    S.form = {}; move(handsOver(S.session) ? 'handoff-in' : 'consent'); persist(); render();
+  }
+
+  // ---------------------------------------------------------------- moderator views
+  function setView(v) {
+    if (S.step === 'active') return;
+    S.view = v; S.confirm = null; S.lastStep = null; if (v !== 'review' && S.form.rev) S.form = {}; render();
+  }
+  // Counted in figures: real sessions that have stopped. Practice runs and unresolved imported copies are left out.
+  function done(s) { return !s.practice && !s.conflictWith && s.status !== 'in-progress'; }
+  function resultsView() {
+    var all = Object.keys(S.sessions).map(function (k) { return S.sessions[k]; }).sort(function (a, b) { return (b.startedAt || '').localeCompare(a.startedAt || ''); });
+    var real = all.filter(done), n = real.filter(function (s) { return s.status === 'completed'; }).length;
+    var rows = S.content.tasks.map(function (t) {
+      var runs = real.map(function (s) { var rs = s.runs.filter(function (r) { return r.taskId === t.id && r.status !== 'interrupted'; }); return rs[rs.length - 1]; }).filter(Boolean);
+      var judged = runs.filter(function (r) { var o = r.moderator && r.moderator.override; var ok = o ? o.success : r.outcome && r.outcome.success; return ok === true || ok === false; });
+      var passed = judged.filter(function (r) { var o = r.moderator && r.moderator.override; return (o ? o.success : r.outcome.success) === true; }).length;
+      var eases = runs.map(function (r) { return r.ease; }).filter(Boolean);
+      var extra = method.figures ? method.figures(t, runs) : [];
+      return el('tr', {}, el('td', {}, el('b', { text: t.id }), ' ', t.title), el('td', { text: String(runs.length) }),
+        el('td', { text: judged.length ? passed + ' of ' + judged.length + (judged.length < runs.length ? ' (' + (runs.length - judged.length) + ' to review)' : '') : 'Judged in the report' }),
+        el('td', { text: fmtMs(median(runs.map(function (r) { return r.durationMs; }).filter(Boolean))) }),
+        el('td', { text: eases.length ? (eases.reduce(function (a, b) { return a + b; }, 0) / eases.length).toFixed(1) + ' / 5' : '–' }),
+        el('td', { text: extra.map(function (x) { return x.label + ': ' + x.value; }).join(' · ') || '–' }));
+    });
+    var everything = JSON.stringify(envelope(all), null, 2);
+    return [
+      el('div', { class: 'card' }, el('span', { class: 'audience', text: 'Moderator' }), el('h1', { tabindex: '-1', text: 'Results so far' }),
+        el('div', { class: 'figures' },
+          el('div', { class: 'figure' }, el('b', { text: String(n) }), el('span', { text: 'completed sessions (practice left out)' })),
+          el('div', { class: 'figure' }, el('b', { text: String(real.length - n) }), el('span', { text: 'ended early' })),
+          el('div', { class: 'figure' }, el('b', { text: String(all.filter(function (s) { return s.status === 'in-progress'; }).length) }), el('span', { text: 'in progress' })),
+          el('div', { class: 'figure' }, el('b', { text: String(all.filter(function (s) { return s.practice; }).length) }), el('span', { text: 'practice runs' }))),
+        n < 5 ? el('div', { class: 'note warn' }, 'Fewer than five finished sessions: treat these figures as early signals, not results.') : null,
+        el('div', { class: 'table-box' }, el('table', {}, el('thead', {}, el('tr', {}, ['Task', 'Runs', 'Completed', 'Median time', 'Ease', method.label].map(function (h) { return el('th', { text: h }); }))), el('tbody', {}, rows))),
+        el('p', { class: 'muted', text: 'Quick figures for fieldwork only. Export the sessions and build the report with research-reporter for the full analysis.' })),
+      el('div', { class: 'card' }, el('h2', { text: 'Export and import' }),
+        el('div', { class: 'actions' },
+          el('button', { type: 'button', class: 'btn primary', 'data-k': 'export-all', onclick: function () { saveFile(fileName('all'), everything).then(function (m) { S.fileMessage = m; announce(m); render(); }); } }, 'Export all sessions'),
+          el('button', { type: 'button', class: 'btn', 'data-k': 'copy-all', onclick: function () { copyText(everything).then(function (m) { S.fileMessage = m; announce(m); render(); }); } }, 'Copy all'),
+          el('label', { class: 'btn', 'data-k': 'import' }, 'Import session files', el('input', { type: 'file', accept: '.json,application/json', multiple: true, class: 'sr-only', onchange: function (e) {
+            var files = Array.prototype.slice.call(e.target.files); var msgs = [];
+            files.reduce(function (p, f) { return p.then(function () { return importFile(f).then(function (m) { msgs.push(m); }, function (err) { msgs.push(err.message); }); }); }, Promise.resolve())
+              .then(function () { S.fileMessage = msgs.join(' '); announce(S.fileMessage); render(); });
+          } }))),
+        S.fileMessage ? el('p', { role: 'status', class: 'muted', text: S.fileMessage }) : null),
+      el('div', { class: 'card' }, el('h2', { text: 'Sessions' }),
+        all.length ? el('div', { class: 'table-box' }, el('table', {}, el('thead', {}, el('tr', {}, ['Participant', 'Segment', 'Status', 'Tasks', 'Started', ''].map(function (h) { return el('th', { text: h }); }))),
+          el('tbody', {}, all.map(function (s) {
+            return el('tr', {}, el('td', { class: 'code' }, s.participant, s.wave ? el('span', { class: 'muted', text: ' entry ' + s.wave }) : null, s.conflictWith ? el('span', { class: 'badge warn', text: ' Imported copy of ' + s.conflictWith }) : null),
+              el('td', { text: s.segment || '–' }),
+              el('td', {}, el('span', { class: 'badge ' + (s.status === 'completed' ? 'ok' : s.status === 'in-progress' ? 'warn' : ''), text: s.status }), s.practice ? el('span', { class: 'badge', text: ' practice' }) : null, s.interruptions ? el('span', { class: 'badge warn', text: ' ' + s.interruptions + ' interrupted' }) : null),
+              el('td', { text: s.runs.filter(function (r) { return r.status !== 'interrupted'; }).length + ' / ' + s.plan.order.length }),
+              el('td', { text: s.startedAt ? new Date(s.startedAt).toLocaleString() : '–' }),
+              el('td', {}, el('span', { class: 'actions' },
+                s.status !== 'in-progress' ? el('button', { type: 'button', class: 'btn quiet', 'data-k': 'review-' + s.id, onclick: function () { openReview(s); } }, 'Review') : null,
+                el('button', { type: 'button', class: 'btn quiet', 'data-k': 'export-' + s.id, onclick: function () { saveFile(fileName(fileCode(s)), JSON.stringify(envelope([s]), null, 2)).then(function (m) { S.fileMessage = m; render(); }); } }, 'Export'),
+                twoStep('delete-' + s.id, 'Delete', function () { Store.remove(s.id).then(function () { delete S.sessions[s.id]; announce('Deleted ' + s.participant + '.'); render(); }); }))));
+          })))) : el('p', { class: 'muted', text: 'No sessions yet.' }))
+    ];
+  }
+  // A moderator's judgements on a finished session, including imported ones: how it was run, an override with a
+  // reason, observation codes and notes for each task, and the debrief notes.
+  function openReview(s) { S.view = 'review'; S.form = { rev: clone(s) }; S.lastStep = null; render(); }
+  function latestRun(s, taskId) { var rs = s.runs.filter(function (r) { return r.taskId === taskId && r.status !== 'interrupted'; }); return rs[rs.length - 1]; }
+  function reviewView() {
+    var s = S.form.rev, codes = S.content.codes || [], err = S.form.revError;
+    var verdict = function (v) { return v === true ? 'Succeeded' : v === false ? 'Did not succeed' : 'Not judged by the tool'; };
+    return [el('div', { class: 'card' }, el('span', { class: 'audience', text: 'Moderator' }), el('h1', { tabindex: '-1', text: 'Review: ' + s.participant + (s.wave ? ' entry ' + s.wave : '') }),
+      el('p', { class: 'muted', text: s.status + (s.stoppedBy ? ' (stopped by the participant)' : '') + ' · started ' + new Date(s.startedAt).toLocaleString() + (s.conflictWith ? ' · imported copy' : '') }),
+      el('div', { class: 'field' }, el('label', { for: 'rev-mode', text: 'How the session was run' }),
+        el('select', { id: 'rev-mode', class: 'input', 'data-k': 'rev-mode', onchange: function (e) { s.mode = e.target.value; } },
+          Object.keys(MODES).map(function (m) { return el('option', { value: m, selected: s.mode === m, text: MODES[m] }); }))),
+      err ? el('div', { class: 'note bad', role: 'alert' }, err) : null),
+      s.plan.order.map(function (tid) {
+        var t = taskById(tid) || { id: tid, title: tid }, r = latestRun(s, tid);
+        if (!r) return el('div', { class: 'card' }, el('h2', { text: t.id + ' ' + t.title }), el('p', { class: 'muted', text: 'Not reached.' }));
+        var m = r.moderator = r.moderator || { reviewed: false, override: null, codes: {}, notes: '' }, k = 'rev-' + r.id;
+        var ov = m.override ? String(m.override.success) : '';
+        return el('div', { class: 'card' }, el('h2', { text: t.id + ' ' + t.title }),
+          el('p', { class: 'muted', text: r.status + ' · ' + fmtMs(r.durationMs) + ' · ' + verdict(r.outcome && r.outcome.success) + (r.ease ? ' · ease ' + r.ease + '/5' : '') + (r.notes ? ' · "' + r.notes + '"' : '') }),
+          el('div', { class: 'field' }, el('label', { for: k + '-ov', text: 'Your judgement' }),
+            el('select', { id: k + '-ov', class: 'input', 'data-k': k + '-ov', onchange: function (e) { var v = e.target.value; m.override = v === '' ? null : { success: v === 'true', reason: (m.override || {}).reason || '' }; render(); } },
+              [['', 'Keep the result above'], ['true', 'Succeeded'], ['false', 'Did not succeed']].map(function (o) { return el('option', { value: o[0], selected: ov === o[0], text: o[1] }); }))),
+          m.override ? el('div', { class: 'field' }, el('label', { for: k + '-why', text: 'Why (required)' }),
+            el('input', { id: k + '-why', class: 'input', 'data-k': k + '-why', value: m.override.reason || '', oninput: function (e) { m.override.reason = e.target.value; } })) : null,
+          codes.length ? el('fieldset', { class: 'scale' }, el('legend', { text: 'Observed' }), el('div', { style: 'display:flex;flex-wrap:wrap;gap:4px 18px' }, codes.map(function (c) {
+            return el('label', { class: 'check' }, el('input', { type: 'checkbox', 'data-k': k + '-c-' + c.id, checked: !!m.codes[c.id], onchange: function (e) { if (e.target.checked) m.codes[c.id] = true; else delete m.codes[c.id]; } }), el('span', { text: c.label }));
+          }))) : null,
+          el('div', { class: 'field' }, el('label', { for: k + '-n', text: 'Your notes on this task' }),
+            el('textarea', { id: k + '-n', class: 'input', 'data-k': k + '-n', oninput: function (e) { m.notes = e.target.value; } }, m.notes || '')));
+      }),
+      el('div', { class: 'card' }, el('div', { class: 'field' }, el('label', { for: 'rev-debrief', text: 'Debrief notes' }),
+        el('textarea', { id: 'rev-debrief', class: 'input', 'data-k': 'rev-debrief', oninput: function (e) { s.debrief.notes = e.target.value; } }, s.debrief.notes || '')),
+        el('div', { class: 'actions' }, primary('Save review', function () {
+          var missing = s.runs.filter(function (r) { return r.moderator && r.moderator.override && !(r.moderator.override.reason || '').trim(); });
+          if (missing.length) { S.form.revError = 'Give a reason for every judgement that differs from the tool\'s result.'; render(); return; }
+          s.plan.order.forEach(function (tid) { var r = latestRun(s, tid); if (r) { r.moderator.reviewed = true; r.moderator.notes = (r.moderator.notes || '').trim(); } });
+          s.updatedAt = iso(now());
+          Store.put(s).then(function () { S.sessions[s.id] = s; S.fileMessage = 'Review saved for ' + s.participant + '.'; announce(S.fileMessage); S.form = {}; S.view = 'results'; render(); },
+            function (e) { S.form.revError = 'Could not save: ' + e.message; render(); });
+        }), el('button', { type: 'button', class: 'btn', 'data-k': 'rev-cancel', onclick: function () { S.form = {}; S.view = 'results'; render(); } }, 'Cancel')))];
+  }
+  function contentView() {
+    var busy = Object.keys(S.sessions).some(function (k) { return S.sessions[k].status === 'in-progress'; });
+    var f = S.form.contentText != null ? S.form : (S.form = { contentText: JSON.stringify(S.content, null, 2) });
+    return [el('div', { class: 'card' }, el('span', { class: 'audience', text: 'Moderator' }), el('h1', { tabindex: '-1', text: 'Study content' }),
+      el('p', { class: 'muted', text: 'Version ' + (S.content.version || 1) + ' · ' + S.hash + '. Saving makes a new version. Sessions already started keep the version they began with.' }),
+      busy ? el('div', { class: 'note warn' }, 'A session is in progress. Finish or end it before changing the content.') : null,
+      S.contentWarnings.length ? el('div', { class: 'note warn' }, el('b', { text: 'Worth a look: ' }), S.contentWarnings.join(' ')) : null,
+      f.contentError ? el('div', { class: 'note bad', role: 'alert' }, f.contentError) : null,
+      el('textarea', { class: 'input code', 'data-k': 'content', 'aria-label': 'Study content as JSON', spellcheck: 'false', style: 'min-height:50vh', oninput: function (e) { f.contentText = e.target.value; } }, f.contentText),
+      el('div', { class: 'actions' },
+        el('button', { type: 'button', class: 'btn primary', 'data-k': 'save-content', disabled: busy, onclick: function () {
+          var next; try { next = JSON.parse(f.contentText); } catch (e) { f.contentError = 'That is not valid JSON: ' + e.message; render(); return; }
+          var v = validateContent(next); if (v.errors.length) { f.contentError = v.errors.join(' '); render(); return; }
+          if (next.studyId !== S.content.studyId) { f.contentError = 'The study id cannot change. Build a new tool for a new study.'; render(); return; }
+          next.version = (S.content.version || 1) + 1;
+          Store.putContent(next).then(function () { useContent(next); S.form = {}; S.fileMessage = ''; announce('Saved as version ' + next.version + '.'); render(); }, function (e) { f.contentError = 'Could not save: ' + e.message; render(); });
+        } }, 'Save as a new version'),
+        twoStep('reset-content', 'Go back to the built-in content', function () { Store.clearContent(); useContent(EMBEDDED); S.form = {}; announce('Back to the built-in content.'); }))
+    )];
+  }
+
+  // ---------------------------------------------------------------- dialogs, keys, theme
+  function isDark() { var t = document.documentElement.dataset.theme; return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; }
+  function toggleTheme() { document.documentElement.dataset.theme = isDark() ? 'light' : 'dark'; try { localStorage.setItem('rt:theme', document.documentElement.dataset.theme); } catch (e) {} render(); }
+  try { var th = localStorage.getItem('rt:theme'); if (th) document.documentElement.dataset.theme = th; } catch (e) {}
+
+  function dialogEl() {
+    if (S.tour && S.step === 'intro') {
+      var steps = method.tour, st = steps[S.tour.step], last = S.tour.step === steps.length - 1;
+      return el('div', { class: 'overlay' }, el('div', { class: 'dialog', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'tour-h' },
+        el('span', { class: 'audience', text: 'How it works · ' + (S.tour.step + 1) + ' of ' + steps.length }), el('h2', { id: 'tour-h', tabindex: '-1', text: st.title }), el('p', { text: st.body }),
+        el('div', { class: 'actions' }, el('button', { type: 'button', class: 'btn primary', 'data-k': 'tour-next', onclick: function () {
+          if (last) { S.cur.tourMs += now() - S.tour.openedAt; S.tour = null; focusKey = 'primary'; } else S.tour.step++; render();
+        } }, last ? 'Got it' : 'Next'))));
+    }
+    if (S.dialog === 'end') {
+      return el('div', { class: 'overlay' }, el('div', { class: 'dialog', role: 'alertdialog', 'aria-modal': 'true', 'aria-labelledby': 'end-h' },
+        el('span', { class: 'audience', text: 'Moderator' }), el('h2', { id: 'end-h', tabindex: '-1', text: 'End this session early?' }),
+        el('p', { text: 'Everything recorded so far is kept, marked as ended early. A task in progress is kept as interrupted.' }),
+        el('div', { class: 'actions' }, el('button', { type: 'button', class: 'btn danger', 'data-k': 'end-yes', onclick: function () { S.dialog = null; endEarly(); render(); } }, 'End and keep the session'),
+          el('button', { type: 'button', class: 'btn', 'data-k': 'end-no', onclick: function () { S.dialog = null; render(); } }, 'Keep going'))));
+    }
+    if (S.dialog === 'stop') {
+      return el('div', { class: 'overlay' }, el('div', { class: 'dialog', role: 'alertdialog', 'aria-modal': 'true', 'aria-labelledby': 'stop-h' },
+        el('span', { class: 'audience', text: 'Participant' }), el('h2', { id: 'stop-h', tabindex: '-1', text: 'Stop taking part?' }),
+        el('p', { text: 'You can stop now. Choose what happens to what you have done so far.' }),
+        el('div', { class: 'actions' },
+          el('button', { type: 'button', class: 'btn', 'data-k': 'stop-keep', onclick: function () { S.dialog = null; stopSession(true); render(); } }, 'Stop and keep my answers'),
+          el('button', { type: 'button', class: 'btn danger', 'data-k': 'stop-withdraw', onclick: function () { S.dialog = null; stopSession(false); render(); } }, 'Stop and delete my answers'),
+          el('button', { type: 'button', class: 'btn quiet', 'data-k': 'stop-no', onclick: function () { S.dialog = null; render(); } }, 'Keep going'))));
+    }
+    if (S.dialog === 'shortcuts') {
+      return el('div', { class: 'overlay', onclick: function (e) { if (e.target === e.currentTarget) { S.dialog = null; render(); } } }, el('div', { class: 'dialog', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'keys-h' },
+        el('h2', { id: 'keys-h', tabindex: '-1', text: 'Keyboard shortcuts' }),
+        el('div', { class: 'shortcuts' }, [['Enter', 'The main button on the screen'], ['Esc', 'Close this, cancel a confirmation, or put a card back'], ['?', 'These shortcuts'], ['1 2 3', 'Session, Results, Study content (moderator screens)'], ['T', 'Light or dark theme (moderator screens)'], ['Ctrl Shift E', 'End the current session early (moderator)']].map(function (r) { return [el('span', {}, el('span', { class: 'kbd', text: r[0] })), el('span', { text: r[1] })]; })),
+        el('div', { class: 'actions' }, el('button', { type: 'button', class: 'btn', 'data-k': 'close-keys', onclick: function () { S.dialog = null; focusKey = 'help'; render(); } }, 'Close'))));
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (e) {
+    var t = e.target, typing = t && (t.tagName === 'TEXTAREA' || (t.tagName === 'INPUT' && /^(text|search|email|number)$/i.test(t.type)) || t.tagName === 'SELECT');
+    if (e.key === 'Escape') {
+      if (S.dialog) { S.dialog = null; render(); return; }
+      if (S.confirm) { focusKey = S.confirm; S.confirm = null; render(); return; }
+      if (S.step === 'active' && method.onEscape && method.onEscape(S.cur.state, ctx)) { render(); return; }
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'E' || e.key === 'e') && S.session && !PARTICIPANT) { e.preventDefault(); S.dialog = 'end'; render(); return; }
+    if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'Enter' && t.tagName !== 'BUTTON' && t.tagName !== 'A' && !(t.tagName === 'INPUT' && t.type === 'checkbox')) {
+      var p = document.querySelector('.overlay [data-k="tour-next"]') || document.querySelector('[data-primary]:not([disabled])'); if (p) { e.preventDefault(); p.click(); } return;
+    }
+    if (e.key === '?') { S.dialog = 'shortcuts'; render(); return; }
+    var moderatorScreen = !PARTICIPANT && !(PARTICIPANT_STEPS[S.step] && S.view === 'session');
+    if (moderatorScreen && /^[123]$/.test(e.key)) { setView(['session', 'results', 'content'][+e.key - 1]); return; }
+    if (moderatorScreen && (e.key === 't' || e.key === 'T')) toggleTheme();
+  });
+
+  function render() {
+    if (!S.content) return;
+    var active = document.activeElement, key = focusKey || (active && active.getAttribute && active.getAttribute('data-k'));
+    var app = document.getElementById('app'), overlay = document.getElementById('overlay');
+    var mainKey = S.view + ':' + S.step + ':' + (S.cur ? S.cur.index : '');
+    if (S.step === 'active' && method.steady && mainKey === S.lastMain && app.querySelector('#task-actions')) {
+      var t = S.cur.task, check = method.canFinish ? method.canFinish(t, S.cur.state) : { ok: true };
+      app.querySelector('#task-actions').replaceWith(taskActions(t, check));
+      overlay.textContent = ''; var od = dialogEl(); if (od) overlay.appendChild(od);
+      var fk = focusKey || key; focusKey = null;
+      var ft = od ? od.querySelector('h2') : fk && app.querySelector('[data-k="' + fk + '"]'); if (ft) ft.focus();
+      return;
+    }
+    S.lastMain = mainKey; app.textContent = ''; overlay.textContent = '';
+    var body;
+    if (S.view === 'results' && !PARTICIPANT_STEPS[S.step]) body = resultsView();
+    else if (S.view === 'content' && !PARTICIPANT_STEPS[S.step]) body = contentView();
+    else if (S.view === 'review' && !PARTICIPANT_STEPS[S.step] && S.form.rev) body = reviewView();
+    else body = [PARTICIPANT_STEPS[S.step] && S.step !== 'consent' ? progress() : null, VIEWS[S.step]()];
+    if (S.save && !S.save.ok && PARTICIPANT_STEPS[S.step]) body.unshift(el('div', { class: 'note bad', role: 'alert' }, PARTICIPANT ? 'Your answers could not be saved on this device. Finish the tasks, then save your answers as a file at the end.' : 'Your answers could not be saved. Please let the moderator know.'));
+    app.appendChild(header());
+    app.appendChild(el('main', { class: 'wrap' + (S.step === 'active' || S.view !== 'session' ? ' wide' : '') }, body));
+    var d = dialogEl(); if (d) overlay.appendChild(d);
+    var screenKey = S.view + ':' + S.step + ':' + (S.cur ? S.cur.index : '') + ':' + (S.tour ? S.tour.step : '') + ':' + (S.dialog || '');
+    var target = null;
+    if (screenKey !== S.lastStep) { target = d ? d.querySelector('h2') : app.querySelector('main h1'); S.lastStep = screenKey; }
+    else if (key) target = app.querySelector('[data-k="' + key + '"]');
+    focusKey = null;
+    if (target) target.focus({ preventScroll: screenKey === S.lastStep && !!key && !d });
+  }
+
+  // ---------------------------------------------------------------- start
+  window.Shell = {
+    register: function (m) { method = m; },
+    el: el, announce: announce, shuffle: shuffle,
+    start: function () {
+      if (!method) { document.getElementById('app').textContent = 'No method module was built into this tool.'; return; }
+      useContent(EMBEDDED);
+      var shared = CONFIG.delivery === 'shared-link' && window.claude && window.claude.use;
+      var who = shared ? window.claude.use('user').catch(function () { return null; }) : Promise.resolve(null);
+      who.then(function (user) {
+        if (!shared) return null;
+        if (!user) { PARTICIPANT = true; return null; }
+        return Promise.all([user.canEdit().catch(function () { return false; }), user.id().catch(function () { return null; })])
+          .then(function (r) { PARTICIPANT = PARTICIPANT || !r[0]; return r[1]; });
+      }).then(function (userId) { return Store.init(userId); }).then(function () { return Store.getContent(); }).then(function (stored) { if (stored && stored.studyId === EMBEDDED.studyId) useContent(stored); return Store.loadAll(); })
+        .then(function (all) { S.sessions = all; return Store.getImports(); })
+        .then(function (imports) {
+          S.imports = imports; var all = S.sessions;
+          var hash = decodeURIComponent((location.hash || '').replace(/^#(code=)?/, ''));
+          if (PARTICIPANT && CODE_RE.test(hash)) S.form.code = hash.toUpperCase();
+          if (PARTICIPANT) {
+            var list = Object.keys(all).map(function (k) { return all[k]; }).sort(function (a, b) { return (b.updatedAt || '').localeCompare(a.updatedAt || ''); });
+            var mine = list.filter(function (s) { return s.status === 'in-progress'; })[0], unsent = list.filter(function (s) { return s.status !== 'in-progress' && !s.handedIn; })[0];
+            if (mine) resume(mine);
+            else if (unsent && !(S.save.mode === 'shared' && S.save.ok)) { S.session = unsent; S.step = 'thanks'; }
+          }
+          document.title = S.content.title + ' · ' + method.label; render();
+        })
+        .catch(function (e) { S.save.ok = false; S.save.error = e.message; render(); });
+    },
+    _state: S
+  };
+})();
+</script>
+<script id="method">{{METHOD_JS}}</script>
+<script>Shell.start();</script>
+</body>
+</html>

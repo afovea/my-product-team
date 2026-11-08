@@ -17,8 +17,9 @@ allowed-tools:
   - Agent
 context: fork
 metadata:
+  model_tier: "most-capable"
   owner: product-delivery
-  version: "1.1.0"
+  version: "1.2.0"
   language: "en-GB"
 ---
 
@@ -112,13 +113,18 @@ Always emit this block, then stop and wait for the user. Never proceed past this
 - <bullet per phase NOT running for this tier — be explicit so the user can opt back in>
 
 **State:** <skipped | uses <cache>/pipeline.json | unavailable — running without persistence>
+
+**Model:** running on <current model>; this run suits <most-capable | balanced | fast> <— switch with /model, or carry on?>
+**Sub-agents:** <none planned | which ones, what each does, the model each runs on — they add cost: approve, and set a cap>
 **Independent review:** <not configured | skipped | mandatory | opt-in>
 
 **Confirm:**
 - `go` / `approve` / `proceed` — run as classified.
 - `small` / `medium` / `large` — explicit tier override.
 - `+review` / `-review` — toggle independent review (only offered if the adapter declares one).
-- `+explore` / `-explore` — toggle the inspection sub-agent (Medium only; Large always uses it, where one is available).
+- `+explore` / `-explore` — toggle the inspection sub-agent (Medium only; Large plans it by default, where one is available).
+- `agents N` / `no agents` — approve sub-agents up to N for the whole run, or none (the work then runs in this conversation). No sub-agent starts until one of these is given; a cap the user or project instructions already set counts.
+- `carry on` / `switched` — keep the current model, or confirm the user has switched it.
 - Free-text correction (e.g. "actually also touch the migration").
 ```
 
@@ -165,9 +171,9 @@ This is the **previous 9-phase flow, unchanged**. Run all of:
 
 1. Requirements intake (interactive — wait for confirmation before shaping).
 2. Shape — run shape-task with the confirmed brief as input.
-3. Repository inspection — **always** dispatch the inspection sub-agent if the adapter declares one, and persist into `repoFindings`. Do not read files into the main thread for grounding. Where no sub-agent is available, inspect inline and say so.
-4. Architect plan — dispatch the planning sub-agent with a condensed briefing (goal, non-goals, chunk table with one-line objectives, top 5 critical files with one-line roles, pointer to the project's architecture rules if it has any). Reconcile the plan into `chunks[]`. Persist into `architectPlan`.
-5. Per-chunk execute — `execute-chunk` for each chunk in order. Inspect step uses the inspection sub-agent for any chunk needing >2 files of grounding the Phase 3 digest didn't cover. Per-chunk validation is targeted (scoped lint + affected tests + any gate the chunk touched); the full chain is deferred to Phase 8.
+3. Repository inspection — dispatch the inspection sub-agent if the adapter declares one and the user approved sub-agents in Phase B, within their cap, and persist into `repoFindings`. Do not read files into the main thread for grounding when it runs. Where no sub-agent is available or approved, inspect inline and say so.
+4. Architect plan — dispatch the planning sub-agent (with approval, within the cap; otherwise plan inline) with a condensed briefing (goal, non-goals, chunk table with one-line objectives, top 5 critical files with one-line roles, pointer to the project's architecture rules if it has any). Reconcile the plan into `chunks[]`. Persist into `architectPlan`.
+5. Per-chunk execute — `execute-chunk` for each chunk in order. Inspect step uses the inspection sub-agent, while the cap allows, for any chunk needing >2 files of grounding the Phase 3 digest didn't cover. Per-chunk validation is targeted (scoped lint + affected tests + any gate the chunk touched); the full chain is deferred to Phase 8.
 6. Per-chunk close — `close-chunk` for each chunk. PASS / PASS_WITH_NOTES continue; FAIL stops.
 7. Wrap-up — compact one-line-per-chunk outcome summary. Do not flip the trailing todo item here.
 8. Cleanup-verify — `cleanup-verify` owns the final `scope: "full"` stamp on `last-gate.json`.
@@ -265,17 +271,17 @@ If shape-task surfaces blocking questions the brief didn't anticipate, return to
 
 ## Phase 3: Repository inspection (mandatory)
 
-**Always** dispatch the inspection sub-agent named by the adapter (`integrations.subagents.inspect`) with the strategy from Phase 2. Brief it with the modules/files the strategy named, the validation commands the strategy plans to run, and the question set: implementation areas, test locations, relevant patterns, and any architecture rules the project documents that this work is likely to bump into.
+Dispatch the inspection sub-agent named by the adapter (`integrations.subagents.inspect`) with the strategy from Phase 2, once the user has approved sub-agents in Phase B and within their cap. Inspection itself is mandatory; the sub-agent is not. Brief it with the modules/files the strategy named, the validation commands the strategy plans to run, and the question set: implementation areas, test locations, relevant patterns, and any architecture rules the project documents that this work is likely to bump into.
 
 Thoroughness `medium` by default; `very thorough` only when the strategy is genuinely uncertain.
 
-Where the host provides no isolated-context sub-agent, inspect inline, keep the digest just as tight, and note in the report that inspection ran in the main context.
+Where the host provides no isolated-context sub-agent, or the user did not approve one, inspect inline, keep the digest just as tight, and note in the report that inspection ran in the main context.
 
 Persist into `repoFindings` and emit a one-screen digest under `## Repository Findings`. Do not paste full file dumps.
 
 ## Phase 4: Architect plan
 
-Dispatch the planning sub-agent named by the adapter (`integrations.subagents.plan`) with a **condensed** briefing — the agent forks, so every line you send inflates the fork.
+With sub-agents approved and the cap not reached, dispatch the planning sub-agent named by the adapter (`integrations.subagents.plan`); otherwise write the plan inline from the same material. Give it a **condensed** briefing — the agent forks, so every line you send inflates the fork.
 
 Send exactly:
 
@@ -294,7 +300,7 @@ Persist into `architectPlan`.
 For every chunk in order, run execute-chunk (interpret → inspect → plan → implement → validate → record).
 
 Two cost rules:
-- **Inspect uses the sub-agent** when a chunk needs >2 files of grounding the Phase 3 digest didn't cover.
+- **Inspect uses the sub-agent** when a chunk needs >2 files of grounding the Phase 3 digest didn't cover, while the approved cap allows; otherwise inline.
 - **Per-chunk validation is targeted**: scoped `<lint>` + `<test.affected>` + any gate whose scope the chunk actually touched. The full gate chain and full test suite are deferred to Phase 8.
 
 Apply the Scope Guard whenever unexpected surface appears.
@@ -380,6 +386,13 @@ Drift list, gate-by-gate, baseline comparison. Stamp written: yes/no.
 
 Apply these as additions to the existing output, not as separate phases.
 
+## Model and sub-agents
+
+Before substantial work, settle two things with the user, once per task: not on every turn, and not again when an orchestrating skill such as `run-pipeline` already has. Trivial work needs neither.
+
+**1. The model.** In one line, say which model you are running on (from your own system information, or say you cannot tell) and which tier the task needs: `most-capable` (Claude Opus), `balanced` (Sonnet) or `fast` (Haiku), or the host's equivalents. Start from this skill's `metadata.model_tier`; move up for high-stakes or hard-to-reverse decisions, ambiguous problems, long multi-step work or a large codebase, and down for lookups, short rewrites, formatting and mechanical checks. If the current model is not that tier, say what that means (more cost, or a risk of falling short), ask whether to switch or carry on, and wait. You cannot switch it yourself: the user does, with `/model` or the app's model menu.
+
+**2. Sub-agents.** Never start sub-agents, parallel agents or a multi-agent workflow on your own initiative, whatever this skill says elsewhere. First say why they would help, what each would do, which model each would use, and that they add cost. Then ask the user to set a cap, as a multiple-choice question: don't use sub-agents (work in this conversation) · up to 2 · up to 5 · another number. The cap covers every sub-agent for the whole task; ask again before going over it. A cap already set by the user or the project's instructions counts. Without approval, work in this conversation.
 
 ## PPoT integration
 

@@ -1,0 +1,208 @@
+{
+  "studyId": "pricing-page-reactions",
+  "title": "Pricing page reactions",
+  "version": 1,
+  "brief": {
+    "body": "You'll look at a few versions of a pricing page and answer short questions about each. Some appear only briefly. About 6 minutes.",
+    "minutes": 6
+  },
+  "consent": {
+    "notice": 1,
+    "heading": "Before you begin",
+    "text": "We record your answers, how long each task takes and anything you type. You are identified only by a code, never your name.\n\nYour answers stay on this device until the research team exports them, are used only for this study, and are deleted 90 days after it ends. You can stop at any time.",
+    "items": [
+      {
+        "id": "data-notice",
+        "label": "I've read how my answers will be used",
+        "required": true
+      },
+      {
+        "id": "over-18",
+        "label": "I'm 18 or over",
+        "required": true
+      }
+    ]
+  },
+  "segments": [
+    {
+      "id": "new",
+      "label": "New to the product"
+    },
+    {
+      "id": "customer",
+      "label": "Current customer"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "At a glance, people can tell what the page is for and which plan is recommended."
+    },
+    {
+      "id": "H2",
+      "statement": "People prefer the layout with the recommended plan highlighted."
+    },
+    {
+      "id": "H3",
+      "statement": "The cancellation terms are understood without help."
+    }
+  ],
+  "shuffleTasks": false,
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "First impression",
+      "hypothesis": "H1",
+      "scenario": "A page will appear for five seconds. Look at it as you normally would.",
+      "exposureMs": 5000,
+      "ease": false,
+      "notesPrompt": false,
+      "questionsHeading": "What do you remember?",
+      "stimuli": [
+        {
+          "id": "page",
+          "image": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20820%20420%22%3E%3Crect%20width%3D%22820%22%20height%3D%22420%22%20fill%3D%22%23f4f5f8%22/%3E%3Ctext%20x%3D%2240%22%20y%3D%2270%22%20font-size%3D%2230%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EChoose%20your%20plan%3C/text%3E%3Crect%20x%3D%2240%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22150%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EStarter%3C/text%3E%3Ctext%20x%3D%22150%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A34%3C/text%3E%3Crect%20x%3D%2270%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3Crect%20x%3D%22290%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3ETeam%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%232f5bd3%22%3E%C2%A39%3C/text%3E%3Crect%20x%3D%22320%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%232f5bd3%22/%3E%3Crect%20x%3D%22540%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22650%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EBusiness%3C/text%3E%3Ctext%20x%3D%22650%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A319%3C/text%3E%3Crect%20x%3D%22570%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3C/svg%3E",
+          "alt": "A pricing page with three plans side by side: Starter £4, Team £9 highlighted, and Business £19."
+        }
+      ],
+      "questions": [
+        {
+          "id": "purpose",
+          "kind": "text",
+          "prompt": "What was the page for?",
+          "required": true
+        },
+        {
+          "id": "recommended",
+          "kind": "choice",
+          "prompt": "Which plan did the page recommend?",
+          "options": [
+            "Starter",
+            "Team",
+            "Business",
+            "I didn't notice"
+          ],
+          "correct": "Team"
+        }
+      ]
+    },
+    {
+      "id": "T2",
+      "title": "Layout preference",
+      "hypothesis": "H2",
+      "scenario": "Compare these two layouts. Take as long as you like, then press Continue.",
+      "ease": false,
+      "notesPrompt": false,
+      "stimuli": [
+        {
+          "id": "A",
+          "label": "Layout A",
+          "image": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20820%20420%22%3E%3Crect%20width%3D%22820%22%20height%3D%22420%22%20fill%3D%22%23f4f5f8%22/%3E%3Ctext%20x%3D%2240%22%20y%3D%2270%22%20font-size%3D%2230%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EChoose%20your%20plan%3C/text%3E%3Crect%20x%3D%2240%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22150%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EStarter%3C/text%3E%3Ctext%20x%3D%22150%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A34%3C/text%3E%3Crect%20x%3D%2270%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3Crect%20x%3D%22290%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3ETeam%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%232f5bd3%22%3E%C2%A39%3C/text%3E%3Crect%20x%3D%22320%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%232f5bd3%22/%3E%3Crect%20x%3D%22540%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22650%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EBusiness%3C/text%3E%3Ctext%20x%3D%22650%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A319%3C/text%3E%3Crect%20x%3D%22570%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3C/svg%3E",
+          "alt": "Layout A: three plans, with Team highlighted in blue."
+        },
+        {
+          "id": "B",
+          "label": "Layout B",
+          "image": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20820%20420%22%3E%3Crect%20width%3D%22820%22%20height%3D%22420%22%20fill%3D%22%23f4f5f8%22/%3E%3Ctext%20x%3D%2240%22%20y%3D%2270%22%20font-size%3D%2230%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EChoose%20your%20plan%3C/text%3E%3Crect%20x%3D%2240%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22150%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EStarter%3C/text%3E%3Ctext%20x%3D%22150%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A34%3C/text%3E%3Crect%20x%3D%2270%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3Crect%20x%3D%22290%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3ETeam%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222222%22%3E%C2%A39%3C/text%3E%3Crect%20x%3D%22320%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23222222%22/%3E%3Crect%20x%3D%22540%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22650%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EBusiness%3C/text%3E%3Ctext%20x%3D%22650%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A319%3C/text%3E%3Crect%20x%3D%22570%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3C/svg%3E",
+          "alt": "Layout B: three plans, all styled the same."
+        }
+      ],
+      "questions": [
+        {
+          "id": "pick",
+          "kind": "choice",
+          "prompt": "Which layout would you rather use?",
+          "options": [
+            "Layout A",
+            "Layout B",
+            "No preference"
+          ],
+          "required": true
+        },
+        {
+          "id": "why",
+          "kind": "text",
+          "prompt": "Why?"
+        }
+      ]
+    },
+    {
+      "id": "T3",
+      "title": "Cancellation terms",
+      "hypothesis": "H3",
+      "scenario": "Read the terms below, then press Continue.",
+      "stimuli": [
+        {
+          "id": "terms",
+          "text": "You can cancel at any time from Settings. If you cancel within 14 days of paying, we refund you in full.\n\nAfter 14 days, your plan stays active until the end of the billing period and is not refunded."
+        }
+      ],
+      "questions": [
+        {
+          "id": "refund",
+          "kind": "choice",
+          "prompt": "You cancel 20 days after paying. What happens?",
+          "options": [
+            "I get a full refund",
+            "I get part of my money back",
+            "My plan runs to the end of the period, with no refund",
+            "It doesn't say"
+          ],
+          "correct": "My plan runs to the end of the period, with no refund",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "T4",
+      "title": "Words for the page",
+      "scenario": "Look at this page again, then press Continue.",
+      "ease": false,
+      "notesPrompt": false,
+      "stimuli": [
+        {
+          "id": "page",
+          "image": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20820%20420%22%3E%3Crect%20width%3D%22820%22%20height%3D%22420%22%20fill%3D%22%23f4f5f8%22/%3E%3Ctext%20x%3D%2240%22%20y%3D%2270%22%20font-size%3D%2230%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EChoose%20your%20plan%3C/text%3E%3Crect%20x%3D%2240%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22150%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EStarter%3C/text%3E%3Ctext%20x%3D%22150%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A34%3C/text%3E%3Crect%20x%3D%2270%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3Crect%20x%3D%22290%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22400%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3ETeam%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%232f5bd3%22%3E%C2%A39%3C/text%3E%3Crect%20x%3D%22320%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%232f5bd3%22/%3E%3Crect%20x%3D%22540%22%20y%3D%22120%22%20width%3D%22220%22%20height%3D%22260%22%20rx%3D%2214%22%20fill%3D%22%23fff%22%20stroke%3D%22%23c9ccd4%22/%3E%3Ctext%20x%3D%22650%22%20y%3D%22170%22%20text-anchor%3D%22middle%22%20font-size%3D%2222%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3EBusiness%3C/text%3E%3Ctext%20x%3D%22650%22%20y%3D%22220%22%20text-anchor%3D%22middle%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20font-family%3D%22sans-serif%22%20fill%3D%22%23222%22%3E%C2%A319%3C/text%3E%3Crect%20x%3D%22570%22%20y%3D%22320%22%20width%3D%22160%22%20height%3D%2240%22%20rx%3D%228%22%20fill%3D%22%23e6e8ee%22/%3E%3C/svg%3E",
+          "alt": "The same pricing page: Starter £4, Team £9 highlighted, Business £19."
+        }
+      ],
+      "questions": [
+        {
+          "id": "words",
+          "kind": "choices",
+          "prompt": "Pick the words that describe it best (up to five).",
+          "options": [
+            "Clear",
+            "Confusing",
+            "Trustworthy",
+            "Pushy",
+            "Simple",
+            "Cluttered",
+            "Professional",
+            "Cheap-looking",
+            "Fair",
+            "Expensive"
+          ]
+        }
+      ]
+    }
+  ],
+  "closing": [
+    {
+      "id": "sign-up",
+      "kind": "scale",
+      "prompt": "How likely would you be to choose a plan on this page?",
+      "labels": [
+        "Very unlikely",
+        "Unlikely",
+        "Not sure",
+        "Likely",
+        "Very likely"
+      ]
+    }
+  ],
+  "thanks": {
+    "heading": "Thank you",
+    "body": "That's everything. Please hand the device back."
+  }
+}

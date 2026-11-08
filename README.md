@@ -1,8 +1,8 @@
 # product-team-skills
 
-A coordinated product team as **31 Agent Skills** — 22 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice — with a routing brain that decides which one a request belongs to.
+A coordinated product team as **32 Agent Skills** — 23 role perspectives, an 8-skill delivery pipeline, and a Project Point of Truth practice — with a routing brain that decides which one a request belongs to.
 
-Invoke a role when you want a specific discipline's judgement: a PRD, a component spec, an accessibility review, a brand review, a threat model, a motion spec, an animated explainer, a usability test report, a release decision. Run the pipeline when a coding task should be classified, chunked and verified rather than just done.
+Invoke a role when you want a specific discipline's judgement: a PRD, a component spec, an accessibility review, a brand review, a threat model, a motion spec, an animated explainer, a usability study tool, a usability test report, a release decision. Run the pipeline when a coding task should be classified, chunked and verified rather than just done.
 
 Every role is project-agnostic, so the same suite works on any codebase without dragging another project's context along.
 
@@ -29,7 +29,8 @@ The same model as a FigJam workshop kit: a run-sheet per capability, timed zones
   - [F · Codex, and other `SKILL.md` hosts](#f--codex-and-other-skillmd-hosts)
 - [Invoking a skill](#invoking-a-skill) — naming a role in chat, `/name` in Claude Code, and why automatic selection differs by host
 - [Project Point of Truth](#project-point-of-truth) — the `/ppot` practice and the pull/push handshake every skill uses
-- [The 31 skills](#the-31-skills) — every role and pipeline skill, grouped, with when to reach for it
+- [Model and sub-agents](#model-and-sub-agents) — every skill checks the model against the task, and asks before starting sub-agents
+- [The 32 skills](#the-32-skills) — every role and pipeline skill, grouped, with when to reach for it
 - [The Figma board](#the-figma-board) — the FigJam companion a team runs the work on
 - [Install options](#install-options) — all routes compared, and what each one actually gives you
   - [Which route](#which-route)
@@ -57,10 +58,10 @@ most common failed install.
 |---|---|---|
 | **Claude web** — `claude.ai` in a browser, chatting | Upload each role | [A](#a--claude-web-claudeai-in-a-browser) |
 | **Claude app** — desktop app, **Chat** tab | Upload each role | [B](#b--claude-app-chat-tab) |
-| **Claude app** — desktop app, **Code** tab | Two typed lines, all 31 | [C](#c--claude-app-code-tab-claude-code) |
-| **Claude Code** — a terminal | Two typed lines, all 31 | [D](#d--claude-code-in-a-terminal) |
+| **Claude app** — desktop app, **Code** tab | Two typed lines, all 32 | [C](#c--claude-app-code-tab-claude-code) |
+| **Claude Code** — a terminal | Two typed lines, all 32 | [D](#d--claude-code-in-a-terminal) |
 | **Claude Code on the web** — `claude.ai/code`, cloud sessions | A committed settings file | [E](#e--claude-code-on-the-web-cloud-sessions) |
-| **Codex** — or any host reading `SKILL.md` | One command, all 31 | [F](#f--codex-and-other-skillmd-hosts) |
+| **Codex** — or any host reading `SKILL.md` | One command, all 32 | [F](#f--codex-and-other-skillmd-hosts) |
 
 ---
 
@@ -73,7 +74,7 @@ Chat, in a browser. Download the roles you want and upload them.
 2. Download a role — say
    [product-designer.zip](https://github.com/afovea/my-product-team/raw/main/download/product-designer.zip)
    or [product-manager.zip](https://github.com/afovea/my-product-team/raw/main/download/product-manager.zip).
-   All 31 are in [`download/`](./download). **Do not unzip them.**
+   All 32 are in [`download/`](./download). **Do not unzip them.**
 3. **Settings → Capabilities → Skills → +** → upload the file → switch it on.
 4. Ask for what you want, naming the role: *"As a product designer, our reports
    page is blank for new users. Design the empty state."*
@@ -96,7 +97,7 @@ Already done it in the browser? Your skills are already here. Skip this.
 
 ### C · Claude app, Code tab (Claude Code)
 
-Not chat — this is Claude Code inside the app. Installs all 31 at once, with no
+Not chat — this is Claude Code inside the app. Installs all 32 at once, with no
 terminal: the two lines go into the ordinary message box.
 
 ```
@@ -169,7 +170,7 @@ cd my-product-team
 ./install.sh --agents --personal
 ```
 
-All 31 into `~/.agents/skills/`, available in every project. Restart Codex, then:
+All 32 into `~/.agents/skills/`, available in every project. Restart Codex, then:
 
 ```
 $product-manager Turn this vague feature request into a delivery-ready ticket.
@@ -248,7 +249,7 @@ explicitly with `/name`, or via [the routing brain](#the-routing-brain-optional-
 when you don't know which discipline you want.
 
 Codex is told the same thing in its own dialect. It does not read
-`disable-model-invocation`, so each of those 30 skills carries an
+`disable-model-invocation`, so each of those 31 skills carries an
 `agents/openai.yaml` setting `policy.allow_implicit_invocation: false`. Without
 that file the roles would fire on their own there — the exact behaviour measured
 and rejected above. CI checks the two stay in step, so a new skill cannot suppress
@@ -304,7 +305,26 @@ and the pull/push handshake used by every skill.
 
 [↑ Back to contents](#contents)
 
-## The 31 skills
+## Model and sub-agents
+
+Every skill carries the same short section, so the behaviour is the same whichever skill runs:
+
+1. **It checks the model.** Before substantial work, the skill says in one line which model is running and which tier the task needs: `most-capable` (Opus), `balanced` (Sonnet) or `fast` (Haiku), or the host's equivalents. Each skill has a usual tier (`metadata.model_tier` in its frontmatter), moved up for high-stakes, ambiguous or long work and down for lookups and mechanical checks. If the two differ, it asks whether to switch or carry on. A skill cannot switch the model itself; you do, with `/model` or the app's model menu.
+2. **It asks before sub-agents.** No skill starts sub-agents, parallel agents or a multi-agent workflow on its own. It says why they would help, what each would do and which model each would use, then asks you to set a cap: none, up to 2, up to 5, or another number. The cap covers the whole task. A cap already set in your instructions counts.
+
+Both happen once per task. When `run-pipeline` orchestrates other skills, it settles them in its plan, and the skills it calls do not ask again.
+
+| Usual tier | Skills |
+|---|---|
+| `most-capable` | diagnose, pricing-strategist, product-strategist, research-tool-builder, run-pipeline, security-specialist, storm-researcher, technical-architect |
+| `fast` | cleanup-verify, requirements-generator |
+| `balanced` | every other skill |
+
+The section's text lives once, in [`reference/model-and-sub-agents.md`](./reference/model-and-sub-agents.md). Each skill keeps its own copy, because skills install one at a time; `python3 scripts/sync-shared-sections.py` refreshes every copy, and `scripts/verify.sh` fails if one drifts or a skill has no tier.
+
+[↑ Back to contents](#contents)
+
+## The 32 skills
 
 ### Shared project knowledge
 
@@ -330,6 +350,7 @@ and the pull/push handshake used by every skill.
 | `/data-analyst` | Metrics, dashboards, funnels, experiments, behavioural evidence |
 | `/customer-success` | Customer feedback, retention signals, adoption blockers |
 | `/storm-researcher` | Contested or strategic research — five-perspective scan, contradiction mapping, adversarial review |
+| `/research-tool-builder` | Consistent offline tools for any research method, from card sorts and tree tests to five-second, preference and diary studies, exporting one session format |
 | `/research-reporter` | Usability test results turned into a consistent, brandable, editable stakeholder report |
 
 ### Design and experience
@@ -393,7 +414,7 @@ exact error text. The summary:
 
 | Route | Command | You get |
 |---|---|---|
-| **Plugin** *(recommended)* | `/plugin install product-team` | All 31 skills **plus** the gate hook. Updatable with one command. No routing brain |
+| **Plugin** *(recommended)* | `/plugin install product-team` | All 32 skills **plus** the gate hook. Updatable with one command. No routing brain |
 | **Desktop app** | **+** → Plugins → Add plugin | The same, without a terminal |
 | **Cloud / web** | two keys in the repo's `.claude/settings.json` | The same, for everyone opening a cloud session on that repo |
 | **Routing only** | `install.sh --routing-only /path/to/project` | The routing brain alone, for when the plugin already supplies the skills |
@@ -417,7 +438,7 @@ It copies the skills, appends the routing brain to `CLAUDE.md` — or `AGENTS.md
 ### Which route
 
 - **Just want the skills?** Plugin — terminal, desktop app, or a committed `.claude/settings.json` for cloud sessions.
-- **Want role arbitration too?** Plugin *plus* `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 31 skills on disk, which claims the bare `/name` and then goes stale independently of the plugin.
+- **Want role arbitration too?** Plugin *plus* `install.sh --routing-only` (add `--agents` on Codex). Routing lives in `CLAUDE.md` or `AGENTS.md`, which is per-project, so no plugin can carry it. Use `--routing-only` rather than a full per-project install: the latter puts a second copy of all 32 skills on disk, which claims the bare `/name` and then goes stale independently of the plugin.
 - **Want it pinned and tracked in the consuming repo?** Submodule.
 - **On claude.ai or the desktop app's Chat tab?** Those are a different product from Claude Code — download a ZIP from [`download/`](./download) and upload it, per [INSTALL.md](./INSTALL.md#part-4--claude-for-chatting-browser-or-chat-tab).
 
@@ -431,7 +452,7 @@ Enterprise overrides personal, and personal overrides project. Plugin skills are
 
 ### Context cost, and how to turn it down
 
-Installing 31 skills is not free. Two different costs, and the second is the one that actually bites.
+Installing 32 skills is not free. Two different costs, and the second is the one that actually bites.
 
 **Always-on** — every skill's `name` and `description` are preloaded into the system prompt so the host knows what exists. That is **~2,300 tokens on every session**, including projects with nothing to do with product work. Nothing else loads until a skill is invoked.
 
@@ -634,7 +655,7 @@ my-product-team/
 ├── .codex-plugin/
 │   └── plugin.json                   # the same, for Codex. Points at skills/
 │                                     #   and hooks/, so nothing is duplicated
-├── skills/                           # all 31 skills, flat, one directory each
+├── skills/                           # all 32 skills, flat, one directory each
 │   ├── product-manager/
 │   │   ├── SKILL.md
 │   │   └── agents/openai.yaml        # Codex display name + invocation policy
@@ -666,8 +687,10 @@ my-product-team/
 │   └── ...                           #   without a terminal. CI keeps it in sync
 ├── scripts/
 │   ├── gate-chain.py                 # standalone gate chain runner
+│   ├── sync-shared-sections.py       # keeps every skill's shared section identical
 │   └── package-skills.sh             # rebuilds download/
 ├── reference/                        # shared docs, deliberately not skills
+│   ├── model-and-sub-agents.md       # the section every skill carries a copy of
 │   ├── project-adapter.md
 │   └── state-schema.md
 ├── docs/
@@ -679,7 +702,7 @@ my-product-team/
 └── README.md
 ```
 
-`reference/` holds documents that five pipeline skills share. They are not skills, so they sit outside `skills/` rather than being forced into a directory that pretends otherwise.
+`reference/` holds documents that five pipeline skills share, and the canonical text of the section every skill carries. They are not skills, so they sit outside `skills/` rather than being forced into a directory that pretends otherwise.
 
 [↑ Back to contents](#contents)
 
@@ -687,8 +710,9 @@ my-product-team/
 
 - All skills use **UK English**.
 - Every skill carries the standard `name` and `description`. Role and pipeline skills additionally use the repository's Claude-specific invocation and metadata fields. The PPoT practice keeps portable minimal frontmatter.
-- Every skill also carries an `agents/openai.yaml` with its display name and short description for Codex. The 29 that set `disable-model-invocation: true` add `policy.allow_implicit_invocation: false` there, which is the same instruction in Codex's dialect; `ppot` deliberately omits it. `scripts/verify.sh` fails if the two ever disagree, so adding a skill means adding both.
+- Every skill also carries an `agents/openai.yaml` with its display name and short description for Codex. The 31 that set `disable-model-invocation: true` add `policy.allow_implicit_invocation: false` there, which is the same instruction in Codex's dialect; `ppot` deliberately omits it. `scripts/verify.sh` fails if the two ever disagree, so adding a skill means adding both.
 - Keep skill bodies **under 500 lines**, per [Anthropic's authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices). Past that, move detail into that skill's `references/` and link to it with a stated trigger for when to read it.
+- Every skill carries the shared `## Model and sub-agents` section and a `metadata.model_tier`. Edit the section only in `reference/model-and-sub-agents.md`, then run `python3 scripts/sync-shared-sections.py`.
 - Every skill ends with `## Maintenance` listing its review triggers. Treat that as a versioning prompt: bump role and pipeline skill metadata when their behaviour changes, and bump the plugin version when the shared PPoT practice changes.
 
 [↑ Back to contents](#contents)
