@@ -7,7 +7,7 @@ disable-model-invocation: true
 metadata:
   model_tier: "most-capable"
   owner: product-delivery
-  version: "1.4.0"
+  version: "1.5.0"
   language: "en-GB"
   persona_type: "security specialist"
   upstream_references:
@@ -483,6 +483,16 @@ Update:
 - audit categories
 - regression prompts
 - known limits
+
+## Works with
+
+- **Takes work from:** `technical-architect` (designs to threat-model); `software-engineer`, `technical-architect` and `design-systems-specialist` (dependencies, foundations and their licences); `devops-engineer` (secrets, headers, infrastructure); `run-pipeline` (chunks on risky paths); `research-tool-builder` (participant data); `brand-guardian` (impersonation).
+- **Hands work to:** `software-engineer` (fixes); `qa-engineer` (regression guards); `devops-engineer` (secrets and headers); the release owner (findings for the release decision).
+- **Workflows:** W2 Test with users, W5 Decide and make ready, W6 Build a ticket, W7 Release, W11 Product health check, W12 Red-team a bet, W15 Adopt a library or component (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

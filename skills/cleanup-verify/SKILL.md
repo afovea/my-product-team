@@ -13,6 +13,7 @@ allowed-tools:
   - Bash
 metadata:
   model_tier: "fast"
+  version: "1.0.0"
 ---
 
 You are a post-implementation cleanup and verification skill.
@@ -103,6 +104,8 @@ Report files compared and any mismatch. A mismatch usually means step 3 did not 
 Run each gate in `gates.chain` **individually** so the report distinguishes which passed. Do not run them as one combined command — a single aggregate exit code hides which gate failed.
 
 Record a pass/fail table. For each ratcheted gate, record the current count and the delta against step 1's baseline.
+
+When the suite's `scripts/gate-chain.py` is available, run the chain through it (`python3 <suite>/scripts/gate-chain.py run --stamp`). It runs the gates one by one, enforces ratchet baselines, and reports each gate separately, so it satisfies this step. It also writes the Stop hook's tree stamp, so the hook does not run the chain a second time at the end of the turn. Take the pass/fail table from its JSON summary.
 
 ### 6. Run tests
 
@@ -195,7 +198,7 @@ State is optional — see [`state-schema.md`](../../reference/state-schema.md). 
 
 Read `<cache>/pipeline.json` at entry to:
 
-- confirm `run.status` is `complete` or `blocked`; this is a post-run pass, not for in-flight runs;
+- confirm `run.status` is `verifying`, `complete` or `blocked`; this is a post-run pass, not for a run still executing chunks;
 - pull `filesChanged` across closed chunks into the report as touched-files context.
 
 On exit:
@@ -208,6 +211,16 @@ When invoked with arguments, treat `$ARGUMENTS` as the expected pre-run baseline
 
 Baseline hint:
 $ARGUMENTS
+
+## Works with
+
+- **Takes work from:** `run-pipeline` (the end of a run); `close-chunk` (the last chunk closed); or any code change.
+- **Hands work to:** `run-pipeline` (drift as a new chunk, or a clean sweep that ends the run).
+- **Workflows:** W6 Build a ticket (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

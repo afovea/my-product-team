@@ -29,7 +29,7 @@ done
 
 PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/product-team-skills-pycache"
 export PYTHONPYCACHEPREFIX
-for p in scripts/gate-chain.py scripts/sync-shared-sections.py hooks/gate-stop.py; do
+for p in scripts/gate-chain.py scripts/sync-shared-sections.py scripts/check-handoffs.py hooks/gate-stop.py; do
   if python3 -m py_compile "$p" 2>/dev/null; then ok "$p"; else bad "$p does not compile"; fi
 done
 
@@ -97,6 +97,10 @@ done
 # Skills install one at a time, so each carries its own copy; this catches a copy that drifts.
 group "Skills carry the shared model and sub-agent section"
 if python3 scripts/sync-shared-sections.py --check; then :; else FAILED=1; fi
+
+# Each skill names who it takes work from and hands work to; a link that goes one way strands work.
+group "Skill handoffs go both ways"
+if python3 scripts/check-handoffs.py; then :; else FAILED=1; fi
 
 # ------------------------------------------------------------------- zips
 

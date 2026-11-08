@@ -7,7 +7,7 @@ disable-model-invocation: true
 metadata:
   model_tier: "balanced"
   owner: product-delivery
-  version: "1.3.0"
+  version: "1.4.0"
   language: "en-GB"
   persona_type: "software engineer"
   tags:
@@ -342,6 +342,16 @@ Update:
 - examples
 - regression prompts
 - output contracts
+
+## Works with
+
+- **Takes work from:** `technical-architect` (the ADR); `product-manager` (feasibility questions); `design-systems-specialist` and `motion-designer` (components and motion to build); `diagnose` (a verified cause, outside a pipeline run); `accessibility-specialist` and `security-specialist` (remediation).
+- **Hands work to:** `technical-architect` (a dependency every product would rely on); `security-specialist` (risky-path review, licences); `qa-engineer` (what to test).
+- **Workflows:** W3 Define the bet, W4 Develop the solution, W6 Build a ticket, W9 Investigate a product question, W11 Product health check, W14 Stand up or audit a design system, W15 Adopt a library or component (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

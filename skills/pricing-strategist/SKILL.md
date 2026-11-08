@@ -7,7 +7,7 @@ disable-model-invocation: true
 metadata:
   model_tier: "most-capable"
   owner: product-delivery
-  version: "1.2.0"
+  version: "1.3.0"
   language: "en-GB"
   persona_type: "pricing strategist"
   tags:
@@ -352,6 +352,16 @@ Update:
 - pricing model reference table
 - regression prompts
 - output contracts
+
+## Works with
+
+- **Takes work from:** `data-analyst` (usage, revenue and churn); `customer-success` (retention risk); `product-strategist` (commercial model questions); `ux-researcher` (willingness-to-pay evidence).
+- **Hands work to:** `growth-product-marketing-manager` (paywall and upgrade experiments); `data-analyst` (experiment readouts); `brand-guardian` (pricing-page claims); `product-manager` (the recommendation to decide on).
+- **Workflows:** W3 Define the bet, W11 Product health check, W12 Red-team a bet, W13 Price and package (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

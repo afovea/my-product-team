@@ -47,7 +47,7 @@ Ordered list of every gate that must pass for a `scope: "full"` stamp. Each entr
 - **blocking** — `true`, or `false` for a gate that is expected to fail
 - **baseline** — for non-blocking gates, the currently accepted failure count, and how to read it from the output
 
-A gate with `blocking: false` and a baseline is a *ratchet*: the run fails if the count gets worse, passes if it stays the same or improves. Record the baseline here so a regression is detectable. **If any gate in the chain is non-blocking, a `scope: "full"` stamp requires every blocking gate to pass and every ratchet to be no worse than baseline** — never stamp `full` while ignoring a worsened ratchet.
+A gate with `blocking: false` and a baseline is a *ratchet*: the run fails if the count gets worse, passes if it stays the same or improves. `scripts/gate-chain.py` enforces it: it reads this list, takes the last number from the gate's output after `read` has filtered it, and fails the chain when that number exceeds `accepted` or cannot be found. Record the baseline here so a regression is detectable. **If any gate in the chain is non-blocking, a `scope: "full"` stamp requires every blocking gate to pass and every ratchet to be no worse than baseline** — never stamp `full` while ignoring a worsened ratchet.
 
 ### `artefacts`
 

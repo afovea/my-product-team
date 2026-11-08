@@ -12,10 +12,9 @@ Behaviour:
   gates fail           -> {"decision": "block"} with the failing output
   repeated failures    -> stops blocking after MAX_BLOCKS, warns the user
 
-The run-open sentinel is a state file written by the pipeline and removed
-when the run closes. Point STATE_FILES at whatever your state contract
-actually uses; a run is treated as open when the file exists and does not
-carry "gate_required": false.
+The run-open sentinel is the pipeline's state file. A run is open while the
+file exists, does not carry "gate_required": false, and, where it records a
+run status (run-pipeline's `pipeline.json`), that status is not finished.
 """
 
 from __future__ import annotations
@@ -27,10 +26,15 @@ import sys
 from pathlib import Path
 
 # A run is treated as open when the pipeline has left a state file behind.
-# Rather than hardcode one filename, look for anything state-shaped under
-# .claude/, so this keeps working if the state contract is renamed.
-STATE_GLOBS = ("*state*.json", "pipeline/*.json", "pipeline/*/*.json")
+# run-pipeline writes <state.directory>/pipeline.json (default .claude/cache/);
+# `*/pipeline.json` also covers a project that moves the directory one level.
+# The other patterns keep older or renamed state contracts working.
+STATE_GLOBS = ("pipeline.json", "*/pipeline.json", "*state*.json",
+               "pipeline/*.json", "pipeline/*/*.json")
 OPT_OUT_KEY = "gate_required"   # set false in the state file to skip the gates
+# run.status values (reference/state-schema.md) after which a run no longer
+# needs gating. Without them a finished run would gate every turn for ever.
+CLOSED_STATUSES = {"complete", "complete_with_findings"}
 
 MAX_BLOCKS = 3          # consecutive blocks before deferring to the human
 GATE_DIR = ".gate"      # everything this tool leaves behind lives here
@@ -91,6 +95,9 @@ def open_run(root: Path) -> bool:
         except (json.JSONDecodeError, OSError):
             return True  # unreadable state is not a reason to skip the gates
         if isinstance(state, dict) and state.get(OPT_OUT_KEY) is False:
+            continue
+        run = state.get("run") if isinstance(state, dict) else None
+        if isinstance(run, dict) and run.get("status") in CLOSED_STATUSES:
             continue
         return True
     return False

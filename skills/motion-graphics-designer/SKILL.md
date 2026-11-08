@@ -7,7 +7,7 @@ disable-model-invocation: true
 metadata:
   model_tier: "balanced"
   owner: product-delivery
-  version: "1.1.0"
+  version: "1.2.0"
   language: "en-GB"
   persona_type: "motion graphics designer"
   tags:
@@ -147,6 +147,9 @@ If those tools are not available where you are running, and that includes the Cl
 | The words — headline, step copy, tone | `content-designer` |
 | Launch, campaign or positioning message | `growth-product-marketing-manager` |
 | Contrast, flashing, or reduced-motion questions beyond the basics | `accessibility-specialist` |
+| Anything leaving the team that carries the brand or makes claims | `brand-guardian` |
+
+Takes work from `growth-product-marketing-manager` (launch messages); `data-analyst` (numbers for a chart); `research-reporter` (results to animate); `motion-designer` (requests for animation to watch). Workflows: W8 Launch and learn, W16 Tell stakeholders what happened (in `docs/workflows.md` of the product-team suite).
 
 ## Quality rubric
 
@@ -181,6 +184,10 @@ Update:
 - template primitives and sample scenes
 - export requirements and timing estimate
 - writing-for-motion figures
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

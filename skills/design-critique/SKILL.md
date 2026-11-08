@@ -13,7 +13,7 @@ allowed-tools:
 metadata:
   model_tier: "balanced"
   owner: product-delivery
-  version: "1.2.0"
+  version: "1.3.0"
   language: "en-GB"
 ---
 
@@ -213,7 +213,7 @@ In every critique, briefly confirm:
 
 ## Cache integration
 
-If `.claude/cache/pipeline.json` exists and this critique is part of a pipeline run:
+If `<cache>/pipeline.json` (the adapter's `state.directory`, default `.claude/cache/`) exists and this critique is part of a pipeline run:
 
 - Read the relevant chunk's design intent from `designBrief` or chunk `objective`.
 - On exit: record the closure decision in `scratchpad.notes` so downstream skills have context.
@@ -223,6 +223,16 @@ When invoked with arguments, treat `$ARGUMENTS` as the design brief, screen desc
 
 Design to critique:
 $ARGUMENTS
+
+## Works with
+
+- **Takes work from:** `run-pipeline` (UI chunks as they close); `product-designer` (the design intent); `design-systems-specialist` (drift checks); `accessibility-specialist` and `content-designer` (findings in their areas).
+- **Hands work to:** `product-designer` (HOLD findings to redesign); `run-pipeline` (fixes as new chunks); the release owner (SHIP, SHIP_WITH_NOTES or HOLD).
+- **Workflows:** W6 Build a ticket, W7 Release, W14 Stand up or audit a design system (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 

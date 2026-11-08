@@ -19,7 +19,7 @@ context: fork
 metadata:
   model_tier: "most-capable"
   owner: product-delivery
-  version: "1.2.0"
+  version: "1.3.0"
   language: "en-GB"
 ---
 
@@ -117,6 +117,7 @@ Always emit this block, then stop and wait for the user. Never proceed past this
 **Model:** running on <current model>; this run suits <most-capable | balanced | fast> <— switch with /model, or carry on?>
 **Sub-agents:** <none planned | which ones, what each does, the model each runs on — they add cost: approve, and set a cap>
 **Independent review:** <not configured | skipped | mandatory | opt-in>
+**Seams:** <the role skills this run will offer at its seams (see "Seams"), e.g. "design-critique on UI chunks; security-specialist on auth/" — or none>
 
 **Confirm:**
 - `go` / `approve` / `proceed` — run as classified.
@@ -125,6 +126,7 @@ Always emit this block, then stop and wait for the user. Never proceed past this
 - `+explore` / `-explore` — toggle the inspection sub-agent (Medium only; Large plans it by default, where one is available).
 - `agents N` / `no agents` — approve sub-agents up to N for the whole run, or none (the work then runs in this conversation). No sub-agent starts until one of these is given; a cap the user or project instructions already set counts.
 - `carry on` / `switched` — keep the current model, or confirm the user has switched it.
+- `-seams` / `+seams` — don't offer the role skills at the seams, or offer them again.
 - Free-text correction (e.g. "actually also touch the migration").
 ```
 
@@ -158,6 +160,7 @@ For requests classified Medium (one feature slice, 1–3 chunks).
 5. **Phase M3 — Per-chunk loop.** For each chunk in order:
    - Run [`execute-chunk`](../execute-chunk/SKILL.md). Per-chunk validation is scoped `<lint>` + `<test.affected>` + any gate whose scope the chunk touched.
    - Run [`close-chunk`](../close-chunk/SKILL.md). On PASS continue; on PASS_WITH_NOTES continue if downstream is unaffected; on FAIL stop with a blocker summary.
+   - Offer the role skill for any seam the chunk hit (see "Seams").
 6. **Phase M4 — Cleanup-verify.** Run [`cleanup-verify`](../cleanup-verify/SKILL.md). It owns the final `scope: "full"` stamp on `last-gate.json` if everything passed.
 7. **Skip independent review by default.** If the adapter declares one and the user opted in via `+review`, run it against the cumulative diff (same protocol as Large flow Phase 9). Otherwise emit the wrap-up summary and stop.
 
@@ -174,7 +177,7 @@ This is the **previous 9-phase flow, unchanged**. Run all of:
 3. Repository inspection — dispatch the inspection sub-agent if the adapter declares one and the user approved sub-agents in Phase B, within their cap, and persist into `repoFindings`. Do not read files into the main thread for grounding when it runs. Where no sub-agent is available or approved, inspect inline and say so.
 4. Architect plan — dispatch the planning sub-agent (with approval, within the cap; otherwise plan inline) with a condensed briefing (goal, non-goals, chunk table with one-line objectives, top 5 critical files with one-line roles, pointer to the project's architecture rules if it has any). Reconcile the plan into `chunks[]`. Persist into `architectPlan`.
 5. Per-chunk execute — `execute-chunk` for each chunk in order. Inspect step uses the inspection sub-agent, while the cap allows, for any chunk needing >2 files of grounding the Phase 3 digest didn't cover. Per-chunk validation is targeted (scoped lint + affected tests + any gate the chunk touched); the full chain is deferred to Phase 8.
-6. Per-chunk close — `close-chunk` for each chunk. PASS / PASS_WITH_NOTES continue; FAIL stops.
+6. Per-chunk close — `close-chunk` for each chunk. PASS / PASS_WITH_NOTES continue; FAIL stops. Offer the role skill for any seam the chunk hit (see "Seams").
 7. Wrap-up — compact one-line-per-chunk outcome summary. Do not flip the trailing todo item here.
 8. Cleanup-verify — `cleanup-verify` owns the final `scope: "full"` stamp on `last-gate.json`.
 9. Independent review — mandatory for Large where the adapter declares one, skipped entirely where it does not. Respect the adapter's `maxRuns` cap (default 2; the last verdict is final). Track `run.reviewRuns`.
@@ -236,7 +239,31 @@ You own `<cache>/pipeline.json` for Medium and Large flows; Small flow does not 
 2. Return to Phase B with the new context and re-classify (almost always one tier higher).
 3. Wait for user confirmation before continuing.
 
-Do **not** absorb scope creep silently. The router is the load-bearing place where misclassification gets corrected.
+Do **not** absorb scope creep silently. The router is the load-bearing place where misclassification gets corrected. When the new scope is a product question rather than a technical one (what the feature should do, not how), say so and hand it to [`product-manager`](../product-manager/SKILL.md) before re-classifying.
+
+# Seams
+
+The atomic skills build and verify code. Four moments in a Medium or Large run need a specialist instead. At each, offer the skill, say why in one line, and run it in this conversation if the user agrees (it is not a sub-agent). The user can turn the offers off with `-seams`.
+
+| When | Offer | What it changes in the run |
+|---|---|---|
+| `close-chunk` returns FAIL and the cause is not obvious from its findings | [`diagnose`](../diagnose/SKILL.md) | Its root cause goes into `scratchpad.notes`, so the next `execute-chunk` fixes the cause rather than the symptom |
+| A chunk changed a user interface and closed | [`design-critique`](../design-critique/SKILL.md), compact mode | HOLD findings become a fix chunk before the next one; the decision goes into `scratchpad.notes` |
+| A chunk touched an auth, session, billing, permissions or data-access path (`paths.risk`) | [`security-specialist`](../security-specialist/SKILL.md), a security audit of the chunk's diff | Critical or High findings become a fix chunk; nothing on a risky path reaches the final sweep unreviewed |
+| The scope guard stops a chunk on a product question | [`product-manager`](../product-manager/SKILL.md) | The scope decision, then back to Phase B (see the escape hatch above) |
+
+Record each offer and its outcome in `scratchpad.notes`. A declined offer is noted, not repeated for the same chunk.
+
+# After the run: release
+
+A clean run ends at verified code, not at a release. The pipeline does not deploy. When `cleanup-verify` returns CLEAN or CLEAN-WITH-NOTES (and any independent review has passed), make the recommended next step the release workflow (W7 in `docs/workflows.md` of the product-team suite):
+
+1. [`qa-engineer`](../qa-engineer/SKILL.md): release readiness.
+2. [`design-critique`](../design-critique/SKILL.md) in full, [`accessibility-specialist`](../accessibility-specialist/SKILL.md), [`security-specialist`](../security-specialist/SKILL.md) where trust boundaries changed, and [`brand-guardian`](../brand-guardian/SKILL.md) where the change is public.
+3. [`devops-engineer`](../devops-engineer/SKILL.md): deployment plan, rollback and runbook.
+4. A person makes the release decision.
+
+Name the steps that apply to this change; skip the ones that do not, and say why.
 
 # Style rules
 
@@ -311,7 +338,7 @@ Immediately after each execution, run close-chunk. PASS continues; PASS_WITH_NOT
 
 ## Phase 7: Final wrap-up
 
-Emit a **compact** outcome summary — one line per chunk: `<ID> — <objective> — <closure decision>`. Aggregate files-changed count + list. Partially completed / blocked chunks. Remaining risks. Recommended next step.
+Emit a **compact** outcome summary — one line per chunk: `<ID> — <objective> — <closure decision>`. Aggregate files-changed count + list. Partially completed / blocked chunks. Seam offers and their outcomes. Remaining risks. Recommended next step: the release steps that apply (see "After the run: release"), or what blocks them.
 
 Reporting only — does not flip the trailing todo item.
 
@@ -385,6 +412,16 @@ Drift list, gate-by-gate, baseline comparison. Stamp written: yes/no.
 - **Feature mode** — additionally surface user flow, API/data/model implications, UI/backend coordination, and compatibility expectations.
 
 Apply these as additions to the existing output, not as separate phases.
+
+## Works with
+
+- **Takes work from:** `product-manager` (tickets that meet Ready); `qa-engineer` (the test plan as chunk criteria); `technical-architect` (architecture rules for Large runs); `diagnose` (a verified cause to fix); `design-critique` (fixes as new chunks); `cleanup-verify` (drift as a new chunk).
+- **Hands work to:** `requirements-generator`, `shape-task`, `execute-chunk`, `close-chunk` and `cleanup-verify` (the run). At the seams: `diagnose` (an unclear FAIL), `design-critique` (UI chunks), `security-specialist` (risky paths), `product-manager` (scope), `product-designer` (design escalations). After a clean sweep: `qa-engineer` and `devops-engineer` (the release).
+- **Workflows:** W6 Build a ticket, W10 Fix a bug or incident, W14 Stand up or audit a design system (in `docs/workflows.md` of the product-team suite).
+
+## Handing over work
+
+When this skill's output will feed another skill or a later step, offer to save it as a Markdown file in the project, for example `product/<work-item>/03-evidence.md`, and give the path in your answer. Keep the output's own headings, name the file for the step, and point the next skill at the file rather than restating it. Skip this for quick answers, and never save secrets or personal data. Skills that already write their own files (the pipeline's state, the research tools and reports, `ppot`) keep their own locations. A working file is not project knowledge: durable facts and decisions still go to `ppot` as proposals.
 
 ## Model and sub-agents
 
