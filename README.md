@@ -9,7 +9,7 @@ A product team you can call on: **33 Agent Skills** covering strategy, research,
 
 The skills work in Claude Code, claude.ai, the Claude app and Codex, and on any codebase.
 
-**Start here:** [Get started](#get-started) · [Install guide](./INSTALL.md) · [Workflows](./docs/workflows.md) · [What can my product team do?](./what-can-my-product-team-do.md) · [Capability map](./docs/capability-map.md) · [The Figma board](https://www.figma.com/community/file/1668354152302142589/afoveas-product-delivery-team-skills)
+**Start here:** [Get started](#get-started) · [Install guide](./INSTALL.md) · [Workflows](./docs/workflows.md) ([visual version](https://claude.ai/artifact/KMSuAh18cm7HfATKLSyt1D)) · [What can my product team do?](./what-can-my-product-team-do.md) · [Capability map](./docs/capability-map.md) · [The Figma board](https://www.figma.com/community/file/1668354152302142589/afoveas-product-delivery-team-skills)
 
 ## Contents
 
@@ -170,6 +170,8 @@ Once a role is loaded it stays for the rest of the conversation. Start a new ses
 ## Workflows
 
 The skills are deliberately narrow, so real product work needs several of them, in the right order. **[docs/workflows.md](./docs/workflows.md)** is the recipe book: seventeen workflows, each naming which skill runs when, what to ask it for, what it leaves behind for the next step, and where a person has to decide.
+
+**→ [Product Team Workflows](https://claude.ai/artifact/KMSuAh18cm7HfATKLSyt1D)** is the same guide as an interactive page: the product cycle as a clickable map, a card for every workflow that you can filter by phase, and a skill finder that shows what each skill is best at and every step it appears in.
 
 Each skill also names who it takes work from and who it hands work to, in its own "Works with" section, so a skill can point you to the next one even outside a workflow.
 
