@@ -2,7 +2,7 @@
 
 How to chain the 33 skills into complete pieces of product work.
 
-**Version 1.1.0** · 26 November 2026 · for product-team skills 1.10.0. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
+**Version 1.1.0** · 26 November 2026 · for product-team skills 1.10.1. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
 
 The skills are deliberately narrow. Each one names who it takes work from and hands work to, in its "Works with" section, but a pair of handoffs is not a plan. This guide supplies the sequencing: which skill runs when, what it should leave behind for the next one, where a person has to decide, and when to go back.
 
