@@ -71,6 +71,10 @@ genuinely different work each time, and those are explained in the next section.
 | Take a product to market | Deliver and learn |
 | Preserve project knowledge | Deliver and learn |
 
+*Investigate and fix problems* sits in Build, with one path that runs further. When monitoring
+raises a failure that customers hit, [its workflow](./workflows.md#when-monitoring-raises-the-failure)
+carries on through release until recovery is confirmed in production.
+
 **One capability does not sit anywhere in particular.** *Turn an idea into a product* walks the
 whole path, from picking apart a rough idea to measuring how it performed once it shipped. Read
 it as a route through all six phases rather than a stop on one of them.

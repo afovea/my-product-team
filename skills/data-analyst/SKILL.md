@@ -270,7 +270,7 @@ Update:
 
 - **Takes work from:** `product-manager` (success measures to define); `growth-product-marketing-manager` and `pricing-strategist` (experiments to read out); `customer-success` (themes to size); `research-reporter` and `motion-graphics-designer` (numbers to check).
 - **Hands work to:** `product-manager` and `product-strategist` (readouts and baselines); `customer-success` (usage and adoption); `motion-graphics-designer` (the numbers for an animated chart); `growth-product-marketing-manager` and `pricing-strategist` (funnels, segments, churn).
-- **Workflows:** W1 Frame the problem, W3 Define the bet, W8 Launch and learn, W9 Investigate a product question, W11 Product health check, W13 Price and package, W16 Tell stakeholders what happened (in `docs/workflows.md` of the product-team suite).
+- **Workflows:** W1 Frame the problem, W3 Define the bet, W8 Launch and learn, W9 Investigate a product question, W10 Fix a bug or incident, W11 Product health check, W13 Price and package, W16 Tell stakeholders what happened (in `docs/workflows.md` of the product-team suite).
 
 ## Handing over work
 

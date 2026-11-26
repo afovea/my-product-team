@@ -256,8 +256,8 @@ Update:
 ## Works with
 
 - **Takes work from:** `data-analyst` (usage and adoption); `growth-product-marketing-manager` (a launch to support).
-- **Hands work to:** `product-manager` and `product-strategist` (themes with frequency); `ux-researcher` (themes worth investigating); `data-analyst` (themes to size); `pricing-strategist` (retention and willingness-to-pay signals).
-- **Workflows:** W1 Frame the problem, W8 Launch and learn, W9 Investigate a product question, W11 Product health check, W12 Red-team a bet, W13 Price and package (in `docs/workflows.md` of the product-team suite).
+- **Hands work to:** `product-manager` and `product-strategist` (themes with frequency); `ux-researcher` (themes worth investigating); `data-analyst` (themes to size); `pricing-strategist` (retention and willingness-to-pay signals); `content-designer` (affected customers to tell).
+- **Workflows:** W1 Frame the problem, W8 Launch and learn, W9 Investigate a product question, W10 Fix a bug or incident, W11 Product health check, W12 Red-team a bet, W13 Price and package (in `docs/workflows.md` of the product-team suite).
 
 ## Handing over work
 

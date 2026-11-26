@@ -259,9 +259,9 @@ Update:
 
 ## Works with
 
-- **Takes work from:** `product-designer` (screens and flows); `ux-researcher` and `research-tool-builder` (task and consent wording); `growth-product-marketing-manager` (onboarding); `brand-guardian` (rewording); `research-reporter` and `motion-graphics-designer` (report and video words).
+- **Takes work from:** `product-designer` (screens and flows); `ux-researcher` and `research-tool-builder` (task and consent wording); `growth-product-marketing-manager` (onboarding); `brand-guardian` (rewording); `research-reporter` and `motion-graphics-designer` (report and video words); `customer-success` (affected customers to tell).
 - **Hands work to:** `brand-guardian` (voice and claims); `accessibility-specialist` (comprehension and labels); `design-critique` (the release review).
-- **Workflows:** W2 Test with users, W4 Develop the solution, W8 Launch and learn, W9 Investigate a product question, W11 Product health check, W16 Tell stakeholders what happened (in `docs/workflows.md` of the product-team suite).
+- **Workflows:** W2 Test with users, W4 Develop the solution, W8 Launch and learn, W9 Investigate a product question, W10 Fix a bug or incident, W11 Product health check, W16 Tell stakeholders what happened (in `docs/workflows.md` of the product-team suite).
 
 ## Handing over work
 
