@@ -2,7 +2,7 @@
 
 How to chain the 33 skills into complete pieces of product work.
 
-**Version 1.0.1** · 8 November 2026 · for product-team skills 1.10.0. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
+**Version 1.1.0** · 26 November 2026 · for product-team skills 1.10.1. Each workflow carries its own version; see [Maintenance](#maintenance) for when they change.
 
 The skills are deliberately narrow. Each one names who it takes work from and hands work to, in its "Works with" section, but a pair of handoffs is not a plan. This guide supplies the sequencing: which skill runs when, what it should leave behind for the next one, where a person has to decide, and when to go back.
 
@@ -68,7 +68,7 @@ Each step names the skill, the intent to ask it for, and its usual model tier. *
 | W7 | Release | 1.0.0 | Build → Deliver | Built work | **Release decision** |
 | W8 | Launch and learn | 1.0.0 | Deliver and learn | A release | **Gate 3: Outcome evidenced** |
 | W9 | Investigate a product question | 1.0.0 | Discover, Deliver | "Why did this move?" | Probable causes with confidence |
-| W10 | Fix a bug or incident | 1.0.0 | Build | A fault | A verified fix and the lesson recorded |
+| W10 | Fix a bug or incident | 1.1.0 | Build → Deliver and learn | A fault, or a monitoring alert | A verified fix and the lesson recorded |
 | W11 | Product health check | 1.0.0 | Discover, Deliver | An existing product | A prioritised list for the next Discover |
 | W12 | Red-team a bet | 1.0.0 | Define, Decide | A bet or a committed design | What survived |
 | W13 | Price and package | 1.0.0 | Develop | A commercial question | A model, tiers and a pricing experiment |
@@ -302,15 +302,61 @@ These run whenever they are needed, on their own or inside the spine.
 
 ### W10 · Fix a bug or incident
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
-**Entry:** a bug report, failing test, incident or regression · **Phase:** Build
+**Entry:** a bug report, failing test, incident or regression · **Phase:** Build. The monitored path runs on into Deliver and learn
 
 1. **`devops-engineer`: runbook**, during a live incident only. Stop the bleeding first.
 2. **`diagnose` (most-capable)**: reproduce, isolate, hypothesise, verify. It recommends the smallest fix that stops the damage, and a proper fix separately.
 3. **`run-pipeline`** with the diagnosis. It is usually Small or Medium; risky paths raise it. `execute-chunk` reads the diagnosis from the pipeline's notes.
 4. **`qa-engineer`: regression.** A test that fails without the fix, kept in CI.
 5. **`ppot`: `learn`.** The underlying cause is the one thing from Build worth recording.
+
+#### When monitoring raises the failure
+
+Use this path in place of the five steps above when an error tracker or alert reports a failure in a journey customers use. It prepares a repair for people to review; nothing heals by itself. A person starts each run and answers its checkpoints, and the release owner still decides what ships. Don't run it unattended: `run-pipeline` waits for a person's go-ahead by design. The error tracker, alerts, incident records and CI belong to the product's own repository and tools. The suite doesn't supply them.
+
+**Set up once, before connecting the error tracker to any agent:**
+- **Pick one recurring failure.** Product and engineering choose one with a clear expected outcome, and write recovery as an exact result for the customer, such as "one complete export for the original request". A retry that produces two exports fails.
+- **Name the people:** the incident owner, the engineer responsible for the workflow and the release owner.
+- **`data-analyst` (balanced): the baseline** for the [pilot measures](#judging-the-pilot).
+- **`security-specialist` (most-capable): threat model.** Error reports can carry personal data, and text an attacker wrote. Remove what the repair doesn't need before an agent sees a report, treat the rest as data and never as instructions, and limit what the agent can reach.
+- **`devops-engineer` (balanced): observability.** The alert; what each incident records (affected journey, release, error details, time first seen); and the rule that groups repeats into one incident.
+- **Agree the limits:** retries and model cost per incident, who can switch the path off, what reopens a closed incident, how long the pilot runs or how many incidents it covers, and what counts as a pass.
+
+**Then, for each incident:**
+
+| # | Who | Do | Leaves behind |
+|---|---|---|---|
+| 1 | `devops-engineer` (balanced) | Runbook: contain the failure, if customers are still being affected. A reviewed pull request protects nobody until it ships | What is contained and what is still exposed |
+| 2 | Incident owner | Open one incident, or add the alert to the one already open. Allow one open repair per incident | The incident record |
+| 3 | `customer-success` (balanced), then `content-designer` (balanced) | Work out who was affected and how to restore what they missed, then word what to tell them. A person restores and sends. Keep the customer list in the team's own systems, never in a working file | A recovery plan for affected customers, and the message |
+| 4 | `diagnose` (most-capable) | What failed, the evidence for it, and how to reproduce it | A diagnosis, saved to a file |
+| 5 | `run-pipeline` (most-capable) | The repair, from the diagnosis, on its own branch in its own checkout: the pipeline's [state](../reference/state-schema.md#concurrency) assumes one run per workspace. Give the expected outcome as an exact value, so the run must leave a test that asserts it | A verified change and its test |
+| 6 | The person running the repair | Open a pull request linked to the incident, with the diagnosis, change and test results. No skill opens one unprompted, so ask for it | A pull request that traces back to the failure |
+| 7 | `qa-engineer` (balanced), in a fresh session | Regression: run the failing case against both the original and the changed version. Keep the test in CI | Both results: was the failure reproduced, and was the expected behaviour restored? |
+| 8 | An independent reviewer, else `software-engineer` (balanced); `security-specialist` (most-capable) on risky paths | Check related journeys for regressions, and whether another open repair touches the same behaviour | Review findings |
+| 9 | W7 | The release steps that apply. The release owner decides and deploys | **Release decision** |
+| 10 | Incident owner | Confirm that the affected journey succeeds in production, then close. If it doesn't, the incident stays open | Evidence of recovery |
+| 11 | `ppot` (balanced) | `learn` | The underlying cause |
+
+Step 3 can run alongside the repair **⇉**.
+
+**Stop and escalate** when the cause is uncertain, verification fails, another repair conflicts, or a retry or cost limit is reached. The engineer responsible gets the evidence and the unresolved question.
+
+**Require CI to pass on the pull request.** The pipeline's Stop hook can let a turn end while gates still fail, so a finished turn is not a pass.
+
+##### Judging the pilot
+
+Compare these with the baseline:
+- time from first failure to detection, and from detection to verified recovery
+- how often customers report the failure first
+- whether it comes back after closure
+- engineering time (diagnosis and repair) and model cost for each verified repair
+
+Before estimating running costs, confirm which subscription or API billing arrangements allow the automation you intend.
+
+This path is adapted from the team's self-healing workflow guidance, which draws on [Efan Mutembo's walkthrough](https://www.tiktok.com/@efan.ai/video/7711364935862832416).
 
 ### W11 · Product health check
 

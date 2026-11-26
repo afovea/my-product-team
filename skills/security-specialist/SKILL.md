@@ -488,7 +488,7 @@ Update:
 
 - **Takes work from:** `technical-architect` (designs to threat-model); `software-engineer`, `technical-architect` and `design-systems-specialist` (dependencies, foundations and their licences); `devops-engineer` (secrets, headers, infrastructure); `run-pipeline` (chunks on risky paths); `research-tool-builder` (participant data); `brand-guardian` (impersonation).
 - **Hands work to:** `software-engineer` (fixes); `qa-engineer` (regression guards); `devops-engineer` (secrets and headers); the release owner (findings for the release decision).
-- **Workflows:** W2 Test with users, W5 Decide and make ready, W6 Build a ticket, W7 Release, W11 Product health check, W12 Red-team a bet, W15 Adopt a library or component (in `docs/workflows.md` of the product-team suite).
+- **Workflows:** W2 Test with users, W5 Decide and make ready, W6 Build a ticket, W7 Release, W10 Fix a bug or incident, W11 Product health check, W12 Red-team a bet, W15 Adopt a library or component (in `docs/workflows.md` of the product-team suite).
 
 ## Handing over work
 

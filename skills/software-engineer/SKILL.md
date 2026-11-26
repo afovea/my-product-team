@@ -347,7 +347,7 @@ Update:
 
 - **Takes work from:** `technical-architect` (the ADR); `product-manager` (feasibility questions); `design-systems-specialist` and `motion-designer` (components and motion to build); `diagnose` (a verified cause, outside a pipeline run); `accessibility-specialist` and `security-specialist` (remediation).
 - **Hands work to:** `technical-architect` (a dependency every product would rely on); `security-specialist` (risky-path review, licences); `qa-engineer` (what to test).
-- **Workflows:** W3 Define the bet, W4 Develop the solution, W6 Build a ticket, W9 Investigate a product question, W11 Product health check, W14 Stand up or audit a design system, W15 Adopt a library or component (in `docs/workflows.md` of the product-team suite).
+- **Workflows:** W3 Define the bet, W4 Develop the solution, W6 Build a ticket, W9 Investigate a product question, W10 Fix a bug or incident, W11 Product health check, W14 Stand up or audit a design system, W15 Adopt a library or component (in `docs/workflows.md` of the product-team suite).
 
 ## Handing over work
 

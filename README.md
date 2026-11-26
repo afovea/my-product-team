@@ -204,7 +204,7 @@ W17 Start ─► W1 Frame ─► W3 Define ─► Gate 1 ─► W4 Develop ─�
 | | Workflow | Use it when |
 |---|---|---|
 | W9 | [Investigate a product question](./docs/workflows.md#w9--investigate-a-product-question) | A metric moved and nobody knows why |
-| W10 | [Fix a bug or incident](./docs/workflows.md#w10--fix-a-bug-or-incident) | Something broke |
+| W10 | [Fix a bug or incident](./docs/workflows.md#w10--fix-a-bug-or-incident) | Something broke, or monitoring raised a failure |
 | W11 | [Product health check](./docs/workflows.md#w11--product-health-check) | You need to know what's wrong and what matters most |
 | W12 | [Red-team a bet](./docs/workflows.md#w12--red-team-a-bet) | Before investing in an idea, or committing to a design |
 | W13 | [Price and package](./docs/workflows.md#w13--price-and-package) | The commercial model is in question |
@@ -222,6 +222,8 @@ W10, fixing a bug, in Claude Code:
 3. `/product-team:qa-engineer Write a regression test for the checkout total bug.` A test that fails without the fix, kept in CI.
 4. `/product-team:ppot learn Rounding happened before tax in the checkout service.` What broke and why becomes something the project knows, once you approve it.
 
+When an error tracker or alert raises a failure that customers hit, W10 has a longer [monitored path](./docs/workflows.md#when-monitoring-raises-the-failure). It adds containment, help for affected customers, a before-and-after check and confirmation in production. A person starts each run; the suite doesn't supply the error tracker or run the path unattended.
+
 ### Rules every workflow follows
 
 - **Start with what's known:** `ppot brief` first, so nobody re-argues a settled decision.
@@ -231,7 +233,7 @@ W10, fixing a bug, in Claude Code:
 - **Knowledge goes back at the end,** as proposals you approve.
 - **Whoever builds something doesn't approve it.**
 
-The guide also has a best-use card for every skill and the ownership rules for where two skills could claim the same job. Workflows are versioned (currently 1.0.0).
+The guide also has a best-use card for every skill and the ownership rules for where two skills could claim the same job. Workflows are versioned (W10 is at 1.1.0, the rest at 1.0.0).
 
 [↑ Back to contents](#contents)
 

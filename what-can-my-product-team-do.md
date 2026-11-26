@@ -512,6 +512,8 @@ The preferred pattern is:
 
 This encourages root-cause investigation rather than immediately patching symptoms.
 
+When monitoring raises a failure that customers hit, the team can also work it through to recovery: contain it, help the people affected, prepare a reviewed repair with evidence from before and after, and confirm that the journey succeeds in production. People start each run, decide what ships and close the incident. The error tracker and alerts come from your product's own tools. [The recipe](./docs/workflows.md#when-monitoring-raises-the-failure) has each step.
+
 ---
 
 ## Review security and privacy
